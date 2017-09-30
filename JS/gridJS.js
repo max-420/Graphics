@@ -1,69 +1,63 @@
-
 var c = document.getElementById("grid");
 var ctx = c.getContext("2d");
 var cellSize = 100;
 var step = 5;
-var coordX;
-var coordY;
+var zeroCoords;
 
 
 function resizeCanvas() {
     c.width = window.innerWidth;
     c.height = window.innerHeight;
 
+    zeroCoords = new Point(c.width / 2, c.height / 2);
 
-    coordX = c.width / 2;
-    coordY = c.height / 2;
-    drawGrid(coordX,coordY,cellSize,c.width,c.height);
+    drawGrid(zeroCoords, cellSize, c.width, c.height);
 }
 resizeCanvas();
 
 
-function drawAxis(coordX, coordY, cWidth){
+function drawAxis(zeroCoords, cWidth) {
     ctx.beginPath();
 
     ctx.strokeStyle = 'red'; // меняем цвет рамки
-    ctx.moveTo(0,coordY);
-    ctx.lineTo(cWidth, coordY);
-    ctx.moveTo(coordX,0);
-    ctx.lineTo(coordX,cWidth);
+    ctx.moveTo(0, zeroCoords.Y);
+    ctx.lineTo(cWidth, zeroCoords.Y);
+    ctx.moveTo(zeroCoords.X, 0);
+    ctx.lineTo(zeroCoords.X, cWidth);
     ctx.lineWidth = 2; // толщина линии
     ctx.stroke();
 }
 //Рисует сетку
-function drawGrid(coordX,coordY,cellSize, cWidth, cHeight) {
+function drawGrid(zeroCoords, cellSize, cWidth, cHeight) {
     //Оси
-
-
     ctx.beginPath();
 
     ctx.strokeStyle = 'orange'; // меняем цвет рамки
     //Конец осей
-    for(y = coordY; y > 0; y -= cellSize){
-        ctx.moveTo(0,y);
+    for (y = zeroCoords.Y; y > 0; y -= cellSize) {
+        ctx.moveTo(0, y);
         ctx.lineTo(cWidth, y);
     }
 
-    for(y = coordY; y < cHeight; y += cellSize){
-        ctx.moveTo(0,y);
+    for (y = zeroCoords.Y; y < cHeight; y += cellSize) {
+        ctx.moveTo(0, y);
         ctx.lineTo(cWidth, y);
     }
 
-    for(x = coordX; x>0; x-=cellSize){
-        ctx.moveTo(x,0);
+    for (x = zeroCoords.X; x > 0; x -= cellSize) {
+        ctx.moveTo(x, 0);
         ctx.lineTo(x, cHeight)
     }
 
-    for(x = coordX; x <cWidth; x +=cellSize){
-        ctx.moveTo(x,0);
+    for (x = zeroCoords.X; x < cWidth; x += cellSize) {
+        ctx.moveTo(x, 0);
         ctx.lineTo(x, cHeight)
     }
 
     ctx.stroke();
 
-    drawAxis(coordX, coordY, cWidth);
+    drawAxis(zeroCoords, cWidth);
 }
-
 
 
 //Маштабирование
@@ -84,27 +78,26 @@ function addOnWheel(elem, handler) {
     }
 }
 
-addOnWheel(grid, function(e) {
+addOnWheel(grid, function (e) {
 
     e.preventDefault();
     var delta = e.deltaY || e.detail || e.wheelDelta;
 
-    if(cellSize-step<step && delta>0)
-    {
+    if (cellSize - step < step && delta > 0) {
         return;
     }
-    var canvasRect=c.getBoundingClientRect();
-    var mouseX = e.clientX - canvasRect.left;
-    var mouseY = e.clientY - canvasRect.top;
-    coordX += (mouseX - coordX)/cellSize*step*Math.sign(delta);
-    coordY += (mouseY - coordY)/cellSize*step*Math.sign(delta);
+    var canvasRect = c.getBoundingClientRect();
 
-    cellSize-=step*Math.sign(delta);
+    mousePos = new Point(e.clientX - canvasRect.left, e.clientY - canvasRect.top);
+
+    zeroCoords = zeroCoords.sum(mousePos.difference(zeroCoords).quotient(cellSize / step / Math.sign(delta)));
+
+    cellSize -= step * Math.sign(delta);
 
     c.width = window.innerWidth;
     c.height = window.innerHeight;
 
-    drawGrid(coordX,coordY,cellSize,c.width,c.height);
+    drawGrid(zeroCoords, cellSize, c.width, c.height);
 });
 
 //Маштабирование конец
@@ -127,35 +120,30 @@ function addOnMouseMove(elem, handler) {
     }
 }
 var mouseDownOnGrid = false;
-var mouseX;
-var mouseY;
+var mousePos;
 
-addOnMouseDown(grid, function(e) {
+addOnMouseDown(grid, function (e) {
     mouseDownOnGrid = true;
 
-    var canvasRect=c.getBoundingClientRect();
+    var canvasRect = c.getBoundingClientRect();
 
-    mouseX = e.clientX - canvasRect.left;
-    mouseY = e.clientY - canvasRect.top;
+    mousePos = new Point(e.clientX - canvasRect.left, e.clientY - canvasRect.top);
 });
-addOnMouseMove(grid, function(e) {
-    if(mouseDownOnGrid == false) return;
-    var canvasRect=c.getBoundingClientRect();
+addOnMouseMove(grid, function (e) {
+    if (mouseDownOnGrid == false) return;
+    var canvasRect = c.getBoundingClientRect();
 
-    var newMouseX = e.clientX - canvasRect.left;
-    var newMouseY = e.clientY - canvasRect.top;
+    newMousePos = new Point(e.clientX - canvasRect.left, e.clientY - canvasRect.top);
 
-    coordX -= (mouseX - newMouseX);
-    coordY -= (mouseY - newMouseY);
+    zeroCoords = zeroCoords.sum(newMousePos.difference(mousePos));
 
-    mouseX = newMouseX;
-    mouseY = newMouseY;
+    mousePos = newMousePos;
 
     c.width = window.innerWidth;
     c.height = window.innerHeight;
 
-    drawGrid(coordX,coordY,cellSize,c.width,c.height);
+    drawGrid(zeroCoords, cellSize, c.width, c.height);
 });
-addOnMouseUp(grid, function(e) {
+addOnMouseUp(grid, function (e) {
     mouseDownOnGrid = false;
 });
