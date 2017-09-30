@@ -6,8 +6,7 @@ var step = 5;
 var coordX;
 var coordY;
 
-// resize the canvas to fill browser window dynamically
-window.addEventListener('resize', resizeCanvas, false);
+
 function resizeCanvas() {
     c.width = window.innerWidth;
     c.height = window.innerHeight;
@@ -67,25 +66,6 @@ function drawGrid(coordX,coordY,cellSize, cWidth, cHeight) {
 
 
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 //Маштабирование
 function addOnWheel(elem, handler) {
     if (elem.addEventListener) {
@@ -103,7 +83,6 @@ function addOnWheel(elem, handler) {
         grid.attachEvent("onmousewheel", handler);
     }
 }
-var scale = 1;
 
 addOnWheel(grid, function(e) {
 
@@ -117,8 +96,8 @@ addOnWheel(grid, function(e) {
     var canvasRect=c.getBoundingClientRect();
     var mouseX = e.clientX - canvasRect.left;
     var mouseY = e.clientY - canvasRect.top;
-    coordX += (mouseX - coordX)/cellSize*5*Math.sign(delta);
-    coordY += (mouseY - coordY)/cellSize*5*Math.sign(delta);
+    coordX += (mouseX - coordX)/cellSize*step*Math.sign(delta);
+    coordY += (mouseY - coordY)/cellSize*step*Math.sign(delta);
 
     cellSize-=step*Math.sign(delta);
 
@@ -129,65 +108,54 @@ addOnWheel(grid, function(e) {
 });
 
 //Маштабирование конец
+function addOnMouseDown(elem, handler) {
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-//Маштабирование
-    function addOnWheel(elem, handler) {
-      if (elem.addEventListener) {
-        if ('onwheel' in document) {
-          // IE9+, FF17+
-          elem.addEventListener("wheel", handler);
-        } else if ('onmousewheel' in document) {
-          // устаревший вариант события
-          elem.addEventListener("mousewheel", handler);
-        } else {
-          // 3.5 <= Firefox < 17, более старое событие DOMMouseScroll пропустим
-          elem.addEventListener("MozMousePixelScroll", handler);
-        }
-      } else { // IE8-
-        grid.attachEvent("onmousewheel", handler);
-      }
+    if (elem.addEventListener) {
+        elem.addEventListener("mousedown", handler);
     }
-    var scale = 1;
+}
+function addOnMouseUp(elem, handler) {
 
-    addOnWheel(grid, function(e) {
+    if (elem.addEventListener) {
+        elem.addEventListener("mouseup", handler);
+    }
+}
+function addOnMouseMove(elem, handler) {
 
-		e.preventDefault();
-		var delta = e.deltaY || e.detail || e.wheelDelta;
+    if (elem.addEventListener) {
+        elem.addEventListener("mousemove", handler);
+    }
+}
+var mouseDownOnGrid = false;
+var mouseX;
+var mouseY;
 
-		if(cellSize-step<step && delta>0)
-		{
-			return;
-		}
-		var canvasRect=c.getBoundingClientRect();
-		var mouseX = e.clientX - canvasRect.left;
-		var mouseY = e.clientY - canvasRect.top;
-		coordX += (mouseX - coordX)/cellSize*5*Math.sign(delta);
-		coordY += (mouseY - coordY)/cellSize*5*Math.sign(delta);
-		
-		cellSize-=step*Math.sign(delta);
-		
-		c.width = window.innerWidth;
-		c.height = window.innerHeight;
+addOnMouseDown(grid, function(e) {
+    mouseDownOnGrid = true;
 
+    var canvasRect=c.getBoundingClientRect();
 
+    mouseX = e.clientX - canvasRect.left;
+    mouseY = e.clientY - canvasRect.top;
+});
+addOnMouseMove(grid, function(e) {
+    if(mouseDownOnGrid == false) return;
+    var canvasRect=c.getBoundingClientRect();
 
-		drawGrid(coordX,coordY,cellSize,c.width,c.height); 
-    });
-    
-//Маштабирование конец
+    var newMouseX = e.clientX - canvasRect.left;
+    var newMouseY = e.clientY - canvasRect.top;
+
+    coordX -= (mouseX - newMouseX);
+    coordY -= (mouseY - newMouseY);
+
+    mouseX = newMouseX;
+    mouseY = newMouseY;
+
+    c.width = window.innerWidth;
+    c.height = window.innerHeight;
+
+    drawGrid(coordX,coordY,cellSize,c.width,c.height);
+});
+addOnMouseUp(grid, function(e) {
+    mouseDownOnGrid = false;
+});
