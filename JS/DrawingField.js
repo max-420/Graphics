@@ -1,22 +1,24 @@
 function DrawingField(canvas) {
+
     var canvas = canvas;
     var ctx = canvas.getContext("2d");
 
     this.gridStep = 10;
     this.scaleValue = 10;
     this.scaleStep = 0.1;
-
     this.zeroCoords = new Point(canvas.width / 2, canvas.height / 2);
 
-    function convertToCanvasCoords(coords) {
-        return coords.multiply(scale).sum(zeroCoords).round();
+    var convertToCanvasCoords = function(coords) {
+        return coords.multiply(this.scaleValue).sum(this.zeroCoords).round();
     }
 
-    var getCellSize = function(){
+    var getCellSize = function () {
         return Math.round(this.gridStep * this.scaleValue);
     }.bind(this);
 
     this.scale = function (direction, center) {
+        var minCellSize = 5;
+        if (this.gridStep * this.scaleValue - this.scaleStep * direction < minCellSize) return;
 
         var zeroCoordsScaleCoef = this.scaleStep / this.scaleValue / direction;
 
