@@ -1,0 +1,98 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <title>Test PaperJS</title>
+        <script type="text/javascript" src="assets\js\paper.js"></script>
+        
+    </head>
+    <body>  
+        <a href="#" onclick="tool1.activate();">Clouds</a>
+        <a href="#" onclick="tool2
+        .activate();">Lines</a>
+        <canvas id="myCanvas" resize></canvas>   
+
+
+        <script type="text/javascript">
+            //BydloCode
+            var canvas = document.getElementById('myCanvas');
+            var width = canvas.width;
+            var height = canvas.height;
+
+            paper.install(window);
+            
+            window.onload = function() {
+                paper.setup('myCanvas');
+                var path;
+
+            // Only execute onMouseDrag when the mouse
+            // has moved at least 10 points:
+            this.tool1 = new Tool();
+            tool1.minDistance = 10;
+
+            tool1.onMouseDown = function(event) {
+                // Create a new path every time the mouse is clicked
+                path = new Path();
+                path.add(event.point);
+                path.strokeColor = 'red';
+            }
+
+            tool1.onMouseDrag = function(event) {
+                // Add a point to the path every time the mouse is dragged
+                path.add(event.point);
+            }
+            this.tool2 = new Tool();
+            //tool1.minDistance = 10;
+
+            tool2.onMouseDown = function(event) {
+                // Create a new path every time the mouse is clicked
+                var hitOptions = {
+                    segments: true,
+                    stroke: true,
+                    fill: true,
+                    tolerance: 5
+                };
+                // Add a point to the path every time the mouse is dragged
+                project.deselectAll();
+                var hitResult = project.hitTest(event.point, hitOptions);
+                if(hitResult)
+                {
+                    hitResult.item.selected = true;
+                }
+            }
+            tool2.onMouseDrag = function(event) {
+                    project.selectedItems.forEach(function(item, i, arr) {
+                        item.position = new Point(item.position._x + event.delta.x , item.position._y +  event.delta.y);
+                    });
+            }
+            
+            //
+                //Линия оси по Х
+                var axix = new Path([0, view.size.height/2], [view.size.width, view.size.height/2]);
+                var axiy = new Path([view.size.width/2, 0], [view.size.width/2, view.size.height]);
+
+                // Create a layer. The properties in the object literal
+                // are set on the newly created layer.
+                var layer = new Layer({
+                    children: [axix, axiy],
+                    strokeColor: 'black',
+                });
+                
+
+            }
+    </script>
+        <style type="text/css">
+            html,
+            body {
+                margin: 0;
+                overflow: hidden;
+                height: 100%;
+            }
+
+            /* Scale canvas with resize attribute to full size */
+            canvas[resize] {
+                width: 100%;
+                height: 100%;
+            }
+        </style>
+    </body>
+</html>
