@@ -67,6 +67,7 @@
             
             //
                 //Линия оси по Х
+
                 var axix = new Path([0, view.size.height/2], [view.size.width, view.size.height/2]);
                 var axiy = new Path([view.size.width/2, 0], [view.size.width/2, view.size.height]);
 
@@ -74,11 +75,39 @@
                 // are set on the newly created layer.
                 var layer = new Layer({
                     children: [axix, axiy],
-                    strokeColor: 'black',
+                    strokeColor: 'red',
                 });
                 
+                var drawGridLines = function(num_rectangles_wide, num_rectangles_tall, boundingRect) {
+                        var width_per_rectangle = boundingRect.width / num_rectangles_wide;
+                        var height_per_rectangle = boundingRect.height / num_rectangles_tall;
 
-            }
+                        for (var i = 0; i <= num_rectangles_wide; i++) {
+                            var xPos = boundingRect.left + i * width_per_rectangle;
+                            if(xPos != view.size.width/2){
+                                var topPoint = new paper.Point(xPos, boundingRect.top);
+                                var bottomPoint = new paper.Point(xPos, boundingRect.bottom);
+                                var aLine = new paper.Path.Line(topPoint, bottomPoint);
+                                aLine.strokeColor = 'black';
+                            }
+                           
+                        }
+                        for (var i = 0; i <= num_rectangles_tall; i++) {
+                            var yPos = boundingRect.top + i * height_per_rectangle;
+                            if(yPos !=view.size.height/2){
+                                var leftPoint = new paper.Point(boundingRect.left, yPos);
+                                var rightPoint = new paper.Point(boundingRect.right, yPos);
+                                var aLine = new paper.Path.Line(leftPoint, rightPoint);
+                                aLine.strokeColor = 'black';
+                            }
+                        }
+                    }
+
+                    drawGridLines(60, 30, paper.view.bounds);
+                    function onResize(event){
+                        layer.position = view.center;
+                    }
+            }   
     </script>
         <style type="text/css">
             html,
