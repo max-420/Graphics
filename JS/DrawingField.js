@@ -10,7 +10,7 @@ function DrawingField(canvas) {
 
     var convertToCanvasCoords = function(coords) {
         return coords.multiply(this.scaleValue).sum(this.zeroCoords).round();
-    }
+    }.bind(this);
 
     var getCellSize = function () {
         return Math.round(this.gridStep * this.scaleValue);
