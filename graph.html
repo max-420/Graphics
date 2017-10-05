@@ -66,26 +66,14 @@
                         item.position = new Point(item.position._x + event.delta.x , item.position._y +  event.delta.y);
                     });
             }
-            
-            //
-                //Линия оси по Х
-
-                var axix = new Path([0, view.size.height/2], [view.size.width, view.size.height/2]);
-                var axiy = new Path([view.size.width/2, 0], [view.size.width/2, view.size.height]);
-
-                // Create a layer. The properties in the object literal
-                // are set on the newly created layer.
-                var layer = new Layer({
-                    children: [axix, axiy],
-                    strokeColor: 'red',
-                });
                 
                 //var topPoint = new paper.Point(view.size.height/2, view.size.width/2);
                 
                 var drawGrid = function (cellSize, centerPoint, size, layout) {
                     //Отрисовка осей
-                    var axix = new Path(layout.view.viewToProject([0, centerPoint.x]), layout.view.viewToProject([size.width, centerPoint.x]));
-                    var axiy = new Path(layout.view.viewToProject([centerPoint.y, 0]), layout.view.viewToProject([centerPoint.y, size.height]));
+                    cellSize*=layout.view.scaling.x;
+                    var axix = new Path([0, centerPoint.x], [size.width, centerPoint.x]);
+                    var axiy = new Path([centerPoint.y, 0], [centerPoint.y, size.height]);
                     
                     console.log('center x: ' + centerPoint.x + 'center y: ' + centerPoint.y);
                     // Create a layer. The properties in the object literal
@@ -127,7 +115,8 @@
                 }
                     var layout = new Layer();
                     var centerPointParam = new paper.Point(view.size.height/2, view.size.width/2);
-                    drawGrid(30,centerPointParam, view.size, layout);
+                    drawGrid(30,centerPointParam, view.viewSize, layout);
+
                 function addOnWheel(elem, handler) {
                     if (elem.addEventListener) {
                         if ('onwheel' in document) {
@@ -154,8 +143,9 @@
                     layout.view.scale(1-(coef*Math.sign(delta)),layout.view.viewToProject(mousePos));
                     layout.removeChildren();
 
-                    var centerPointParam = new paper.Point(view.size.height/2, view.size.width/2);
-                    drawGrid(30,centerPointParam, view.size, layout);
+                    var centerPointParam = new paper.Point(layout.view.size.height/2, layout.view.size.width/2);
+                    drawGrid(30,centerPointParam, view.viewSize, layout);
+
                 });
             }   
     </script>
