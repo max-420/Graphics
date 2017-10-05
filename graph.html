@@ -82,56 +82,52 @@
                 
                 //var topPoint = new paper.Point(view.size.height/2, view.size.width/2);
                 
-                var drawGrid = function (cellSize, centerPoint, size) {
+                var drawGrid = function (cellSize, centerPoint, size, layout) {
                     //Отрисовка осей
-                    var axix = new Path([0, centerPoint.x], [size.width, centerPoint.x]);
-                    var axiy = new Path([centerPoint.y, 0], [centerPoint.y, size.height]);
+                    var axix = new Path(layout.view.viewToProject([0, centerPoint.x]), layout.view.viewToProject([size.width, centerPoint.x]));
+                    var axiy = new Path(layout.view.viewToProject([centerPoint.y, 0]), layout.view.viewToProject([centerPoint.y, size.height]));
+                    
                     console.log('center x: ' + centerPoint.x + 'center y: ' + centerPoint.y);
                     // Create a layer. The properties in the object literal
                     // are set on the newly created layer.
-                    var layer = new Layer({
-                        children: [axix, axiy],
-                        strokeColor: 'red',
-                    });
                     //Конец осей
 
-                    for(y = centerPoint.y - cellSize; y > 0; y -=cellSize){
-                        var rightPoint = new paper.Point(y, 0);
-                        var leftPoint = new paper.Point(y, size.height);
+                    for(y = centerPoint.y; y > 0; y -=cellSize){
+                        var rightPoint = layout.view.viewToProject(new paper.Point(y, 0));
+                        var leftPoint = layout.view.viewToProject(new paper.Point(y, size.height));
 
                         var aLine = new paper.Path.Line(rightPoint, leftPoint);
                         aLine.strokeColor = 'black';
                     }
 
-                    for(y = centerPoint.y + cellSize; y < size.width; y +=cellSize){
-                        var rightPoint = new paper.Point(y, 0);
-                        var leftPoint = new paper.Point(y, size.height);
+                    for(y = centerPoint.y; y < size.width; y +=cellSize){
+                        var rightPoint = layout.view.viewToProject(new paper.Point(y, 0));
+                        var leftPoint = layout.view.viewToProject(new paper.Point(y, size.height));
 
                         var aLine = new paper.Path.Line(rightPoint, leftPoint);
                         aLine.strokeColor = 'black';
                     }
 
-                    for(x = centerPoint.x - cellSize; x > 0; x -=cellSize){
-                        var rightPoint = new paper.Point(0, x);
-                        var leftPoint = new paper.Point(size.width, x);
+                    for(x = centerPoint.x; x > 0; x -=cellSize){
+                        var rightPoint = layout.view.viewToProject(new paper.Point(0, x));
+                        var leftPoint = layout.view.viewToProject(new paper.Point(size.width, x));
 
                         var aLine = new paper.Path.Line(rightPoint, leftPoint);
                         aLine.strokeColor = 'black';
                     }
 
-                    for(x = centerPoint.x + cellSize; x < size.height; x +=cellSize){
-                        var rightPoint = new paper.Point(0, x);
-                        var leftPoint = new paper.Point(size.width, x);
+                    for(x = centerPoint.x; x < size.height; x +=cellSize){
+                        var rightPoint = layout.view.viewToProject(new paper.Point(0, x));
+                        var leftPoint = layout.view.viewToProject(new paper.Point(size.width, x));
 
                         var aLine = new paper.Path.Line(rightPoint, leftPoint);
                         aLine.strokeColor = 'black';
                     }
 
                 }
-
+                    var layout = new Layer();
                     var centerPointParam = new paper.Point(view.size.height/2, view.size.width/2);
-                    drawGrid(30,centerPointParam, view.size);
-
+                    drawGrid(30,centerPointParam, view.size, layout);
                 function addOnWheel(elem, handler) {
                     if (elem.addEventListener) {
                         if ('onwheel' in document) {
@@ -155,11 +151,11 @@
                     var canvasRect = canvas.getBoundingClientRect();
 
                     var mousePos = new Point(e.clientX - canvasRect.left, e.clientY - canvasRect.top);
-                    layer.view.scale(1-(coef*Math.sign(delta)),layer.view.viewToProject(mousePos));
-                    layer.removeChildren();
-                    
+                    layout.view.scale(1-(coef*Math.sign(delta)),layout.view.viewToProject(mousePos));
+                    layout.removeChildren();
+
                     var centerPointParam = new paper.Point(view.size.height/2, view.size.width/2);
-                    drawGrid(30,centerPointParam, view.size);
+                    drawGrid(30,centerPointParam, view.size, layout);
                 });
             }   
     </script>
