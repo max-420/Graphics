@@ -1,167 +1,177 @@
 <!DOCTYPE html>
 <html>
-    <head>
-        <title>Test PaperJS</title>
-        <script type="text/javascript" src="assets\js\paper.js"></script>
-        
-    </head>
-    <body>  
-        <a href="#" onclick="tool1.activate();">Clouds</a>
-        <a href="#" onclick="tool2
-        .activate();">Lines</a>
-        <canvas id="myCanvas" resize></canvas>   
-        
+<head>
+    <title>Test PaperJS</title>
+    <script type="text/javascript" src="assets\js\paper.js"></script>
 
-        <script type="text/javascript">
+</head>
+<body>
+<a href="#" onclick="tool1.activate();">Line</a>
+<a href="#" onclick="tool2.activate();">Move</a>
+<a href="#" onclick="tool3.activate();">Hand</a>
+<canvas id="myCanvas" resize></canvas>
 
 
-            //BydloCode
-            var canvas = document.getElementById('myCanvas');
-            var width = canvas.width;
-            var height = canvas.height;
+<script type="text/javascript">
 
-            paper.install(window);
-            
-            window.onload = function() {
-                paper.setup('myCanvas');
-                var path;
 
-            // Only execute onMouseDrag when the mouse
-            // has moved at least 10 points:
-            this.tool1 = new Tool();
-            tool1.minDistance = 10;
+    //BydloCode
+    var canvas = document.getElementById('myCanvas');
 
-            tool1.onMouseDown = function(event) {
-                // Create a new path every time the mouse is clicked
-                path = new Path();
-                path.add(event.point);
-                path.strokeColor = 'red';
+    paper.install(window);
+
+    window.onload = function () {
+        paper.setup('myCanvas');
+        var path;
+
+        // Only execute onMouseDrag when the mouse
+        // has moved at least 10 points:
+        this.tool1 = new Tool();
+        tool1.minDistance = 10;
+
+        tool1.onMouseDown = function (event) {
+            // Create a new path every time the mouse is clicked
+            path = new Path();
+            path.add(event.point);
+            path.strokeColor = 'red';
+        }
+
+        tool1.onMouseDrag = function (event) {
+            // Add a point to the path every time the mouse is dragged
+            path.add(event.point);
+        }
+        this.tool2 = new Tool();
+        //tool1.minDistance = 10;
+
+        tool2.onMouseDown = function (event) {
+            // Create a new path every time the mouse is clicked
+            var hitOptions = {
+                segments: true,
+                stroke: true,
+                fill: true,
+                tolerance: 5
+            };
+            // Add a point to the path every time the mouse is dragged
+            project.deselectAll();
+            var hitResult = project.hitTest(event.point, hitOptions);
+            if (hitResult) {
+                hitResult.item.selected = true;
+            }
+        }
+        tool2.onMouseDrag = function (event) {
+            project.selectedItems.forEach(function (item, i, arr) {
+                item.position = new Point(item.position._x + event.delta.x, item.position._y + event.delta.y);
+            });
+        }
+        this.tool3 = new Tool();
+        //tool1.minDistance = 10;
+        tool3.onMouseDrag = function (event) {
+            view.translate(event.point.subtract(event.downPoint));
+            //view.center = new Point(view.center._x - event.delta.x, view.center._y - event.delta.y);
+            console.log(event.delta);
+            drawGrid(30, layout);
+        }
+
+        var drawGrid = function (cellSize, layout) {
+            layout.removeChildren();
+            layout.activate();
+            var boundRect = layout.view.bounds;
+
+            var grid = new Group();
+            for (y = 0; y < boundRect.bottom; y += cellSize) {
+                var rightPoint = [boundRect.right, y];
+                var leftPoint = [boundRect.left, y];
+
+                var gridLine = new Path.Line(rightPoint, leftPoint);
+                grid.addChild(gridLine);
             }
 
-            tool1.onMouseDrag = function(event) {
-                // Add a point to the path every time the mouse is dragged
-                path.add(event.point);
-            }
-            this.tool2 = new Tool();
-            //tool1.minDistance = 10;
+            for (y = 0; y > boundRect.top; y -= cellSize) {
+                var rightPoint = [boundRect.right, y];
+                var leftPoint = [boundRect.left, y];
 
-            tool2.onMouseDown = function(event) {
-                // Create a new path every time the mouse is clicked
-                var hitOptions = {
-                    segments: true,
-                    stroke: true,
-                    fill: true,
-                    tolerance: 5
-                };
-                // Add a point to the path every time the mouse is dragged
-                project.deselectAll();
-                var hitResult = project.hitTest(event.point, hitOptions);
-                if(hitResult)
-                {
-                    hitResult.item.selected = true;
+                var gridLine = new Path.Line(rightPoint, leftPoint);
+                grid.addChild(gridLine);
+            }
+
+            for (x = 0; x > boundRect.left; x -= cellSize) {
+                var topPoint = [x, boundRect.bottom];
+                var bottomPoint = [x, boundRect.top];
+
+                var gridLine = new Path.Line(topPoint, bottomPoint);
+                grid.addChild(gridLine);
+            }
+
+            for (x = 0; x < boundRect.right; x += cellSize) {
+                var topPoint = [x, boundRect.bottom];
+                var bottomPoint = [x, boundRect.top];
+
+                var gridLine = new Path.Line(topPoint, bottomPoint);
+                grid.addChild(gridLine);
+            }
+
+            grid.strokeColor = 'orange';
+
+            var axisLeft = new Path([0, 0], [boundRect.left, 0]);
+            var axisRight = new Path([0, 0], [boundRect.right, 0]);
+            var axisBottom = new Path([0, 0], [0, boundRect.bottom]);
+            var axisTop = new Path([0, 0], [0, boundRect.top]);
+
+            var axis = new Group([axisLeft, axisRight, axisBottom, axisTop]);
+
+            axis.strokeColor = 'red';
+            axis.strokeWidth = 2;
+
+            layout.style.strokeScaling = false;
+            drawing.activate();
+        }
+
+        var layout = new Layer();
+        var drawing = new Layer();
+        drawGrid(30, layout);
+
+        function addOnWheel(elem, handler) {
+            if (elem.addEventListener) {
+                if ('onwheel' in document) {
+                    // IE9+, FF17+
+                    elem.addEventListener("wheel", handler);
+                } else if ('onmousewheel' in document) {
+                    // устаревший вариант события
+                    elem.addEventListener("mousewheel", handler);
+                } else {
+                    // 3.5 <= Firefox < 17, более старое событие DOMMouseScroll пропустим
+                    elem.addEventListener("MozMousePixelScroll", handler);
                 }
+            } else { // IE8-
+                grid.attachEvent("onmousewheel", handler);
             }
-            tool2.onMouseDrag = function(event) {
-                    project.selectedItems.forEach(function(item, i, arr) {
-                        item.position = new Point(item.position._x + event.delta.x , item.position._y +  event.delta.y);
-                    });
-            }
-                
-                //var topPoint = new paper.Point(view.size.height/2, view.size.width/2);
-                
-                var drawGrid = function (cellSize, centerPoint, size, layout) {
-                    //Отрисовка осей
-                    cellSize*=layout.view.scaling.x;
-                    var axix = new Path([0, centerPoint.x], [size.width, centerPoint.x]);
-                    var axiy = new Path([centerPoint.y, 0], [centerPoint.y, size.height]);
-                    
-                    console.log('center x: ' + centerPoint.x + 'center y: ' + centerPoint.y);
-                    // Create a layer. The properties in the object literal
-                    // are set on the newly created layer.
-                    //Конец осей
+        }
 
-                    for(y = centerPoint.y; y > 0; y -=cellSize){
-                        var rightPoint = layout.view.viewToProject(new paper.Point(y, 0));
-                        var leftPoint = layout.view.viewToProject(new paper.Point(y, size.height));
+        var coef = 0.1;
+        addOnWheel(canvas, function (e) {
+            e.preventDefault();
+            var delta = e.deltaY || e.detail || e.wheelDelta;
+            var canvasRect = canvas.getBoundingClientRect();
+            var mousePos = new Point(e.clientX - canvasRect.left, e.clientY - canvasRect.top);
+            layout.view.scale(1 - (coef * Math.sign(delta)), layout.view.viewToProject(mousePos));
 
-                        var aLine = new paper.Path.Line(rightPoint, leftPoint);
-                        aLine.strokeColor = 'black';
-                    }
+            drawGrid(30, layout);
+        });
+    }
+</script>
+<style type="text/css">
+    html,
+    body {
+        margin: 0;
+        overflow: hidden;
+        height: 100%;
+    }
 
-                    for(y = centerPoint.y; y < size.width; y +=cellSize){
-                        var rightPoint = layout.view.viewToProject(new paper.Point(y, 0));
-                        var leftPoint = layout.view.viewToProject(new paper.Point(y, size.height));
-
-                        var aLine = new paper.Path.Line(rightPoint, leftPoint);
-                        aLine.strokeColor = 'black';
-                    }
-
-                    for(x = centerPoint.x; x > 0; x -=cellSize){
-                        var rightPoint = layout.view.viewToProject(new paper.Point(0, x));
-                        var leftPoint = layout.view.viewToProject(new paper.Point(size.width, x));
-
-                        var aLine = new paper.Path.Line(rightPoint, leftPoint);
-                        aLine.strokeColor = 'black';
-                    }
-
-                    for(x = centerPoint.x; x < size.height; x +=cellSize){
-                        var rightPoint = layout.view.viewToProject(new paper.Point(0, x));
-                        var leftPoint = layout.view.viewToProject(new paper.Point(size.width, x));
-
-                        var aLine = new paper.Path.Line(rightPoint, leftPoint);
-                        aLine.strokeColor = 'black';
-                    }
-
-                }
-                    var layout = new Layer();
-                    var centerPointParam = new paper.Point(view.size.height/2, view.size.width/2);
-                    drawGrid(30,centerPointParam, view.viewSize, layout);
-
-                function addOnWheel(elem, handler) {
-                    if (elem.addEventListener) {
-                        if ('onwheel' in document) {
-                            // IE9+, FF17+
-                            elem.addEventListener("wheel", handler);
-                        } else if ('onmousewheel' in document) {
-                            // устаревший вариант события
-                            elem.addEventListener("mousewheel", handler);
-                        } else {
-                            // 3.5 <= Firefox < 17, более старое событие DOMMouseScroll пропустим
-                            elem.addEventListener("MozMousePixelScroll", handler);
-                        }
-                    } else { // IE8-
-                        grid.attachEvent("onmousewheel", handler);
-                    }
-                }
-                var coef = 0.1;
-                addOnWheel(canvas, function (e) {
-                    e.preventDefault();
-                    var delta = e.deltaY || e.detail || e.wheelDelta;
-                    var canvasRect = canvas.getBoundingClientRect();
-
-                    var mousePos = new Point(e.clientX - canvasRect.left, e.clientY - canvasRect.top);
-                    layout.view.scale(1-(coef*Math.sign(delta)),layout.view.viewToProject(mousePos));
-                    layout.removeChildren();
-
-                    var centerPointParam = new paper.Point(layout.view.size.height/2, layout.view.size.width/2);
-                    drawGrid(30,centerPointParam, view.viewSize, layout);
-
-                });
-            }   
-    </script>
-        <style type="text/css">
-            html,
-            body {
-                margin: 0;
-                overflow: hidden;
-                height: 100%;
-            }
-
-            /* Scale canvas with resize attribute to full size */
-            canvas[resize] {
-                width: 100%;
-                height: 100%;
-            }
-        </style>
-    </body>
+    /* Scale canvas with resize attribute to full size */
+    canvas[resize] {
+        width: 100%;
+        height: 100%;
+    }
+</style>
+</body>
 </html>
