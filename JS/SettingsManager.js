@@ -24,9 +24,6 @@ function SettingsManager() {
         prevProps = prevProps || [];
         for (var s in source) {
             if (typeof(source[s]) == 'object') {
-                // Object.defineProperty(dest, s, {
-                //     //writable:false
-                // });
                 dest[s] = {};
                 setWrappers(source[s], dest[s], prevProps.concat(s));
                 Object.defineProperty(dest, s, {
@@ -63,10 +60,5 @@ function SettingsManager() {
         var json = localStorage.getItem('settings');
         var savedSettings = JSON.parse(json);
         $.extend( true,settingsObj,savedSettings );
-    };
+    }.bind(this);
 }
-
-var sss = new SettingsManager();
-sss.settings.drawing.strokeColor='white';
-alert(sss.settings.drawing.strokeColor);
-alert(sss.settings.background.gridStep);
