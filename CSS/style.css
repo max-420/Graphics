@@ -1,16 +1,12 @@
+html,
 body {
-  background-color: #fff;
-  overflow: hidden;
-  overflow: auto;
-  display: table;
-  margin: 0;
-  width: 100%;
-  height: 100%;
+    margin: 0;
+    overflow: hidden;
+    height: 100%;
 }
-canvas 
-{ 
-    border:0;
-    display:block;
-    margin:0 auto;
-    display: block;
+
+/* Scale canvas with resize attribute to full size */
+canvas[resize] {
+    width: 100%;
+    height: 100%;
 }
