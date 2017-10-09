@@ -26,7 +26,7 @@
 
 <script type="text/javascript">
 
-    var SaveSettings = new SettingsManager();
+    var settingsManager = new SettingsManager();
 
 
     //BydloCode
@@ -36,15 +36,15 @@
 
     //
     function getGridColorVal(colorValue){
-        SaveSettings.background.gridColor = colorValue;
+        settingsManager.settings.background.gridColor = colorValue;
     }
 
     function getAxisColorVal(colorValue){
-        SaveSettings.background.axisColor = colorValue;
+        settingsManager.settings.background.axisColor = colorValue;
     }
     function setColorPicker(){
-        pickerGridColor.value = SaveSettings.background.gridColor;
-        pickerAxisColor.value = SaveSettings.background.axisColor;
+        pickerGridColor.value = settingsManager.settings.background.gridColor;
+        pickerAxisColor.value = settingsManager.settings.background.axisColor;
     }
 
 
@@ -140,7 +140,7 @@
                 grid.addChild(gridLine);
             }
 
-            grid.strokeColor = SaveSettings.background.gridColor;
+            grid.strokeColor = settingsManager.settings.background.gridColor;
 
             var axisLeft = new Path([0, 0], [boundRect.left, 0]);
             var axisRight = new Path([0, 0], [boundRect.right, 0]);
@@ -149,7 +149,7 @@
 
             var axis = new Group([axisLeft, axisRight, axisBottom, axisTop]);
 
-            axis.strokeColor = SaveSettings.background.axisColor;
+            axis.strokeColor = settingsManager.settings.background.axisColor;
             axis.strokeWidth = 2;
 
             layout.style.strokeScaling = false;
