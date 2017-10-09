@@ -25,33 +25,26 @@
 
 <script type="text/javascript">
 
-   
+    var SaveSettings = new SettingsManager();
+
+
     //BydloCode
     var canvas = document.getElementById('myCanvas');
     var pickerGridColor = document.getElementById("pickerGridColor");
     var pickerAxisColor = document.getElementById("pickerAxisColor");
 
-
-    //Нужно переписывать на ООП, бо это жесть
-    var gridColor = "black";
-    var axisColor = "red";
-    
     //
     function getGridColorVal(colorValue){
-        gridColor = colorValue;
-
-    }
-    function setGridColorVar(colorValue){
-        pickerGridColor.value = colorValue;
+        SaveSettings.background.gridColor = colorValue;
     }
 
     function getAxisColorVal(colorValue){
-        axisColor = colorValue;
+        SaveSettings.background.axisColor = colorValue;
     }
-    function setAxisColorVar(colorValue){
-        pickerAxisColor.value = colorValue;
+    function setColorPicker(){
+        pickerGridColor.value = SaveSettings.background.gridColor;
+        pickerAxisColor.value = SaveSettings.background.axisColor;
     }
-    //
 
 
     paper.install(window);
@@ -105,10 +98,10 @@
             view.translate(event.point.subtract(event.downPoint));
             //view.center = new Point(view.center._x - event.delta.x, view.center._y - event.delta.y);
             console.log(event.delta);
-            drawGrid(30, layout, gridColor, axisColor);
+            drawGrid(30, layout);
         }
 
-        var drawGrid = function (cellSize, layout, gridColor, axisColor) {
+        var drawGrid = function (cellSize, layout) {
             layout.removeChildren();
             layout.activate();
             var boundRect = layout.view.bounds;
@@ -146,7 +139,7 @@
                 grid.addChild(gridLine);
             }
 
-            grid.strokeColor = gridColor;
+            grid.strokeColor = SaveSettings.background.gridColor;
 
             var axisLeft = new Path([0, 0], [boundRect.left, 0]);
             var axisRight = new Path([0, 0], [boundRect.right, 0]);
@@ -155,7 +148,7 @@
 
             var axis = new Group([axisLeft, axisRight, axisBottom, axisTop]);
 
-            axis.strokeColor = axisColor;
+            axis.strokeColor = SaveSettings.background.axisColor;
             axis.strokeWidth = 2;
 
             layout.style.strokeScaling = false;
@@ -164,7 +157,7 @@
 
         var layout = new Layer();
         var drawing = new Layer();
-        drawGrid(30, layout, gridColor, axisColor);
+        drawGrid(30, layout);
 
         function addOnWheel(elem, handler) {
             if (elem.addEventListener) {
@@ -191,7 +184,7 @@
             var mousePos = new Point(e.clientX - canvasRect.left, e.clientY - canvasRect.top);
             layout.view.scale(1 - (coef * Math.sign(delta)), layout.view.viewToProject(mousePos));
 
-            drawGrid(30, layout, gridColor, axisColor);
+            drawGrid(30, layout);
         });
     }
 </script>

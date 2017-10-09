@@ -60,7 +60,3 @@ function SettingsManager() {
     };
 }
 
-var sss = new SettingsManager();
-sss.drawing.strokeColor='white';
-alert(sss.drawing.strokeColor);
-alert(sss.background.gridStep);
