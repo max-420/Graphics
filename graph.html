@@ -12,7 +12,8 @@
     <li><a href="#" onclick="tool1.activate();">Line</a></li>
     <li><a href="#" onclick="tool2.activate();">Move</a></li>
     <li><a href="#" onclick="tool3.activate();">Hand</a></li>
-    <li>Grid color: <input type="color"/></li>
+    <li>Grid color <input type="color" id="pickerGridColor" onchange="getGridColorVal(pickerGridColor.value)"/></li>
+    <li>Axis color <input type="color" id="pickerAxisColor" onchange="getAxisColorVal(pickerAxisColor.value)"/></li>
 </ul>
     
 
@@ -24,9 +25,34 @@
 
 <script type="text/javascript">
 
-
+   
     //BydloCode
     var canvas = document.getElementById('myCanvas');
+    var pickerGridColor = document.getElementById("pickerGridColor");
+    var pickerAxisColor = document.getElementById("pickerAxisColor");
+
+
+    //Нужно переписывать на ООП, бо это жесть
+    var gridColor = "black";
+    var axisColor = "red";
+    
+    //
+    function getGridColorVal(colorValue){
+        gridColor = colorValue;
+
+    }
+    function setGridColorVar(colorValue){
+        pickerGridColor.value = colorValue;
+    }
+
+    function getAxisColorVal(colorValue){
+        axisColor = colorValue;
+    }
+    function setAxisColorVar(colorValue){
+        pickerAxisColor.value = colorValue;
+    }
+    //
+
 
     paper.install(window);
 
@@ -79,10 +105,10 @@
             view.translate(event.point.subtract(event.downPoint));
             //view.center = new Point(view.center._x - event.delta.x, view.center._y - event.delta.y);
             console.log(event.delta);
-            drawGrid(30, layout);
+            drawGrid(30, layout, gridColor, axisColor);
         }
 
-        var drawGrid = function (cellSize, layout) {
+        var drawGrid = function (cellSize, layout, gridColor, axisColor) {
             layout.removeChildren();
             layout.activate();
             var boundRect = layout.view.bounds;
@@ -120,7 +146,7 @@
                 grid.addChild(gridLine);
             }
 
-            grid.strokeColor = 'orange';
+            grid.strokeColor = gridColor;
 
             var axisLeft = new Path([0, 0], [boundRect.left, 0]);
             var axisRight = new Path([0, 0], [boundRect.right, 0]);
@@ -129,7 +155,7 @@
 
             var axis = new Group([axisLeft, axisRight, axisBottom, axisTop]);
 
-            axis.strokeColor = 'red';
+            axis.strokeColor = axisColor;
             axis.strokeWidth = 2;
 
             layout.style.strokeScaling = false;
@@ -138,7 +164,7 @@
 
         var layout = new Layer();
         var drawing = new Layer();
-        drawGrid(30, layout);
+        drawGrid(30, layout, gridColor, axisColor);
 
         function addOnWheel(elem, handler) {
             if (elem.addEventListener) {
@@ -165,7 +191,7 @@
             var mousePos = new Point(e.clientX - canvasRect.left, e.clientY - canvasRect.top);
             layout.view.scale(1 - (coef * Math.sign(delta)), layout.view.viewToProject(mousePos));
 
-            drawGrid(30, layout);
+            drawGrid(30, layout, gridColor, axisColor);
         });
     }
 </script>
