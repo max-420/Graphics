@@ -15,9 +15,6 @@ function Settings() {
 function SettingsManager() {
     this.settings = {};
     var settingsObj = new Settings();
-
-    loadSettings();
-
     setWrappers(settingsObj, this.settings);
 
     function setWrappers(source, dest, prevProps) {
@@ -61,4 +58,10 @@ function SettingsManager() {
         var savedSettings = JSON.parse(json);
         $.extend( true,settingsObj,savedSettings );
     }.bind(this);
+    loadSettings();
 }
+
+var sss = new SettingsManager();
+sss.settings.drawing.strokeColor='white';
+alert(sss.settings.drawing.strokeColor);
+alert(sss.settings.background.gridStep);
