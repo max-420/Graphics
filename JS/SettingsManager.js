@@ -1,4 +1,4 @@
-function Settings() {
+function Settings(mediator) {
     this.drawing =
         {
             strokeColor: 'black',
@@ -9,7 +9,11 @@ function Settings() {
         {
             axisColor: 'red',
             gridColor: 'orange',
-            gridStep: 5,
+            cellSize: 5,
+        };
+    this.scaling =
+        {
+            scalingStep: 0.1,
         };
 }
 function SettingsManager() {
@@ -34,12 +38,15 @@ function SettingsManager() {
                     prevProps: prevProps,
                 }
                 Object.defineProperty(dest, s, {
+
                     get: function () {
                         return this.source[this.name];
                     }.bind(context),
 
                     set: function (value) {
                         this.source[this.name] = value;
+                        var path = prevProps.concat([this.name]).join('.');
+                        mediator.publish("settingsChanged", path, value);
                         saveSettings();
                     }.bind(context),
                 });
@@ -58,10 +65,6 @@ function SettingsManager() {
         var savedSettings = JSON.parse(json);
         $.extend( true,settingsObj,savedSettings );
     }.bind(this);
+
     loadSettings();
 }
-
-var sss = new SettingsManager();
-sss.settings.drawing.strokeColor='white';
-alert(sss.settings.drawing.strokeColor);
-alert(sss.settings.background.gridStep);
