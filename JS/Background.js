@@ -1,6 +1,7 @@
 function Background(mediator, backgroundSettings) {
     var layout = new Layer();
 
+    view.translate(view.viewSize.divide(2));
     var redraw = function () {
         layout.removeChildren();
         layout.activate();

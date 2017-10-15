@@ -1,4 +1,4 @@
-function Settings(mediator) {
+function Settings() {
     this.drawing =
         {
             strokeColor: 'black',
@@ -17,7 +17,7 @@ function Settings(mediator) {
             scalingStep: 0.1,
         };
 }
-function SettingsManager() {
+function SettingsManager(mediator) {
     this.settings = {};
     var settingsObj = new Settings();
     setWrappers(settingsObj, this.settings);
