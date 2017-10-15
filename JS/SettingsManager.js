@@ -13,6 +13,7 @@ function Settings(mediator) {
         };
     this.scaling =
         {
+            step: 2,
             scalingStep: 0.1,
         };
 }

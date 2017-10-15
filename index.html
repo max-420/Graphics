@@ -2,6 +2,7 @@
 <html>
 <head>
     <title>Test PaperJS</title>
+    <!--JS-->
     <script src="assets\js\mediator.min.js"></script>
     <script src="assets\js\jquery-3.2.1.min.js"></script>
     <script type="text/javascript" src="assets\js\paper.js"></script>
@@ -9,18 +10,66 @@
     <script type="text/javascript" src="JS\Background.js"></script>
     <script type="text/javascript" src="JS\Tools.js"></script>
     <script type="text/javascript" src="JS\Scaling.js"></script>
+    <script type="text/javascript" src="JS\bootstrap.min.js"></script>
+    <!---CSS-->
     <link rel="stylesheet" type="text/css" href="CSS\style.css"/>
-
+    <link rel="stylesheet" type="text/css" href="CSS\bootstrap.css">
+    <link rel="stylesheet" type="text/css" href="CSS\bootstrap.min.css">
+      <style>
+        .modal-header, h4, .close {
+            background-color: #5cb85c;
+            color:white !important;
+            text-align: center;
+            font-size: 30px;
+        }
+        .modal-footer {
+            background-color: #f9f9f9;
+        }
+        .navbar {
+            border-radius: 0px;
+            margin-bottom: 0px;
+        }
+      </style>
 </head>
 <body>
-<ul>
-    <li><a href="#" onclick="tools[0].activate();">Line</a></li>
-    <li><a href="#" onclick="tools[1].activate();">Move</a></li>
-    <li><a href="#" onclick="tools[2].activate();">Hand</a></li>
-    <li>Grid color <input type="color" id="pickerGridColor" onchange="getGridColorVal(pickerGridColor.value)"/></li>
-    <li>Axis color <input type="color" id="pickerAxisColor" onchange="getAxisColorVal(pickerAxisColor.value)"/></li>
-</ul>
 
+ <nav class="navbar navbar-inverse navbar-fixed-top">
+    <ul class="nav navbar-nav ">
+        <li><a href="#" onclick="tools[0].activate();"><span class="glyphicon glyphicon-pencil" aria-hidden="true"></span> Line</a></li>
+        <li><a href="#" onclick="tools[1].activate();"><span class="glyphicon glyphicon-share-alt" aria-hidden="true"></span> Move</a></li>
+        <li><a href="#" onclick="tools[2].activate();"><span class="glyphicon glyphicon-eye-open" aria-hidden="true"></span> Hand</a></li>
+        <li><a href="#" data-toggle="modal" data-target="#gridSettings" ><span class="glyphicon glyphicon-asterisk" aria-hidden="true"></span> Grid settings</a></li>
+    </ul>
+</nav>  
+
+<!-- Modal -->
+<div id="gridSettings" class="modal fade" role="dialog">
+  <div class="modal-dialog">
+
+    <!-- Modal content-->
+    <div class="modal-content">
+      <div class="modal-header">
+        <button type="button" class="close" data-dismiss="modal">&times;</button>
+        <h4 class="modal-title">Grid Settings</h4>
+      </div>
+      <div class="modal-body">
+        <label for="pickerGridColor"><span class="glyphicon glyphicon-eye-open"></span> Grid color</label>
+        <input type="color" id="pickerGridColor"/>
+
+        <label for="pickerAxisColor"><span class="glyphicon glyphicon-eye-open"></span> Axis color</label>
+        <input type="color" id="pickerAxisColor"/>
+        <br/>
+        <label for="step"><span class="glyphicon glyphicon-eye-open"></span> Step grid</label>
+        <input type="number" class="form-control" id="step" placeholder="Enter step grid">
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-primary" onclick="SaveChanges()" data-dismiss="modal">Save changes</button>
+        <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+      </div>
+    </div>
+
+  </div>
+</div>
 
 <canvas id="myCanvas" resize></canvas>
 
@@ -29,27 +78,24 @@
     var mediator = new Mediator();
     var settingsManager = new SettingsManager(mediator);
 
-
     //BydloCode
     var canvas = document.getElementById('myCanvas');
     var pickerGridColor = document.getElementById("pickerGridColor");
     var pickerAxisColor = document.getElementById("pickerAxisColor");
-
-    //
-    function getGridColorVal(colorValue) {
-        settingsManager.settings.background.gridColor = colorValue;
-    }
-
-    function getAxisColorVal(colorValue) {
-        settingsManager.settings.background.axisColor = colorValue;
-    }
-    function setColorPicker() {
+    var stepSetting = document.getElementById("step");
+    
+    function SetSettings() {
         pickerGridColor.value = settingsManager.settings.background.gridColor;
         pickerAxisColor.value = settingsManager.settings.background.axisColor;
+        stepSetting.value = settingsManager.settings.scaling.step;
     }
-    setColorPicker();
+    SetSettings();
 
-
+    function SaveChanges(){
+        settingsManager.settings.scaling.step = stepSetting.value;
+        settingsManager.settings.background.gridColor = pickerGridColor.value;
+        settingsManager.settings.background.axisColor = pickerAxisColor.value;
+    }
     paper.install(window);
 
     window.onload = function () {
