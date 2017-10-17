@@ -57,12 +57,15 @@ function SettingsManager(mediator) {
 
     var saveSettings = function ()
     {
+        if(!localStorage) return;
         var json = JSON.stringify(settingsObj);
         localStorage.setItem('settings',json);
     }.bind(this);
 
     var loadSettings = function () {
+        if(!localStorage) return;
         var json = localStorage.getItem('settings');
+        if(!json) return;
         var savedSettings = JSON.parse(json);
         $.extend( true,settingsObj,savedSettings );
     }.bind(this);
