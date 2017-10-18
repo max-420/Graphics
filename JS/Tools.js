@@ -1,4 +1,4 @@
-function Tools(mediator, drawingSettings)
+function Tools(mediator, drawingSettings, drawingLayers)
 {
     var path;
     // Only execute onMouseDrag when the mouse
@@ -32,7 +32,7 @@ function Tools(mediator, drawingSettings)
             tolerance: 5
         };
         project.deselectAll();
-        var hitResult = project.hitTest(event.point, hitOptions);
+        var hitResult = drawingLayers.hitTest(event.point, hitOptions);
         if (hitResult) {
             hitResult.item.selected = true;
         }

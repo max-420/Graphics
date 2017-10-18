@@ -179,9 +179,10 @@
     window.onload = function () {
         paper.setup('myCanvas');
         var background = new Background(mediator, settingsManager.settings.background);
-        var tools = new Tools(mediator, settingsManager.settings.drawing);
+
         var scaling = new Scaling(mediator, settingsManager.settings.scaling, canvas);
         var drawing = new Layer();
+        var tools = new Tools(mediator, settingsManager.settings.drawing, drawing);
         undoRedo = new UndoRedo(mediator, drawing);
         mediator.subscribe("backgroundUpdated", function () {
             drawing.activate();
