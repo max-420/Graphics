@@ -18,6 +18,11 @@ function Tools(mediator, drawingSettings)
         path.add(event.point);
     }
 
+    line.onMouseUp = function (event) {
+        // Add a point to the path every time the mouse is dragged
+        mediator.publish("drawingChanged");
+    }
+
     var move = new Tool();
     move.onMouseDown = function (event) {
         var hitOptions = {
@@ -36,6 +41,10 @@ function Tools(mediator, drawingSettings)
         project.selectedItems.forEach(function (item, i, arr) {
             item.position = new Point(item.position._x + event.delta.x, item.position._y + event.delta.y);
         });
+    }
+
+    move.onMouseUp = function (event) {
+        mediator.publish("drawingChanged");
     }
     var hand = new Tool();
     hand.onMouseDrag = function (event) {
