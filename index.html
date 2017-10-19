@@ -13,83 +13,30 @@
     <script type="text/javascript" src="JS\UndoRedo.js"></script>
     <script type="text/javascript" src="JS\bootstrap.min.js"></script>
     <!---CSS-->
-    <link rel="stylesheet" type="text/css" href="CSS\style.css"/>
     <link rel="stylesheet" type="text/css" href="CSS\bootstrap.css">
     <link rel="stylesheet" type="text/css" href="CSS\bootstrap.min.css">
-      <style>
-        .modal-header, h4, .close {
-            background-color: #5cb85c;
-            color:white !important;
-            text-align: center;
-            font-size: 30px;
-        }
-        .modal-footer {
-            background-color: #f9f9f9;
-        }
-        .navbar {
-            border-radius: 0px;
-            margin-bottom: 0px;
-        }
-        .elementPanel{
-            top: 80px;
-            position: absolute;
-            left: 15px; /* Положение от правого края */
-            list-style-type: none;
-            margin: 0;
-            padding: 0;
-        }
-        .elementPanel li{
-            background-color: #f1f1f1;
-            margin-bottom: 20px;
-            width: 30px;
-            height: 30px;
-        }
-        .elementPanel li span{
-            display: block;
-            padding: 8px 8px;
-            text-decoration: none;
-        }
-        .elementPanel li span:hover{
-            color: blue;
-        }
-        li.dropdown {
-            display: inline-block;
-        }
-        .dropdown-content {
-            display: none;
-            position: absolute;
-            background-color: #f9f9f9;
-            width: 30px;
-            box-shadow: 0px 8px 16px 0px rgba(0,0,0,0.2);
-            z-index: 1;
-        }
-        .dropdown-content a {
-            color: black;
-            padding: 12px 16px;
-            text-decoration: none;
-            display: block;
-            text-align: left;
-        }
-        .dropdown-content a:hover {background-color: #f1f1f1}
-
-        .dropdown:hover .dropdown-content {
-            display: block;
-        }
-      </style>
+    <link rel="stylesheet" type="text/css" href="CSS\style.css"/>
 </head>
 <body>
 
-<nav class="navbar navbar-default">
+    <nav class="navbar navbar-default">
           <div class="collapse navbar-collapse" id="myNavbar">
             <ul class="nav navbar-nav navbar-left">
                 <li><a href="#" onclick="tools[0].activate();"><span class="glyphicon glyphicon-pencil" aria-hidden="true"></span> Line</a></li>
-                <li><a href="#" onclick="tools[1].activate();"><span class="glyphicon glyphicon-share-alt" aria-hidden="true"></span> Move</a></li>
-                <li><a href="#" onclick="undoRedo.undo();"><span class="glyphicon glyphicon-eye-open" aria-hidden="true"></span> Undo</a></li>
-                <li><a href="#" onclick="undoRedo.redo();"><span class="glyphicon glyphicon-eye-open" aria-hidden="true"></span> Redo</a></li>
+                <li><a href="#" onclick="tools[1].activate();"><span class="glyphicon glyphicon-hand-up" aria-hidden="true"></span> Move</a></li>
+                <li><a href="#" onclick="tools[2].activate();"><span class="glyphicon glyphicon-eye-open" aria-hidden="true"></span> Hand</a></li>
                 <li><a href="#" data-toggle="modal" data-target="#gridSettings" ><span class="glyphicon glyphicon-asterisk" aria-hidden="true"></span> Grid settings</a></li>
+                <li><button class="btn btn-danger navbar-btn" id="settingBtn"><span class="glyphicon glyphicon-asterisk" aria-hidden="true"></span> Settings</button></li>
+            </ul>
+            <ul class="nav navbar-nav navbar-right">
+                <li><a href="#"><span class="glyphicon glyphicon-thumbs-up"></span> Press F11</a></li>
             </ul>
           </div>
-      </nav>
+    </nav>
+    <div class="container" hidden="true" id="panelSetting">
+        <p>panel here</p>
+        <p>panel here</p><p>panel here</p><p>panel here</p><p>panel here</p><p>panel here</p>
+    </div>
 
 <!-- Modal -->
 <div id="gridSettings" class="modal fade" role="dialog">
@@ -120,10 +67,10 @@
   </div>
 </div>
 
-    <ul class="elementPanel">
+    <ul class="leftElementPanel">
         <li class="dropdown">
             <a href="javascript:void(0)" class="dropbtn">
-                <span class="glyphicon glyphicon-education"></span>
+                <span class="glyphicon glyphicon-paperclip"></span>
             </a>
             <div class="dropdown-content">
                 <span class="glyphicon glyphicon-education"></span>
@@ -131,21 +78,29 @@
                 <span class="glyphicon glyphicon-education"></span>
             </div>
         </li>
-        <li><span class="glyphicon glyphicon-pencil"></span></li>
         <li><span class="glyphicon glyphicon-flash"></span></li>
+        <li><span class="glyphicon glyphicon-transfer"></span></li>
          <li class="dropdown">
             <a href="javascript:void(0)" class="dropbtn">
                 <span class="glyphicon glyphicon-education"></span>
             </a>
             <div class="dropdown-content">
-                <span class="glyphicon glyphicon-education"></span>
-                <span class="glyphicon glyphicon-education"></span>
-                <span class="glyphicon glyphicon-education"></span>
+                <div class="dropdown-element"><span class="glyphicon glyphicon-education"></span></div>
+                <div class="dropdown-element"><span class="glyphicon glyphicon-education"></span></div>
             </div>
         </li>
-        <li><span class="glyphicon glyphicon-education"></span></li>
+        <li><span class="glyphicon glyphicon-option-horizontal"></span></li>
+    </ul>
 
-
+    <ul class="rightElementPanel">
+        <li>
+            <a href="#" onclick="undoRedo.undo();" id="undo"><span class="glyphicon glyphicon-chevron-left" aria-hidden="true"></span>
+            </a>
+        </li>
+        <li>
+            <a href="#" onclick="undoRedo.redo();" id="redo"><span class="glyphicon glyphicon-chevron-right" aria-hidden="true"></span>
+            </a>
+        </li>
     </ul>
     <canvas id="myCanvas" resize></canvas>
 
@@ -189,8 +144,37 @@
         });
     }
 </script>
-<style type="text/css">
+<script>
+    $(document).ready(function(){
+        $('#undo').popover({title: "Undo", content: "Undo", placement: "left", trigger:"hover"}); 
+        $('#redo').popover({title: "Redo", content: "Redo", placement: "bottom", trigger:"hover"}); 
 
-</style>
+        var check = true;
+        var leftElementPanel = $(".leftElementPanel");
+        var rightElementPanel = $(".rightElementPanel");
+        var panelSettings = $("#panelSetting");
+
+        var sizePanelSettings = parseInt(panelSettings.css("height"));
+        var sizeLeftElementPanel = parseInt(leftElementPanel.css("top"));
+        var sizeRightElementPanel = parseInt(rightElementPanel.css("top"));
+        $('#settingBtn').click(function(){
+            var panelSettings = $("#panelSetting");
+            
+            if(check){ 
+                panelSettings.show("fast");
+                leftElementPanel.animate({"top":sizeLeftElementPanel + sizePanelSettings},"fast");
+                rightElementPanel.animate({"top":sizeRightElementPanel + sizePanelSettings},"fast");
+                check = false;
+            } 
+            else{
+                panelSettings.hide("fast");
+                leftElementPanel.animate({"top" : sizeLeftElementPanel},"fast");
+                rightElementPanel.animate({"top" : sizeRightElementPanel},"fast");
+                check = true;
+            }
+           
+        });
+    });
+</script>
 </body>
 </html>
