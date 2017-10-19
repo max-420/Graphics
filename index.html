@@ -33,9 +33,73 @@
             </ul>
           </div>
     </nav>
-    <div class="container" hidden="true" id="panelSetting">
-        <p>panel here</p>
-        <p>panel here</p><p>panel here</p><p>panel here</p><p>panel here</p><p>panel here</p>
+    <div class="container-fluid" hidden="true" id="panelSetting">
+        <div class="row">
+            <div class="col-lg-4">
+                    <div class="panel panel-success" style="margin-top:20px">
+                        <div class="panel-heading">Grid settings</div>
+                        <div class="panel-body">
+                            <form class="form-horizontal">
+                                <div class="form-group">
+                                    <div class="form-group">
+                                        <label class="col-sm-3 control-label">Grid color </label>
+                                        <div class="col-sm-9">
+                                                <input type="color" id="pickerGridColor"/>
+                                        </div>
+                                    </div>  
+                                    <div class="form-group">
+                                        <label class="col-sm-3 control-label">Grid color </label>
+                                        <div class="col-sm-9">
+                                                <input type="color" id="pickerAxisColor"/>
+                                        </div>
+                                    </div>
+                                    
+                                    <div class="form-group">
+                                        <label class="col-sm-3 control-label">Step grid</label>
+                                        <div class="col-sm-9">
+                                        <input class="form-control" id="step" type="number" value="Enter step grid" style="width:50%">
+                                        </div>
+                                    </div>
+                                </div>
+                            </form> 
+                            <button type="button" class="btn btn-primary" onclick="SaveChanges()">Save changes</button>
+                        </div>
+                    </div>
+            </div>
+            <div class="col-lg-4">
+                    <div class="panel panel-default" style="margin-top:20px">
+                            <div class="panel-heading">Panel Heading</div>
+                            <div class="panel-body">Panel Content</div>
+                    </div>
+            </div>
+            <div class="col-lg-4">
+                    <div class="panel panel-default" style="margin-top:20px">
+                            <div class="panel-heading">Panel Heading</div>
+                            <div class="panel-body">Panel Content</div>
+                    </div>
+            </div>
+        </div>
+        OR 
+        <ul class="nav nav-pills">
+                <li class="active"><a data-toggle="pill" href="#home">Home</a></li>
+                <li><a data-toggle="pill" href="#menu1">Menu 1</a></li>
+                <li><a data-toggle="pill" href="#menu2">Menu 2</a></li>
+              </ul>
+              
+              <div class="tab-content">
+                <div id="home" class="tab-pane fade in active">
+                  <h3>HOME</h3>
+                  <p>Some content.</p>
+                </div>
+                <div id="menu1" class="tab-pane fade">
+                  <h3>Menu 1</h3>
+                  <p>Some content in menu 1.</p>
+                </div>
+                <div id="menu2" class="tab-pane fade">
+                  <h3>Menu 2</h3>
+                  <p>Some content in menu 2.</p>
+                </div>
+              </div>
     </div>
 
 <!-- Modal -->
