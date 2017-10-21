@@ -18,7 +18,7 @@ function Scaling(mediator, scalingSettings, canvas)
     }
 
     addOnWheel(canvas, function (e) {
-        var coef = scalingSettings.scalingStep;
+        var coef = scalingSettings.step;
         e.preventDefault();
         var delta = e.deltaY || e.detail || e.wheelDelta;
         var canvasRect = canvas.getBoundingClientRect();

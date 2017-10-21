@@ -3,20 +3,22 @@ function Background(mediator, backgroundSettings) {
 
     view.translate(view.viewSize.divide(2));
     var redraw = function () {
+        if(!backgroundSettings.showGrid && !backgroundSettings.showAxis) return;
+        var prevLayer = project.activeLayer;
         layout.removeChildren();
         layout.activate();
 
-        drawGrid();
-        drawAxis();
+        if(backgroundSettings.showGrid) drawGrid();
+        if(backgroundSettings.showAxis) drawAxis();
 
         layout.style.strokeScaling = false;
-        mediator.publish("backgroundUpdated");
+        prevLayer.activate();
     }
 
     var drawGrid = function () {
 
         var boundRect = layout.view.bounds;
-        var cellSize = backgroundSettings.cellSize;
+        var cellSize = backgroundSettings.gridStep;
 
         var grid = new Group();
         for (y = 0; y < boundRect.bottom; y += cellSize) {

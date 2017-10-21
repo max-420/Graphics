@@ -11,6 +11,7 @@
     <script type="text/javascript" src="JS\Tools.js"></script>
     <script type="text/javascript" src="JS\Scaling.js"></script>
     <script type="text/javascript" src="JS\UndoRedo.js"></script>
+    <script type="text/javascript" src="JS\Binding.js"></script>
     <script type="text/javascript" src="JS\bootstrap.min.js"></script>
     <!---CSS-->
     <link rel="stylesheet" type="text/css" href="CSS\bootstrap.css">
@@ -183,12 +184,12 @@
     function SetSettings() {
         pickerGridColor.value = settingsManager.settings.background.gridColor;
         pickerAxisColor.value = settingsManager.settings.background.axisColor;
-        stepSetting.value = settingsManager.settings.scaling.step;
+        stepSetting.value = settingsManager.settings.background.gridStep;
     }
     SetSettings();
 
     function SaveChanges(){
-        settingsManager.settings.scaling.step = stepSetting.value;
+        settingsManager.settings.background.gridStep = stepSetting.value;
         settingsManager.settings.background.gridColor = pickerGridColor.value;
         settingsManager.settings.background.axisColor = pickerAxisColor.value;
     }
@@ -199,14 +200,11 @@
     window.onload = function () {
         paper.setup('myCanvas');
         var background = new Background(mediator, settingsManager.settings.background);
-
+        var binding = new Binding(mediator, settingsManager.settings.binding);
         var scaling = new Scaling(mediator, settingsManager.settings.scaling, canvas);
         var drawing = new Layer();
-        var tools = new Tools(mediator, settingsManager.settings.drawing, drawing);
+        var tools = new Tools(mediator, settingsManager.settings.drawing, drawing, binding);
         undoRedo = new UndoRedo(mediator, drawing);
-        mediator.subscribe("backgroundUpdated", function () {
-            drawing.activate();
-        });
     }
 </script>
 <script>

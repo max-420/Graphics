@@ -1,7 +1,7 @@
-function Tools(mediator, drawingSettings, drawingLayers) {
-    var hand = new Hand();
-    var move = new Move();
+function Tools(mediator, drawingSettings, drawingLayers, binding) {
     var line = new Line();
+    var move = new Move();
+    var hand = new Hand();
     var select = new Select();
 
     function Line() {
@@ -11,12 +11,14 @@ function Tools(mediator, drawingSettings, drawingLayers) {
 
         line.onMouseDown = function (event) {
             path = new Path();
-            path.add(event.point);
+            var point = binding.getPoint(event.point);
+            path.add(point);
             path.strokeColor = drawingSettings.strokeColor;
         }
 
         line.onMouseDrag = function (event) {
-            path.add(event.point);
+            var point = binding.getPoint(event.point);
+            path.add(point);
         }
 
         line.onMouseUp = function (event) {
@@ -25,6 +27,9 @@ function Tools(mediator, drawingSettings, drawingLayers) {
     };
 
     function Move() {
+        var basePoint = new Point(0,0);
+        var lastPoint = new Point(0,0);
+        var deltaSum = new Point(0,0);
         var move = new Tool();
         move.onMouseDown = function (event) {
             var hitOptions = {
@@ -33,6 +38,8 @@ function Tools(mediator, drawingSettings, drawingLayers) {
                 fill: true,
                 tolerance: 5
             };
+            basePoint =  binding.getPoint(event.point);
+            lastPoint = basePoint;
             if(project.selectedItems.length == 0) {
                 var hitResult = drawingLayers.hitTest(event.point, hitOptions);
                 if (hitResult) {
@@ -41,8 +48,12 @@ function Tools(mediator, drawingSettings, drawingLayers) {
             }
         }
         move.onMouseDrag = function (event) {
+            var point = binding.getPoint(event.point);
+            var delta = point.subtract(lastPoint);
+            lastPoint = point;
+            deltaSum = deltaSum.add(delta);
             project.selectedItems.forEach(function (item, i, arr) {
-                item.position = new Point(item.position._x + event.delta.x, item.position._y + event.delta.y);
+                item.position = new Point(item.position._x + delta.x, item.position._y + delta.y);
             });
         }
         move.onMouseUp = function (event) {

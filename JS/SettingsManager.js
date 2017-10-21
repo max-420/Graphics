@@ -7,14 +7,20 @@ function Settings() {
         };
     this.background =
         {
+            showAxis: true,
             axisColor: 'red',
+            showGrid: true,
             gridColor: 'orange',
-            cellSize: 5,
+            gridStep: 5,
         };
     this.scaling =
         {
-            step: 2,
-            scalingStep: 0.1,
+            step: 0.1,
+        };
+    this.binding =
+        {
+            bindToGrid: true,
+            gridStep: 5,
         };
 }
 function SettingsManager(mediator) {
@@ -70,5 +76,12 @@ function SettingsManager(mediator) {
         $.extend( true,settingsObj,savedSettings );
     }.bind(this);
 
+    this.reset = function()
+    {
+        this.settings = {};
+        var settingsObj = new Settings();
+        setWrappers(settingsObj, this.settings);
+        saveSettings();
+    }
     loadSettings();
 }
