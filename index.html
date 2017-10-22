@@ -13,23 +13,22 @@
     <script type="text/javascript" src="JS\UndoRedo.js"></script>
     <script type="text/javascript" src="JS\Binding.js"></script>
     <script type="text/javascript" src="JS\bootstrap.min.js"></script>
-    <script type="text/javascript" src ="JS\bootstrap-colorpicker.min.js"></script>
     <!---CSS-->
     <link rel="stylesheet" type="text/css" href="CSS\bootstrap.css">
     <link rel="stylesheet" type="text/css" href="CSS\bootstrap.min.css">
     <link rel="stylesheet" type="text/css" href="CSS\style.css"/>
-    <link rel="stylesheet" type="text/css" href="CSS\bootstrap-colorpicker.min.css"/>
 </head>
 <body>
 
     <nav class="navbar navbar-default">
           <div class="collapse navbar-collapse" id="myNavbar">
             <ul class="nav navbar-nav navbar-left">
-                <li><button class="btn btn-danger navbar-btn" id="ClosePanel"><span class="glyphicon glyphicon-asterisk" aria-hidden="true"></span> Close panel</button></li>
                 <li><a href="#" onclick="tools[0].activate();"><span class="glyphicon glyphicon-pencil" aria-hidden="true"></span> Line</a></li>
                 <li><a href="#" onclick="tools[1].activate();"><span class="glyphicon glyphicon-hand-up" aria-hidden="true"></span> Move</a></li>
                 <li><a href="#" onclick="tools[2].activate();"><span class="glyphicon glyphicon-eye-open" aria-hidden="true"></span> Hand</a></li>
                 <li><a href="#" onclick="tools[3].activate();"><span class="glyphicon glyphicon-eye-open" aria-hidden="true"></span> Select</a></li>
+                <li><a href="#" onclick="tools[4].activate();"><span class="glyphicon glyphicon-eye-open" aria-hidden="true"></span> Circle</a></li>
+                <li><a href="#" data-toggle="modal" data-target="#gridSettings" ><span class="glyphicon glyphicon-asterisk" aria-hidden="true"></span> Grid settings</a></li>
                 <li><button class="btn btn-danger navbar-btn" id="settingBtn"><span class="glyphicon glyphicon-asterisk" aria-hidden="true"></span> Settings</button></li>
             </ul>
             <ul class="nav navbar-nav navbar-right">
@@ -41,25 +40,20 @@
         <div class="row">
             <div class="col-lg-4">
                     <div class="panel panel-success" style="margin-top:20px">
+                        <div class="panel-heading">Grid settings</div>
                         <div class="panel-body">
                             <form class="form-horizontal">
                                 <div class="form-group">
                                     <div class="form-group">
                                         <label class="col-sm-3 control-label">Grid color </label>
                                         <div class="col-sm-9">
-                                            <div id="gridColorPicker" data-format="alias" class="input-group colorpicker-component">
-                                                <input type="text" value="primary" class="form-control" />
-                                                <span class="input-group-addon"><i></i></span>
-                                            </div>
+                                                <input type="color" id="pickerGridColor"/>
                                         </div>
                                     </div>  
                                     <div class="form-group">
-                                        <label class="col-sm-3 control-label">Axies color </label>
+                                        <label class="col-sm-3 control-label">Grid color </label>
                                         <div class="col-sm-9">
-                                            <div id="gridColorAxis" data-format="alias" class="input-group colorpicker-component">
-                                                <input type="text" value="primary" class="form-control" />
-                                                <span class="input-group-addon"><i></i></span>
-                                            </div>
+                                                <input type="color" id="pickerAxisColor"/>
                                         </div>
                                     </div>
                                     
@@ -71,33 +65,74 @@
                                     </div>
                                 </div>
                             </form> 
+                            <button type="button" class="btn btn-primary" onclick="SaveChanges()">Save changes</button>
                         </div>
                     </div>
             </div>
             <div class="col-lg-4">
-                    <div class="panel panel-default" style="margin-top:20px; padding-left:20px; padding-bottom:20px;">
-                            <form>
-                                <div class="checkbox">
-                                   <label><input type="checkbox" id="showGrid" value="" checked>Show grid</label>
-                                </div>
-                                <div class="checkbox">
-                                   <label><input type="checkbox" id="showAxis" value="" checked>Show axis</label>
-                                </div>
-                                <div class="checkbox">
-                                   <label><input type="checkbox" id="BindingGrid" value="">Binding</label>
-                                </div>
-                                <input class="form-control" id="stepBindingGrid" type="number" value="Enter step binding" style="width:50%" disabled>
-                            </form>
+                    <div class="panel panel-default" style="margin-top:20px">
+                            <div class="panel-heading">Panel Heading</div>
+                            <div class="panel-body">Panel Content</div>
                     </div>
             </div>
             <div class="col-lg-4">
                     <div class="panel panel-default" style="margin-top:20px">
+                            <div class="panel-heading">Panel Heading</div>
                             <div class="panel-body">Panel Content</div>
                     </div>
             </div>
-        </div>  
+        </div>
+        OR 
+        <ul class="nav nav-pills">
+                <li class="active"><a data-toggle="pill" href="#home">Home</a></li>
+                <li><a data-toggle="pill" href="#menu1">Menu 1</a></li>
+                <li><a data-toggle="pill" href="#menu2">Menu 2</a></li>
+              </ul>
+              
+              <div class="tab-content">
+                <div id="home" class="tab-pane fade in active">
+                  <h3>HOME</h3>
+                  <p>Some content.</p>
+                </div>
+                <div id="menu1" class="tab-pane fade">
+                  <h3>Menu 1</h3>
+                  <p>Some content in menu 1.</p>
+                </div>
+                <div id="menu2" class="tab-pane fade">
+                  <h3>Menu 2</h3>
+                  <p>Some content in menu 2.</p>
+                </div>
+              </div>
     </div>
 
+<!-- Modal -->
+<div id="gridSettings" class="modal fade" role="dialog">
+  <div class="modal-dialog">
+
+    <!-- Modal content-->
+    <div class="modal-content">
+      <div class="modal-header">
+        <button type="button" class="close" data-dismiss="modal">&times;</button>
+        <h4 class="modal-title">Grid Settings</h4>
+      </div>
+      <div class="modal-body">
+        <label for="pickerGridColor"><span class="glyphicon glyphicon-eye-open"></span> Grid color</label>
+        <input type="color" id="pickerGridColor"/>
+
+        <label for="pickerAxisColor"><span class="glyphicon glyphicon-eye-open"></span> Axis color</label>
+        <input type="color" id="pickerAxisColor"/>
+        <br/>
+        <label for="step"><span class="glyphicon glyphicon-eye-open"></span> Step grid</label>
+        <input type="number" class="form-control" id="step" placeholder="Enter step grid">
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-primary" onclick="SaveChanges()" data-dismiss="modal">Save changes</button>
+        <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+      </div>
+    </div>
+
+  </div>
+</div>
 
     <ul class="leftElementPanel">
         <li class="dropdown">
@@ -141,15 +176,24 @@
     var mediator = new Mediator();
     var settingsManager = new SettingsManager(mediator);
 
+    //BydloCode
     var canvas = document.getElementById('myCanvas');
+    var pickerGridColor = document.getElementById("pickerGridColor");
+    var pickerAxisColor = document.getElementById("pickerAxisColor");
+    var stepSetting = document.getElementById("step");
     
-  //  function SetSettings() {
-  //      pickerGridColor.value = settingsManager.settings.background.gridColor;
-  //      pickerAxisColor.value = settingsManager.settings.background.axisColor;
-  //      stepSetting.value = settingsManager.settings.background.gridStep;
-  //  }
-  //  SetSettings();
+    function SetSettings() {
+        pickerGridColor.value = settingsManager.settings.background.gridColor;
+        pickerAxisColor.value = settingsManager.settings.background.axisColor;
+        stepSetting.value = settingsManager.settings.background.gridStep;
+    }
+    SetSettings();
 
+    function SaveChanges(){
+        settingsManager.settings.background.gridStep = stepSetting.value;
+        settingsManager.settings.background.gridColor = pickerGridColor.value;
+        settingsManager.settings.background.axisColor = pickerAxisColor.value;
+    }
     paper.install(window);
 
     var undoRedo;
@@ -167,124 +211,33 @@
 </script>
 <script>
     $(document).ready(function(){
-
-        var gridColorAxisHTML =  $('#gridColorAxis');
-        var gridColorPickerHTML = $('#gridColorPicker');
-
-        gridColorAxisHTML.colorpicker({ colorSelectors:
-            { 'black': '#000000',
-                'white': '#ffffff',
-                'red': '#FF0000',
-                'default': '#777777',
-                'primary': '#337ab7',
-                'success': '#5cb85c',
-                'info': '#5bc0de',
-                'warning':  '#f0ad4e',
-                'danger': '#d9534f' }
-        }).on('hidePicker',function ()
-        {
-            settingsManager.settings.background.axisColor = gridColorAxisHTML.colorpicker('getValue');
-        });
-
-        gridColorPickerHTML.colorpicker({ colorSelectors:
-            { 'black': '#000000',
-                'white': '#ffffff',
-                'red': '#FF0000',
-                'default': '#777777',
-                'primary': '#337ab7',
-                'success': '#5cb85c',
-                'info': '#5bc0de',
-                'warning':  '#f0ad4e',
-                'danger': '#d9534f' }
-        }).on('hidePicker',function () {
-            settingsManager.settings.background.gridColor = gridColorPickerHTML.colorpicker('getValue');
-        });
-
-
         $('#undo').popover({title: "Undo", content: "Undo", placement: "left", trigger:"hover"}); 
-        $('#redo').popover({title: "Redo", content: "Redo", placement: "bottom", trigger:"hover"});
+        $('#redo').popover({title: "Redo", content: "Redo", placement: "bottom", trigger:"hover"}); 
 
         var check = true;
-        var leftElementPanelHTML = $(".leftElementPanel");
-        var rightElementPanelHTML = $(".rightElementPanel");
-        var panelSettingsHTML = $("#panelSetting");
-        
+        var leftElementPanel = $(".leftElementPanel");
+        var rightElementPanel = $(".rightElementPanel");
+        var panelSettings = $("#panelSetting");
 
-        var sizePanelSettings = parseInt(panelSettingsHTML.css("height"));
-        var sizeLeftElementPanel = parseInt(leftElementPanelHTML.css("top"));
-        var sizeRightElementPanel = parseInt(rightElementPanelHTML.css("top"));
+        var sizePanelSettings = parseInt(panelSettings.css("height"));
+        var sizeLeftElementPanel = parseInt(leftElementPanel.css("top"));
+        var sizeRightElementPanel = parseInt(rightElementPanel.css("top"));
         $('#settingBtn').click(function(){
             var panelSettings = $("#panelSetting");
             
             if(check){ 
                 panelSettings.show("fast");
-                leftElementPanelHTML.animate({"top":sizeLeftElementPanel + sizePanelSettings},"fast");
-                rightElementPanelHTML.animate({"top":sizeRightElementPanel + sizePanelSettings},"fast");
+                leftElementPanel.animate({"top":sizeLeftElementPanel + sizePanelSettings},"fast");
+                rightElementPanel.animate({"top":sizeRightElementPanel + sizePanelSettings},"fast");
                 check = false;
             } 
             else{
                 panelSettings.hide("fast");
-                leftElementPanelHTML.animate({"top" : sizeLeftElementPanel},"fast");
-                rightElementPanelHTML.animate({"top" : sizeRightElementPanel},"fast");
+                leftElementPanel.animate({"top" : sizeLeftElementPanel},"fast");
+                rightElementPanel.animate({"top" : sizeRightElementPanel},"fast");
                 check = true;
             }
            
-        });
-
-        var closePanel = $("#ClosePanel");
-        $(closePanel).click(function(){
-            if(check == false){
-                panelSettingsHTML.hide("fast");
-                leftElementPanelHTML.animate({"top" : sizeLeftElementPanel},"fast");
-                panelSettingsHTML.animate({"top" : sizeRightElementPanel},"fast");
-                check = true;
-            }
-        });
-
-
-        //EVENT LIST FOR SET NEW VALUE
-        var stepHTML = $('#step');
-        var showGridHTML = $('#showGrid');
-        var showAxisHTML = $('#showAxis');
-        var stepBinderHTML = $('#BindingGrid');
-
-
-        function SetSettingInHTMLElements() {
-            gridColorAxisHTML.colorpicker('setValue', settingsManager.settings.background.axisColor);
-            gridColorPickerHTML.colorpicker('setValue', settingsManager.settings.background.gridColor);
-        };
-        SetSettingInHTMLElements();
-
-        stepHTML.change(function () {
-            settingsManager.settings.background.step = step.val();
-        });
-
-        showGridHTML.click(function () {
-            if (!$(this).is(':checked')) {
-                settingsManager.settings.background.showGrid = false;
-                alert('hellp');
-            }
-            else{
-                settingsManager.settings.background.showGrid = true;
-            }
-        });
-        showAxisHTML.click(function () {
-            if (!$(this).is(':checked')) {
-                settingsManager.settings.background.showAxis = false;
-            }
-            else{
-                settingsManager.settings.background.showAxis = true;
-            }
-        });
-
-        //stepBinding
-        stepBinderHTML.click(function() {
-            if (!$(this).is(':checked')) {
-                $('#stepBindingGrid').attr("disabled", "disabled");
-            }
-            else{
-                $('#stepBindingGrid').removeAttr("disabled");
-            }
         });
     });
 </script>

@@ -3,46 +3,46 @@ function Tools(mediator, drawingSettings, drawingLayers, binding, previewLayer) 
     var move = new Move();
     var hand = new Hand();
     var select = new Select();
+    var circle = new Circle();
 
     function Line() {
         var path;
-        var line = new Tool();
-        var mainLayer;
-        var cancelled;
-        line.minDistance = 10;
-
-        line.onMouseDown = function (event) {
-            cancelled = false;
-            mainLayer = project.activeLayer;
-            previewLayer.activate();
+        var line = new DrawingTool();
+        line.init = function(event, targetItems)
+        {
             path = new Path();
+            targetItems.addChild(path);
             var point = binding.getPoint(event.point);
             path.add(point);
             path.strokeColor = drawingSettings.strokeColor;
         }
-
-        line.onMouseDrag = function (event) {
-            if (cancelled) return;
+        line.draw = function(event, targetItems)
+        {
             var point = binding.getPoint(event.point);
             path.add(point);
         }
+    }
 
-        line.onMouseUp = function (event) {
-            if (cancelled) return;
-            mainLayer.addChild(path);
-            mainLayer.activate();
-            previewLayer.removeChildren();
-            mediator.publish("drawingChanged");
+    function Circle() {
+        var path;
+        var circle = new DrawingTool();
+        var center;
+        circle.init = function(event, targetItems)
+        {
+            center = binding.getPoint(event.point);
+            path = new Path.Circle(center, 0);
+            targetItems.addChild(path);
+            path.strokeColor = drawingSettings.strokeColor;
         }
-
-        line.onKeyDown = function (event) {
-            if (event.key = 'escape') {
-                cancelled = true;
-                mainLayer.activate();
-                previewLayer.removeChildren();
-            }
+        circle.draw = function(event, targetItems)
+        {
+            var point = binding.getPoint(event.point);
+            path.remove();
+            path = new Path.Circle(center, point.getDistance(center));
+            targetItems.addChild(path);
+            path.strokeColor = drawingSettings.strokeColor;
         }
-    };
+    }
 
     function Move() {
         var basePoint = new Point(0, 0);
@@ -129,47 +129,45 @@ function Tools(mediator, drawingSettings, drawingLayers, binding, previewLayer) 
             }
         }
     }
-
-    function ToolBuilder() {
+    function DrawingTool(){
         var cancelled;
-        var tagretItems;
+        var targetItems;
         var copy;
-        var init = function (event) {
-
-        }
-        var finish = function () {
-            mainLayer.activate();
-            previewLayer.removeChildren();
-            mediator.publish("drawingChanged");
-        }
+        //this.init;
+        //this.draw;
         var tool = new Tool();
+        tool.minDistance = 2;
+
         tool.onMouseDown = function (event) {
             cancelled = false;
             mainLayer = project.activeLayer;
             previewLayer.activate();
+            targetItems = new Group();
+
+            if(this.init) this.init(event, targetItems);
+        }.bind(this);
+
+        tool.onMouseDrag = function (event) {
+            if (cancelled) return;
+
+            if(this.draw) this.draw(event, targetItems);
+        }.bind(this);
+
+        tool.onMouseUp = function (event) {
+            if (cancelled) return;
+
+            mainLayer.addChildren(targetItems.children);
+            mainLayer.activate();
+            previewLayer.removeChildren();
+            mediator.publish("drawingChanged");
         }
-        this.selectOneOrMany()
-        {
-            tool.onMouseDown+=function(event)
-            {
-                var hitOptions = {
-                    segments: true,
-                    stroke: true,
-                    fill: true,
-                    tolerance: 5
-                };
-                if (project.selectedItems.length == 0) {
-                    var hitResult = drawingLayers.hitTest(event.point, hitOptions);
-                    if (hitResult) {
-                        hitResult.item.selected = true;
-                    }
-                }
-                targetItems = new Group(project.selectedItems);
+
+        tool.onKeyDown = function (event) {
+            if (event.key = 'escape') {
+                cancelled = true;
+                mainLayer.activate();
+                previewLayer.removeChildren();
             }
-        }
-
-    }
-    function ToolWrapper(){
-
+        }.bind(this);
     }
 }
