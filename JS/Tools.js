@@ -8,16 +8,14 @@ function Tools(mediator, drawingSettings, drawingLayers, binding, previewLayer) 
     function Line() {
         var path;
         var line = new DrawingTool();
-        line.init = function(event, targetItems)
-        {
+        line.init = function (event, targetItems) {
             path = new Path();
             targetItems.addChild(path);
             var point = binding.getPoint(event.point);
             path.add(point);
             path.strokeColor = drawingSettings.strokeColor;
         }
-        line.draw = function(event, targetItems)
-        {
+        line.draw = function (event, targetItems) {
             var point = binding.getPoint(event.point);
             path.add(point);
         }
@@ -27,15 +25,13 @@ function Tools(mediator, drawingSettings, drawingLayers, binding, previewLayer) 
         var path;
         var circle = new DrawingTool();
         var center;
-        circle.init = function(event, targetItems)
-        {
+        circle.init = function (event, targetItems) {
             center = binding.getPoint(event.point);
             path = new Path.Circle(center, 0);
             targetItems.addChild(path);
             path.strokeColor = drawingSettings.strokeColor;
         }
-        circle.draw = function(event, targetItems)
-        {
+        circle.draw = function (event, targetItems) {
             var point = binding.getPoint(event.point);
             path.remove();
             path = new Path.Circle(center, point.getDistance(center));
@@ -129,7 +125,8 @@ function Tools(mediator, drawingSettings, drawingLayers, binding, previewLayer) 
             }
         }
     }
-    function DrawingTool(){
+
+    function DrawingTool() {
         var cancelled;
         var targetItems;
         var copy;
@@ -144,13 +141,13 @@ function Tools(mediator, drawingSettings, drawingLayers, binding, previewLayer) 
             previewLayer.activate();
             targetItems = new Group();
 
-            if(this.init) this.init(event, targetItems);
+            if (this.init) this.init(event, targetItems);
         }.bind(this);
 
         tool.onMouseDrag = function (event) {
             if (cancelled) return;
 
-            if(this.draw) this.draw(event, targetItems);
+            if (this.draw) this.draw(event, targetItems);
         }.bind(this);
 
         tool.onMouseUp = function (event) {
