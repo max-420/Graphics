@@ -8,8 +8,8 @@ function Binding(mediator, bindingSettings) {
         }
         return bindedPoint;
     }
-    function bindToGrid(point)
-    {
+    function bindToGrid(point){
+
         return point.divide(bindingSettings.gridStep).round().multiply(bindingSettings.gridStep);
     }
 }

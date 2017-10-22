@@ -3,13 +3,14 @@ function Tools(mediator, drawingSettings, drawingLayers, binding, previewLayer) 
     var move = new Move();
     var hand = new Hand();
     var select = new Select();
+    var circle = new Circle();
 
     function Line() {
         var path;
         var line = new Tool();
         var mainLayer;
         var cancelled;
-        line.minDistance = 10;
+        line.minDistance = 5;
 
         line.onMouseDown = function (event) {
             cancelled = false;
@@ -42,7 +43,50 @@ function Tools(mediator, drawingSettings, drawingLayers, binding, previewLayer) 
                 previewLayer.removeChildren();
             }
         }
-    };
+    }
+
+    function Circle() {
+        var path;
+        var circle = new Tool();
+        var center;
+        var mainLayer;
+        var cancelled;
+        circle.minDistance = 2;
+
+        circle.onMouseDown = function (event) {
+            cancelled = false;
+            mainLayer = project.activeLayer;
+            previewLayer.activate();
+            //path = new Path();
+            center = binding.getPoint(event.point);
+            path = new Path.Circle(center, 0);
+            path.strokeColor = drawingSettings.strokeColor;
+        }
+
+        circle.onMouseDrag = function (event) {
+            if (cancelled) return;
+            var point = binding.getPoint(event.point);
+            path.remove();
+            path = new Path.Circle(center, point.getDistance(center));
+            path.strokeColor = drawingSettings.strokeColor;
+        }
+
+        circle.onMouseUp = function (event) {
+            if (cancelled) return;
+            mainLayer.addChild(path);
+            mainLayer.activate();
+            previewLayer.removeChildren();
+            mediator.publish("drawingChanged");
+        }
+
+        circle.onKeyDown = function (event) {
+            if (event.key = 'escape') {
+                cancelled = true;
+                mainLayer.activate();
+                previewLayer.removeChildren();
+            }
+        }
+    }
 
     function Move() {
         var basePoint = new Point(0, 0);
@@ -167,7 +211,6 @@ function Tools(mediator, drawingSettings, drawingLayers, binding, previewLayer) 
                 targetItems = new Group(project.selectedItems);
             }
         }
-
     }
     function ToolWrapper(){
 
