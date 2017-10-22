@@ -41,15 +41,9 @@ function Tools(mediator, drawingSettings, drawingLayers, binding, previewLayer) 
     }
 
     function Move() {
-        var basePoint = new Point(0, 0);
         var lastPoint = new Point(0, 0);
-        var deltaSum = new Point(0, 0);
-        var move = new Tool();
-        var targetItems;
-        var copy;
-        var mainLayer;
-        var cancelled;
-        move.onMouseDown = function (event) {
+        var move = new TransformTool();
+        move.selection = function (event) {
             var hitOptions = {
                 segments: true,
                 stroke: true,
@@ -62,43 +56,46 @@ function Tools(mediator, drawingSettings, drawingLayers, binding, previewLayer) 
                     hitResult.item.selected = true;
                 }
             }
-            targetItems = new Group(project.selectedItems);
-
-            cancelled = false;
-            mainLayer = project.activeLayer;
-            previewLayer.activate();
-
-            deltaSum = new Point(0, 0);
-            basePoint = binding.getPoint(event.point);
-            lastPoint = basePoint;
-
-            copy = targetItems.clone();
-            previewLayer.addChild(copy);
-            copy.selected = false;
         }
-        move.onMouseDrag = function (event) {
-            if (cancelled) return;
+        move.init = function (event, targetItems) {
+            deltaSum = new Point(0, 0);
+            lastPoint = binding.getPoint(event.point);
+        }
+        move.transform = function (event, targetItems) {
             var point = binding.getPoint(event.point);
             var delta = point.subtract(lastPoint);
             lastPoint = point;
-            deltaSum = deltaSum.add(delta);
-            copy.translate(delta);
+            targetItems.translate(delta);
         }
-        move.onMouseUp = function (event) {
-            if (cancelled) return;
-            mainLayer.activate();
-            targetItems.translate(deltaSum);
-            previewLayer.removeChildren();
-            mediator.publish("drawingChanged");
-        }
-        move.onKeyDown = function (event) {
-            if (event.key = 'escape') {
-                cancelled = true;
-                mainLayer.activate();
-                previewLayer.removeChildren();
+    }
+
+    function Copy() {
+        var lastPoint = new Point(0, 0);
+        var move = new TransformTool();
+        move.selection = function (event) {
+            var hitOptions = {
+                segments: true,
+                stroke: true,
+                fill: true,
+                tolerance: 5
+            };
+            if (project.selectedItems.length == 0) {
+                var hitResult = drawingLayers.hitTest(event.point, hitOptions);
+                if (hitResult) {
+                    hitResult.item.selected = true;
+                }
             }
         }
-        this.activate
+        move.init = function (event, targetItems) {
+            deltaSum = new Point(0, 0);
+            lastPoint = binding.getPoint(event.point);
+        }
+        move.transform = function (event, targetItems) {
+            var point = binding.getPoint(event.point);
+            var delta = point.subtract(lastPoint);
+            lastPoint = point;
+            targetItems.translate(delta);
+        }
     }
 
     function Hand() {
@@ -129,13 +126,14 @@ function Tools(mediator, drawingSettings, drawingLayers, binding, previewLayer) 
     function DrawingTool() {
         var cancelled;
         var targetItems;
-        var copy;
         //this.init;
         //this.draw;
         var tool = new Tool();
         tool.minDistance = 2;
 
         tool.onMouseDown = function (event) {
+            if(this.selection) this.selection(event);
+
             cancelled = false;
             mainLayer = project.activeLayer;
             previewLayer.activate();
@@ -158,6 +156,56 @@ function Tools(mediator, drawingSettings, drawingLayers, binding, previewLayer) 
             previewLayer.removeChildren();
             mediator.publish("drawingChanged");
         }
+
+        tool.onKeyDown = function (event) {
+            if (event.key = 'escape') {
+                cancelled = true;
+                mainLayer.activate();
+                previewLayer.removeChildren();
+            }
+        }.bind(this);
+    }
+    function TransformTool(){
+        var cancelled;
+        var selection;
+        var targetItems;
+        //this.init;
+        //this.transform;
+        //this.selection;
+        var tool = new Tool();
+        tool.minDistance = 2;
+
+        tool.onMouseDown = function (event) {
+            if(this.selection) this.selection(event);
+
+            selection = new Group(project.selectedItems);
+            cancelled = false;
+            mainLayer = project.activeLayer;
+            previewLayer.activate();
+
+            targetItems = selection.clone();
+            previewLayer.addChild(targetItems);
+            targetItems.selected = false;
+
+            if(this.init) this.init(event, targetItems);
+        }.bind(this);
+
+        tool.onMouseDrag = function (event) {
+            if (cancelled) return;
+
+            if(this.transform) this.transform(event, targetItems);
+        }.bind(this);
+
+        tool.onMouseUp = function (event) {
+            if (cancelled) return;
+
+            targetItems.selected = true;
+            mainLayer.addChildren(targetItems.children);
+            selection.remove();
+            mainLayer.activate();
+            previewLayer.removeChildren();
+            mediator.publish("drawingChanged");
+        }.bind(this);
 
         tool.onKeyDown = function (event) {
             if (event.key = 'escape') {
