@@ -4,6 +4,7 @@ function Tools(mediator, drawingSettings, drawingLayers, binding, previewLayer) 
     var hand = new Hand();
     var select = new Select();
     var circle = new Circle();
+    var scale = new Scale();
 
     function Line() {
         var path;
@@ -69,8 +70,8 @@ function Tools(mediator, drawingSettings, drawingLayers, binding, previewLayer) 
         }
     }
 
-    function Copy() {
-        var lastPoint = new Point(0, 0);
+    function Scale() {
+        var lastDistance;
         var move = new TransformTool();
         move.selection = function (event) {
             var hitOptions = {
@@ -87,14 +88,14 @@ function Tools(mediator, drawingSettings, drawingLayers, binding, previewLayer) 
             }
         }
         move.init = function (event, targetItems) {
-            deltaSum = new Point(0, 0);
-            lastPoint = binding.getPoint(event.point);
+            var point = binding.getPoint(event.point);
+            lastDistance = targetItems.position.getDistance(point);
         }
         move.transform = function (event, targetItems) {
             var point = binding.getPoint(event.point);
-            var delta = point.subtract(lastPoint);
-            lastPoint = point;
-            targetItems.translate(delta);
+            var distance = targetItems.position.getDistance(point);
+            targetItems.scale(distance/lastDistance);
+            lastDistance = distance;
         }
     }
 
