@@ -5,6 +5,7 @@ function Tools(mediator, drawingSettings, drawingLayers, binding, previewLayer) 
     var select = new Select();
     var circle = new Circle();
     var scale = new Scale();
+    var rotate = new Rotate();
 
     function Line() {
         var path;
@@ -96,6 +97,36 @@ function Tools(mediator, drawingSettings, drawingLayers, binding, previewLayer) 
             var distance = targetItems.position.getDistance(point);
             targetItems.scale(distance/lastDistance);
             lastDistance = distance;
+        }
+    }
+    function Rotate() {
+        var lastAngle;
+        var pos;
+        var move = new TransformTool();
+        move.selection = function (event) {
+            var hitOptions = {
+                segments: true,
+                stroke: true,
+                fill: true,
+                tolerance: 1
+            };
+            if (project.selectedItems.length == 0) {
+                var hitResult = drawingLayers.hitTest(event.point, hitOptions);
+                if (hitResult) {
+                    hitResult.item.selected = true;
+                }
+            }
+        }
+        move.init = function (event, targetItems) {
+            var point = binding.getPoint(event.point);
+            pos = targetItems.position;
+            lastAngle = point.subtract(pos).angle;
+        }
+        move.transform = function (event, targetItems) {
+            var point = binding.getPoint(event.point);
+            var angle = point.subtract(pos).angle;
+            targetItems.rotate(angle-lastAngle, pos);
+            lastAngle = angle;
         }
     }
 
