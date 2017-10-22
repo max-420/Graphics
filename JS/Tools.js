@@ -1,4 +1,4 @@
-function Tools(mediator, drawingSettings, drawingLayers, binding) {
+function Tools(mediator, drawingSettings, drawingLayers, binding, previewLayer) {
     var line = new Line();
     var move = new Move();
     var hand = new Hand();
@@ -7,9 +7,14 @@ function Tools(mediator, drawingSettings, drawingLayers, binding) {
     function Line() {
         var path;
         var line = new Tool();
+        var mainLayer;
+        var cancelled;
         line.minDistance = 10;
 
         line.onMouseDown = function (event) {
+            cancelled = false;
+            mainLayer = project.activeLayer;
+            previewLayer.activate();
             path = new Path();
             var point = binding.getPoint(event.point);
             path.add(point);
@@ -17,20 +22,37 @@ function Tools(mediator, drawingSettings, drawingLayers, binding) {
         }
 
         line.onMouseDrag = function (event) {
+            if (cancelled) return;
             var point = binding.getPoint(event.point);
             path.add(point);
         }
 
         line.onMouseUp = function (event) {
+            if (cancelled) return;
+            mainLayer.addChild(path);
+            mainLayer.activate();
+            previewLayer.removeChildren();
             mediator.publish("drawingChanged");
+        }
+
+        line.onKeyDown = function (event) {
+            if (event.key = 'escape') {
+                cancelled = true;
+                mainLayer.activate();
+                previewLayer.removeChildren();
+            }
         }
     };
 
     function Move() {
-        var basePoint = new Point(0,0);
-        var lastPoint = new Point(0,0);
-        var deltaSum = new Point(0,0);
+        var basePoint = new Point(0, 0);
+        var lastPoint = new Point(0, 0);
+        var deltaSum = new Point(0, 0);
         var move = new Tool();
+        var targetItems;
+        var copy;
+        var mainLayer;
+        var cancelled;
         move.onMouseDown = function (event) {
             var hitOptions = {
                 segments: true,
@@ -38,26 +60,47 @@ function Tools(mediator, drawingSettings, drawingLayers, binding) {
                 fill: true,
                 tolerance: 5
             };
-            basePoint =  binding.getPoint(event.point);
-            lastPoint = basePoint;
-            if(project.selectedItems.length == 0) {
+            if (project.selectedItems.length == 0) {
                 var hitResult = drawingLayers.hitTest(event.point, hitOptions);
                 if (hitResult) {
                     hitResult.item.selected = true;
                 }
             }
+            targetItems = new Group(project.selectedItems);
+
+            cancelled = false;
+            mainLayer = project.activeLayer;
+            previewLayer.activate();
+
+            deltaSum = new Point(0, 0);
+            basePoint = binding.getPoint(event.point);
+            lastPoint = basePoint;
+
+            copy = targetItems.clone();
+            previewLayer.addChild(copy);
+            copy.selected = false;
         }
         move.onMouseDrag = function (event) {
+            if (cancelled) return;
             var point = binding.getPoint(event.point);
             var delta = point.subtract(lastPoint);
             lastPoint = point;
             deltaSum = deltaSum.add(delta);
-            project.selectedItems.forEach(function (item, i, arr) {
-                item.position = new Point(item.position._x + delta.x, item.position._y + delta.y);
-            });
+            copy.translate(delta);
         }
         move.onMouseUp = function (event) {
+            if (cancelled) return;
+            mainLayer.activate();
+            targetItems.translate(deltaSum);
+            previewLayer.removeChildren();
             mediator.publish("drawingChanged");
+        }
+        move.onKeyDown = function (event) {
+            if (event.key = 'escape') {
+                cancelled = true;
+                mainLayer.activate();
+                previewLayer.removeChildren();
+            }
         }
         this.activate
     }
@@ -85,5 +128,48 @@ function Tools(mediator, drawingSettings, drawingLayers, binding) {
                 hitResult.item.selected = true;
             }
         }
+    }
+
+    function ToolBuilder() {
+        var cancelled;
+        var tagretItems;
+        var copy;
+        var init = function (event) {
+
+        }
+        var finish = function () {
+            mainLayer.activate();
+            previewLayer.removeChildren();
+            mediator.publish("drawingChanged");
+        }
+        var tool = new Tool();
+        tool.onMouseDown = function (event) {
+            cancelled = false;
+            mainLayer = project.activeLayer;
+            previewLayer.activate();
+        }
+        this.selectOneOrMany()
+        {
+            tool.onMouseDown+=function(event)
+            {
+                var hitOptions = {
+                    segments: true,
+                    stroke: true,
+                    fill: true,
+                    tolerance: 5
+                };
+                if (project.selectedItems.length == 0) {
+                    var hitResult = drawingLayers.hitTest(event.point, hitOptions);
+                    if (hitResult) {
+                        hitResult.item.selected = true;
+                    }
+                }
+                targetItems = new Group(project.selectedItems);
+            }
+        }
+
+    }
+    function ToolWrapper(){
+
     }
 }
