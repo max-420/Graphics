@@ -3,9 +3,9 @@ function Background(mediator, backgroundSettings) {
 
     view.translate(view.viewSize.divide(2));
     var redraw = function () {
+        layout.removeChildren();
         if(!backgroundSettings.showGrid && !backgroundSettings.showAxis) return;
         var prevLayer = project.activeLayer;
-        layout.removeChildren();
         layout.activate();
 
         if(backgroundSettings.showGrid) drawGrid();
@@ -22,7 +22,7 @@ function Background(mediator, backgroundSettings) {
         console.log(boundRect);
         console.log(cellSize);
         var grid = new Group();
-        for (y = 0; y < boundRect.bottom; y += cellSize) {
+        for (y = cellSize; y < boundRect.bottom; y += cellSize) {
             var rightPoint = [boundRect.right, y];
             var leftPoint = [boundRect.left, y];
 
@@ -46,7 +46,7 @@ function Background(mediator, backgroundSettings) {
             grid.addChild(gridLine);
         }
 
-        for (x = 0; x < boundRect.right; x += cellSize) {
+        for (x =  cellSize; x < boundRect.right; x += cellSize) {
             var topPoint = [x, boundRect.bottom];
             var bottomPoint = [x, boundRect.top];
 

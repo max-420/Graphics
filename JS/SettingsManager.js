@@ -65,6 +65,7 @@ function SettingsManager(mediator) {
     {
         if(!localStorage) return;
         var json = JSON.stringify(settingsObj);
+        localStorage.removeItem('settings');
         localStorage.setItem('settings',json);
     }.bind(this);
 
