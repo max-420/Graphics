@@ -19,7 +19,8 @@ function Background(mediator, backgroundSettings) {
 
         var boundRect = layout.view.bounds;
         var cellSize = backgroundSettings.gridStep;
-
+        console.log(boundRect);
+        console.log(cellSize);
         var grid = new Group();
         for (y = 0; y < boundRect.bottom; y += cellSize) {
             var rightPoint = [boundRect.right, y];
