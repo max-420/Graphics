@@ -37,9 +37,6 @@
                 <li><a href="#" onclick="tools[4].activate();"><span class="glyphicon glyphicon-eye-open" aria-hidden="true"></span> Circle</a></li>
                 <li><a href="#" onclick="tools[5].activate();"><span class="glyphicon glyphicon-eye-open" aria-hidden="true"></span> Scale</a></li>
                 <li><a href="#" onclick="tools[6].activate();"><span class="glyphicon glyphicon-eye-open" aria-hidden="true"></span> Rotate</a></li>
-                <li><a href="#" data-toggle="modal" data-target="#gridSettings" ><span class="glyphicon glyphicon-asterisk" aria-hidden="true"></span> Grid settings</a></li>
-
->>>>>>> refs/remotes/origin/master
                 <li><button class="btn btn-danger navbar-btn" id="settingBtn"><span class="glyphicon glyphicon-asterisk" aria-hidden="true"></span> Settings</button></li>
             </ul>
             <ul class="nav navbar-nav navbar-right">
@@ -104,7 +101,29 @@
             </div>
             <div class="col-lg-4">
                     <div class="panel panel-default" style="margin-top:20px">
-                            <div class="panel-body">Panel Content</div>
+                            <div class="panel-body">
+                                <form class="form-horizontal">
+                                    <div class="form-group">
+                                        <div class="form-group">
+                                            <label class="control-label col-sm-2">Active color</label>
+                                            <div class="col-sm-10">
+                                                <div id="ActiveColorPicker" data-format="alias"
+                                                     class="input-group colorpicker-component" style="width: 90%">
+                                                    <input type="text" value="primary" class="form-control" />
+                                                    <span class="input-group-addon"><i></i></span>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div class="form-group">
+                                            <label class="control-label col-sm-2">Stroke width</label>
+                                            <div class="col-sm-10">
+                                                <input class="form-control" id="strokeWidth" type="number" value="Enter stroke width" style="width:50%">
+                                            </div>
+                                        </div>
+                                    </div>
+                                </form>
+                                </div>
+                            </div>
                     </div>
             </div>
         </div>  
@@ -176,32 +195,32 @@
 
         var gridColorAxisHTML =  $('#gridColorAxis');
         var gridColorPickerHTML = $('#gridColorPicker');
+        var activeColorPickerHTML = $('#ActiveColorPicker');
 
-        gridColorAxisHTML.colorpicker({ colorSelectors:
-            { 'black': '#000000',
-                'white': '#ffffff',
-                'red': '#FF0000',
-                'default': '#777777',
-                'primary': '#337ab7',
-                'success': '#5cb85c',
-                'info': '#5bc0de',
-                'warning':  '#f0ad4e',
-                'danger': '#d9534f' }
+        var constColor = { 'black': '#000000',
+            'white': '#ffffff',
+            'red': '#FF0000',
+            'default': '#777777',
+            'primary': '#337ab7',
+            'success': '#5cb85c',
+            'info': '#5bc0de',
+            'warning':  '#f0ad4e',
+            'danger': '#d9534f' };
+
+
+        gridColorAxisHTML.colorpicker({ colorSelectors: constColor
         }).on('hidePicker',function ()
         {
             settingsManager.settings.background.axisColor = gridColorAxisHTML.colorpicker('getValue');
         });
 
-        gridColorPickerHTML.colorpicker({ colorSelectors:
-            { 'black': '#000000',
-                'white': '#ffffff',
-                'red': '#FF0000',
-                'default': '#777777',
-                'primary': '#337ab7',
-                'success': '#5cb85c',
-                'info': '#5bc0de',
-                'warning':  '#f0ad4e',
-                'danger': '#d9534f' }
+        activeColorPickerHTML.colorpicker({ colorSelectors: constColor
+        }).on('hidePicker',function ()
+        {
+            settingsManager.settings.drawing.strokeColor = activeColorPickerHTML.colorpicker('getValue');
+        });
+
+        gridColorPickerHTML.colorpicker({ colorSelectors: constColor
         }).on('hidePicker',function () {
             settingsManager.settings.background.gridColor = gridColorPickerHTML.colorpicker('getValue');
         });
@@ -254,14 +273,17 @@
         var showAxisHTML = $('#showAxis');
         var stepBinderHTML = $('#BindingGrid');
         var stepBindingGridHTML = $('#stepBindingGrid');
+        var strokeWidthHTML = $('#strokeWidth');
+
 
         function SetSettingInHTMLElements() {
             gridColorAxisHTML.colorpicker('setValue', settingsManager.settings.background.axisColor);
             gridColorPickerHTML.colorpicker('setValue', settingsManager.settings.background.gridColor);
+            activeColorPickerHTML.colorpicker('setValue', settingsManager.settings.drawing.strokeColor);
 
             stepHTML.val(settingsManager.settings.background.gridStep);
             stepBindingGridHTML.val(settingsManager.settings.binding.gridStep);
-
+            strokeWidthHTML.val(settingsManager.settings.drawing.strokeWidth);
 
             if (settingsManager.settings.background.showAxis) {
                 showAxisHTML.prop('checked', true);
@@ -275,6 +297,9 @@
 
         stepHTML.change(function () {
             settingsManager.settings.background.step = parseInt(stepHTML.val());
+        });
+        strokeWidthHTML.change(function () {
+            settingsManager.settings.drawing.strokeWidth = strokeWidthHTML.val();
         });
         stepBindingGridHTML.change(function () {
             settingsManager.settings.binding.gridStep = stepBindingGridHTML.val();

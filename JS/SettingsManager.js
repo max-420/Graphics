@@ -1,7 +1,7 @@
 function Settings() {
     this.drawing =
         {
-            strokeColor: 'black',
+            strokeColor: 'red',
             strokeWidth: 1,
             strokeScaling: true,
         };

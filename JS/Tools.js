@@ -16,6 +16,7 @@ function Tools(mediator, drawingSettings, drawingLayers, binding, previewLayer) 
             var point = binding.getPoint(event.point);
             path.add(point);
             path.strokeColor = drawingSettings.strokeColor;
+            path.strokeWidth = drawingSettings.strokeWidth;
         }
         line.draw = function (event, targetItems) {
             var point = binding.getPoint(event.point);
@@ -32,6 +33,7 @@ function Tools(mediator, drawingSettings, drawingLayers, binding, previewLayer) 
             path = new Path.Circle(center, 0);
             targetItems.addChild(path);
             path.strokeColor = drawingSettings.strokeColor;
+            path.strokeWidth = drawingSettings.strokeWidth;
         }
         circle.draw = function (event, targetItems) {
             var point = binding.getPoint(event.point);
@@ -39,6 +41,7 @@ function Tools(mediator, drawingSettings, drawingLayers, binding, previewLayer) 
             path = new Path.Circle(center, point.getDistance(center));
             targetItems.addChild(path);
             path.strokeColor = drawingSettings.strokeColor;
+            path.strokeWidth = drawingSettings.strokeWidth;
         }
     }
 
