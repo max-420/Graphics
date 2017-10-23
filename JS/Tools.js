@@ -4,6 +4,8 @@ function Tools(mediator, drawingSettings, drawingLayers, binding, previewLayer) 
     var hand = new Hand();
     var select = new Select();
     var circle = new Circle();
+    var scale = new Scale();
+    var rotate = new Rotate();
 
     function Line() {
         var path;
@@ -69,8 +71,8 @@ function Tools(mediator, drawingSettings, drawingLayers, binding, previewLayer) 
         }
     }
 
-    function Copy() {
-        var lastPoint = new Point(0, 0);
+    function Scale() {
+        var lastDistance;
         var move = new TransformTool();
         move.selection = function (event) {
             var hitOptions = {
@@ -87,14 +89,44 @@ function Tools(mediator, drawingSettings, drawingLayers, binding, previewLayer) 
             }
         }
         move.init = function (event, targetItems) {
-            deltaSum = new Point(0, 0);
-            lastPoint = binding.getPoint(event.point);
+            var point = binding.getPoint(event.point);
+            lastDistance = targetItems.position.getDistance(point);
         }
         move.transform = function (event, targetItems) {
             var point = binding.getPoint(event.point);
-            var delta = point.subtract(lastPoint);
-            lastPoint = point;
-            targetItems.translate(delta);
+            var distance = targetItems.position.getDistance(point);
+            targetItems.scale(distance/lastDistance);
+            lastDistance = distance;
+        }
+    }
+    function Rotate() {
+        var lastAngle;
+        var pos;
+        var move = new TransformTool();
+        move.selection = function (event) {
+            var hitOptions = {
+                segments: true,
+                stroke: true,
+                fill: true,
+                tolerance: 1
+            };
+            if (project.selectedItems.length == 0) {
+                var hitResult = drawingLayers.hitTest(event.point, hitOptions);
+                if (hitResult) {
+                    hitResult.item.selected = true;
+                }
+            }
+        }
+        move.init = function (event, targetItems) {
+            var point = binding.getPoint(event.point);
+            pos = targetItems.position;
+            lastAngle = point.subtract(pos).angle;
+        }
+        move.transform = function (event, targetItems) {
+            var point = binding.getPoint(event.point);
+            var angle = point.subtract(pos).angle;
+            targetItems.rotate(angle-lastAngle, pos);
+            lastAngle = angle;
         }
     }
 
