@@ -211,6 +211,9 @@ function Tools(mediator, drawingSettings, drawingLayers, binding, previewLayer) 
         var tool = new Tool();
         tool.minDistance = 2;
 
+        tool.onMouseMove = function (event) {
+            binding.drawPoint(event.point)
+        };
         tool.onMouseDown = function (event) {
             if(this.selection) this.selection(event);
 
