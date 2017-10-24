@@ -48,20 +48,6 @@ function Tools(mediator, drawingSettings, drawingLayers, binding, previewLayer) 
     function Move() {
         var lastPoint = new Point(0, 0);
         var move = new TransformTool();
-        move.selection = function (event) {
-            var hitOptions = {
-                segments: true,
-                stroke: true,
-                fill: true,
-                tolerance: 5
-            };
-            if (project.selectedItems.length == 0) {
-                var hitResult = drawingLayers.hitTest(event.point, hitOptions);
-                if (hitResult) {
-                    hitResult.item.selected = true;
-                }
-            }
-        }
         move.init = function (event, targetItems) {
             deltaSum = new Point(0, 0);
             lastPoint = binding.getPoint(event.point);
@@ -77,20 +63,6 @@ function Tools(mediator, drawingSettings, drawingLayers, binding, previewLayer) 
     function Scale() {
         var lastDistance;
         var move = new TransformTool();
-        move.selection = function (event) {
-            var hitOptions = {
-                segments: true,
-                stroke: true,
-                fill: true,
-                tolerance: 5
-            };
-            if (project.selectedItems.length == 0) {
-                var hitResult = drawingLayers.hitTest(event.point, hitOptions);
-                if (hitResult) {
-                    hitResult.item.selected = true;
-                }
-            }
-        }
         move.init = function (event, targetItems) {
             var point = binding.getPoint(event.point);
             lastDistance = targetItems.position.getDistance(point);
@@ -106,20 +78,6 @@ function Tools(mediator, drawingSettings, drawingLayers, binding, previewLayer) 
         var lastAngle;
         var pos;
         var move = new TransformTool();
-        move.selection = function (event) {
-            var hitOptions = {
-                segments: true,
-                stroke: true,
-                fill: true,
-                tolerance: 1
-            };
-            if (project.selectedItems.length == 0) {
-                var hitResult = drawingLayers.hitTest(event.point, hitOptions);
-                if (hitResult) {
-                    hitResult.item.selected = true;
-                }
-            }
-        }
         move.init = function (event, targetItems) {
             var point = binding.getPoint(event.point);
             pos = targetItems.position;
@@ -142,6 +100,10 @@ function Tools(mediator, drawingSettings, drawingLayers, binding, previewLayer) 
     }
 
     function Select() {
+        var selectMany;
+        var startPoint;
+        var selectionRect;
+        var mainLayer;
         var select = new Tool();
         select.onMouseDown = function (event) {
             var hitOptions = {
@@ -150,11 +112,36 @@ function Tools(mediator, drawingSettings, drawingLayers, binding, previewLayer) 
                 fill: true,
                 tolerance: 5
             };
-
+            startPoint = event.point;
             var hitResult = drawingLayers.hitTest(event.point, hitOptions);
             if (hitResult) {
-                hitResult.item.selected = true;
+                hitResult.item.selected = !hitResult.item.selected;
             }
+        }
+        select.onMouseDrag = function (event) {
+            if(!selectMany)
+            {
+                mainLayer = project.activeLayer;
+                previewLayer.activate();
+                selectMany = true;
+            }
+            var prev = selectionRect;
+            selectionRect = new Path.Rectangle(startPoint, event.point);
+            selectionRect.strokeColor = 'grey';
+            selectionRect.strokeWidth = 1;
+            selectionRect.dashArray = [10, 4];
+            selectionRect.strokeScaling = false;
+            if (prev) prev.remove();
+        }
+        select.onMouseUp = function (event) {
+            if(!selectMany) return;
+            var items = drawingLayers.getItems({inside: new Rectangle(startPoint, event.point)});
+            items.forEach(function (item) {
+                item.selected = true;
+            })
+            mainLayer.activate();
+            previewLayer.removeChildren();
+            selectMany = false;
         }
     }
 
@@ -197,6 +184,7 @@ function Tools(mediator, drawingSettings, drawingLayers, binding, previewLayer) 
                 cancelled = true;
                 mainLayer.activate();
                 previewLayer.removeChildren();
+                project.deselectAll();
             }
         }.bind(this);
     }
@@ -206,7 +194,20 @@ function Tools(mediator, drawingSettings, drawingLayers, binding, previewLayer) 
         var targetItems;
         //this.init;
         //this.transform;
-        //this.selection;
+        this.selection = function (event) {
+            var hitOptions = {
+                segments: true,
+                stroke: true,
+                fill: true,
+                tolerance: 5
+            };
+            if (project.selectedItems.length == 0) {
+                var hitResult = drawingLayers.hitTest(event.point, hitOptions);
+                if (hitResult) {
+                    hitResult.item.selected = true;
+                }
+            }
+        }
         var tool = new Tool();
         tool.minDistance = 2;
 
@@ -247,6 +248,7 @@ function Tools(mediator, drawingSettings, drawingLayers, binding, previewLayer) 
                 cancelled = true;
                 mainLayer.activate();
                 previewLayer.removeChildren();
+                project.deselectAll();
             }
         }.bind(this);
     }
