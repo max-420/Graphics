@@ -13,8 +13,9 @@ function Binding(mediator, bindingSettings, bindingsLayer) {
         if(bindingSettings.bindToGrid)
         {
             var bindedPoint = bindToGrid(point);
-            var line1 = new Path(bindedPoint.subtract(5), bindedPoint.add(5));
-            var line2 = new Path(new Point(bindedPoint.x - 5, bindedPoint.y + 5), new Point(bindedPoint.x + 5, bindedPoint.y - 5));
+            var size = 3;
+            var line1 = new Path(bindedPoint.subtract(size), bindedPoint.add(size));
+            var line2 = new Path(new Point(bindedPoint.x - size, bindedPoint.y + size), new Point(bindedPoint.x + size, bindedPoint.y - size));
             bindingsLayer.addChild(line1);
             bindingsLayer.addChild(line2);
             line1.strokeColor = 'grey';

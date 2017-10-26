@@ -6,6 +6,7 @@ function Tools(mediator, drawingSettings, drawingLayers, binding, previewLayer) 
     var circle = new Circle();
     var scale = new Scale();
     var rotate = new Rotate();
+    var drawer = new Drawer();
 
     function Line() {
         var path;
@@ -70,10 +71,11 @@ function Tools(mediator, drawingSettings, drawingLayers, binding, previewLayer) 
         move.transform = function (event, targetItems) {
             var point = binding.getPoint(event.point);
             var distance = targetItems.position.getDistance(point);
-            targetItems.scale(distance/lastDistance);
+            targetItems.scale(distance / lastDistance);
             lastDistance = distance;
         }
     }
+
     function Rotate() {
         var lastAngle;
         var pos;
@@ -86,13 +88,13 @@ function Tools(mediator, drawingSettings, drawingLayers, binding, previewLayer) 
         move.transform = function (event, targetItems) {
             var point = binding.getPoint(event.point);
             var angle = point.subtract(pos).angle;
-            targetItems.rotate(angle-lastAngle, pos);
+            targetItems.rotate(angle - lastAngle, pos);
             lastAngle = angle;
         }
     }
 
     function Hand() {
-        var hand = new Tool();
+        var hand = new ToolWrapper();
         hand.onMouseDrag = function (event) {
             view.translate(event.point.subtract(event.downPoint));
             mediator.publish("fieldMoved");
@@ -104,7 +106,7 @@ function Tools(mediator, drawingSettings, drawingLayers, binding, previewLayer) 
         var startPoint;
         var selectionRect;
         var mainLayer;
-        var select = new Tool();
+        var select = new ToolWrapper();
         select.onMouseDown = function (event) {
             var hitOptions = {
                 segments: true,
@@ -119,8 +121,7 @@ function Tools(mediator, drawingSettings, drawingLayers, binding, previewLayer) 
             }
         }
         select.onMouseDrag = function (event) {
-            if(!selectMany)
-            {
+            if (!selectMany) {
                 mainLayer = project.activeLayer;
                 previewLayer.activate();
                 selectMany = true;
@@ -134,7 +135,7 @@ function Tools(mediator, drawingSettings, drawingLayers, binding, previewLayer) 
             if (prev) prev.remove();
         }
         select.onMouseUp = function (event) {
-            if(!selectMany) return;
+            if (!selectMany) return;
             var items = drawingLayers.getItems({inside: new Rectangle(startPoint, event.point)});
             items.forEach(function (item) {
                 item.selected = true;
@@ -146,51 +147,28 @@ function Tools(mediator, drawingSettings, drawingLayers, binding, previewLayer) 
     }
 
     function DrawingTool() {
-        var cancelled;
         var targetItems;
         //this.init;
         //this.draw;
-        var tool = new Tool();
-        tool.minDistance = 2;
+        var tool = new ToolWrapper();
 
         tool.onMouseDown = function (event) {
-            if(this.selection) this.selection(event);
-
-            cancelled = false;
-            mainLayer = project.activeLayer;
             previewLayer.activate();
             targetItems = new Group();
-
             if (this.init) this.init(event, targetItems);
         }.bind(this);
 
         tool.onMouseDrag = function (event) {
-            if (cancelled) return;
-
             if (this.draw) this.draw(event, targetItems);
         }.bind(this);
 
         tool.onMouseUp = function (event) {
-            if (cancelled) return;
-
-            mainLayer.addChildren(targetItems.children);
-            mainLayer.activate();
-            previewLayer.removeChildren();
-            mediator.publish("drawingChanged");
+            drawer.save(targetItems.children);
+            targetItems.remove();
         }
-
-        tool.onKeyDown = function (event) {
-            if (event.key = 'escape') {
-                cancelled = true;
-                mainLayer.activate();
-                previewLayer.removeChildren();
-                project.deselectAll();
-            }
-        }.bind(this);
     }
-    function TransformTool(){
-        var cancelled;
-        var selection;
+
+    function TransformTool() {
         var targetItems;
         //this.init;
         //this.transform;
@@ -207,52 +185,102 @@ function Tools(mediator, drawingSettings, drawingLayers, binding, previewLayer) 
                     hitResult.item.selected = true;
                 }
             }
-        }
-        var tool = new Tool();
-        tool.minDistance = 2;
+        };
+        var tool = new ToolWrapper();
 
         tool.onMouseMove = function (event) {
             binding.drawPoint(event.point)
         };
+
         tool.onMouseDown = function (event) {
-            if(this.selection) this.selection(event);
+            this.selection(event);
 
-            selection = new Group(project.selectedItems);
-            cancelled = false;
-            mainLayer = project.activeLayer;
-            previewLayer.activate();
+            targetItems = drawer.getSelection();
 
-            targetItems = selection.clone();
-            previewLayer.addChild(targetItems);
-            targetItems.selected = false;
-
-            if(this.init) this.init(event, targetItems);
+            if (this.init) this.init(event, targetItems);
         }.bind(this);
 
         tool.onMouseDrag = function (event) {
-            if (cancelled) return;
-
-            if(this.transform) this.transform(event, targetItems);
+            if (this.transform) this.transform(event, targetItems);
         }.bind(this);
 
         tool.onMouseUp = function (event) {
-            if (cancelled) return;
+            drawer.saveSelection();
+        }.bind(this);
+    }
 
-            targetItems.selected = true;
-            mainLayer.addChildren(targetItems.children);
-            selection.remove();
-            mainLayer.activate();
+    function Drawer() {
+        var selectedItems;
+        var selectedItemsCopy;
+        this.getSelection = function()
+        {
+            selectedItems = new Group(project.selectedItems);
+            selectedItemsCopy = selectedItems.clone();
+            drawingLayers.addChild(selectedItems);
+            previewLayer.addChild(selectedItemsCopy);
+            selectedItemsCopy.selected = false;
+            return selectedItemsCopy;
+        }
+        this.saveSelection = function()
+        {
+            if (!selectedItemsCopy) return;
+            selectedItemsCopy.selected = true;
+            drawingLayers.addChildren(selectedItemsCopy.children);
+            selectedItems.remove();
+            selectedItemsCopy = null;
+            selectedItems = null;
             previewLayer.removeChildren();
             mediator.publish("drawingChanged");
+
+        }
+        this.save = function(newItems)
+        {
+            drawingLayers.addChildren(newItems);
+            previewLayer.removeChildren();
+            mediator.publish("drawingChanged");
+        }
+        this.delete = function(items)
+        {
+            items.forEach(function (item) {
+                item.remove();
+            });
+            mediator.publish("drawingChanged");
+        }
+        this.cancel = function()
+        {
+            previewLayer.removeChildren();
+            project.deselectAll();
+        }
+    }
+
+    function ToolWrapper() {
+        var tool = new Tool();
+        this.cancelled = false;
+        tool.onMouseMove = function (event) {
+            if (this.onMouseMove) this.onMouseMove(event);
+        }.bind(this);
+        tool.onMouseDown = function (event) {
+            this.cancelled = false;
+            if (this.onMouseDown) this.onMouseDown(event);
+        }.bind(this);
+
+        tool.onMouseDrag = function (event) {
+            if (this.cancelled) return;
+            if (this.onMouseDrag) this.onMouseDrag(event);
+        }.bind(this);
+
+        tool.onMouseUp = function (event) {
+            if (this.cancelled) return;
+            if (this.onMouseUp) this.onMouseUp(event);
         }.bind(this);
 
         tool.onKeyDown = function (event) {
             if (event.key = 'escape') {
-                cancelled = true;
-                mainLayer.activate();
-                previewLayer.removeChildren();
-                project.deselectAll();
+                this.cancelled = true;
+                drawer.cancel();
             }
+            if (this.onKeyDown) this.onKeyDown(event);
         }.bind(this);
+        this.activate = tool.activate;
     }
 }
