@@ -18,12 +18,13 @@ function Scaling(mediator, scalingSettings, canvas)
     }
 
     addOnWheel(canvas, function (e) {
-        var coef = scalingSettings.step;
+        var step = scalingSettings.step;
         e.preventDefault();
         var delta = e.deltaY || e.detail || e.wheelDelta;
         var canvasRect = canvas.getBoundingClientRect();
         var mousePos = new Point(e.clientX - canvasRect.left, e.clientY - canvasRect.top);
-        view.scale(1 - (coef * Math.sign(delta)), view.viewToProject(mousePos));
-        mediator.publish("fieldScaled");
+        var coef = 1 - (step * Math.sign(delta));
+        view.scale(coef, view.viewToProject(mousePos));
+        mediator.publish("fieldScaled", coef);
     });
 }
