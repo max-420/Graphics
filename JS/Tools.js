@@ -6,9 +6,10 @@ function Tools(mediator, drawingSettings, drawingLayers, binding, previewLayer) 
     var circle = new Circle();
     var scale = new Scale();
     var rotate = new Rotate();
+	var pathLine = new PathLine();
     var drawer = new Drawer();
 
-    function Line() {
+    function PathLine() {
         var path;
         var line = new DrawingTool();
         line.init = function (event, targetItems) {
@@ -22,6 +23,25 @@ function Tools(mediator, drawingSettings, drawingLayers, binding, previewLayer) 
         line.draw = function (event, targetItems) {
             var point = binding.getPoint(event.point);
             path.add(point);
+        }
+    }
+	function Line() {
+        var path;
+		var startPoint;
+        var line = new DrawingTool();
+        line.init = function (event, targetItems) {
+            path = new Path();
+            targetItems.addChild(path);
+            var point = binding.getPoint(event.point);
+			startPoint = point;
+        }
+        line.draw = function (event, targetItems) {
+            var point = binding.getPoint(event.point);
+			path.remove();
+            path = new Path(startPoint, point);
+			targetItems.addChild(path);
+			path.strokeColor = drawingSettings.strokeColor;
+            path.strokeWidth = drawingSettings.strokeWidth;
         }
     }
 

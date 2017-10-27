@@ -35,7 +35,4 @@ function Binding(mediator, bindingSettings, bindingsLayer) {
 
         return point.divide(bindingSettings.gridStep).round().multiply(bindingSettings.gridStep);
     }
-    mediator.subscribe("fieldScaled", function (coef) {
-        bindingsLayer.scale(1/coef);
-    });
 }
