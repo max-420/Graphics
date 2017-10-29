@@ -11,7 +11,7 @@ function Settings() {
             axisColor: 'red',
             showGrid: true,
             gridColor: 'orange',
-            gridStep: 5,
+            gridStep: 30,
         };
     this.scaling =
         {
@@ -20,7 +20,10 @@ function Settings() {
     this.binding =
         {
             bindToGrid: true,
-            gridStep: 5,
+            bindToLineEnds: true,
+            bindToIntersections: true,
+            bindingTolerance: 10,
+            gridStep: 30,
         };
 }
 function SettingsManager(mediator) {
@@ -84,5 +87,6 @@ function SettingsManager(mediator) {
         setWrappers(settingsObj, this.settings);
         saveSettings();
     }
+    this.reset();
     loadSettings();
 }

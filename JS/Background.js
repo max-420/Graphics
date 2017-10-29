@@ -1,68 +1,60 @@
 function Background(mediator, backgroundSettings) {
     var layout = new Layer();
-
+    var margin = 200;
+    var lastBounds = new Rectangle(view.bounds.point.subtract(margin), view.size.add(margin));
     view.translate(view.viewSize.divide(2));
     var redraw = function () {
-        layout.removeChildren();
-        if(!backgroundSettings.showGrid && !backgroundSettings.showAxis) return;
+        console.log("redraw");
+        lastBounds = new Rectangle(view.bounds.point.subtract(margin), view.size.add(margin));
+        if (!backgroundSettings.showGrid && !backgroundSettings.showAxis) return;
         var prevLayer = project.activeLayer;
         layout.activate();
-
-        if(backgroundSettings.showGrid) drawGrid();
-        if(backgroundSettings.showAxis) drawAxis();
-
+        var prevState = new Group([layout.firstChild, layout.lastChild]);
+        if (backgroundSettings.showGrid) drawGrid();
+        if (backgroundSettings.showAxis) drawAxis();
         layout.style.strokeScaling = false;
+        prevState.removeChildren();
+        prevState.remove();
         prevLayer.activate();
+
     }
 
     var drawGrid = function () {
-
-        var boundRect = layout.view.bounds;
+        var scaledMargin = margin;
+        var boundRect = view.bounds;
         var cellSize = backgroundSettings.gridStep;
-        console.log(boundRect);
-        console.log(cellSize);
         var grid = new Group();
-        for (y = cellSize; y < boundRect.bottom; y += cellSize) {
-            var rightPoint = [boundRect.right, y];
-            var leftPoint = [boundRect.left, y];
 
-            var gridLine = new Path.Line(rightPoint, leftPoint);
-            grid.addChild(gridLine);
+        var rightPoint = [boundRect.right + scaledMargin, 0];
+        var leftPoint = [boundRect.left - scaledMargin, 0];
+        var horLine = new Symbol(new Path.Line(rightPoint, leftPoint));
+        var topPoint = [0, boundRect.bottom + scaledMargin];
+        var bottomPoint = [0, boundRect.top - scaledMargin];
+        var vertLine = new Symbol(new Path.Line(topPoint, bottomPoint));
+        horLine.definition.strokeColor = backgroundSettings.gridColor;
+        vertLine.definition.strokeColor = backgroundSettings.gridColor;
+        horLine.definition.strokeScaling = false;
+        vertLine.definition.strokeScaling = false;
+        var yStart = Math.round((boundRect.top - scaledMargin) / cellSize) * cellSize;
+
+        for (y = yStart; y < boundRect.bottom + scaledMargin; y += cellSize) {
+            grid.addChild(horLine.place(new Point(view.center.x, y)));
+        }
+        var xStart = Math.round((boundRect.left - scaledMargin) / cellSize) * cellSize;
+        for (x = xStart; x < boundRect.right + scaledMargin; x += cellSize) {
+            grid.addChild(vertLine.place(new Point(x, view.center.y)));
         }
 
-        for (y = 0; y > boundRect.top; y -= cellSize) {
-            var rightPoint = [boundRect.right, y];
-            var leftPoint = [boundRect.left, y];
 
-            var gridLine = new Path.Line(rightPoint, leftPoint);
-            grid.addChild(gridLine);
-        }
-
-        for (x = 0; x > boundRect.left; x -= cellSize) {
-            var topPoint = [x, boundRect.bottom];
-            var bottomPoint = [x, boundRect.top];
-
-            var gridLine = new Path.Line(topPoint, bottomPoint);
-            grid.addChild(gridLine);
-        }
-
-        for (x =  cellSize; x < boundRect.right; x += cellSize) {
-            var topPoint = [x, boundRect.bottom];
-            var bottomPoint = [x, boundRect.top];
-
-            var gridLine = new Path.Line(topPoint, bottomPoint);
-            grid.addChild(gridLine);
-        }
-
-        grid.strokeColor = backgroundSettings.gridColor;
     }
     var drawAxis = function () {
-        var boundRect = layout.view.bounds;
+        var scaledMargin = margin;
+        var boundRect = view.bounds;
 
-        var axisLeft = new Path([0, 0], [boundRect.left, 0]);
-        var axisRight = new Path([0, 0], [boundRect.right, 0]);
-        var axisBottom = new Path([0, 0], [0, boundRect.bottom]);
-        var axisTop = new Path([0, 0], [0, boundRect.top]);
+        var axisLeft = new Path([0, 0], [boundRect.left - scaledMargin, 0]);
+        var axisRight = new Path([0, 0], [boundRect.right + scaledMargin, 0]);
+        var axisBottom = new Path([0, 0], [0, boundRect.bottom + scaledMargin]);
+        var axisTop = new Path([0, 0], [0, boundRect.top - scaledMargin]);
 
         var axis = new Group([axisLeft, axisRight, axisBottom, axisTop]);
 
@@ -79,9 +71,13 @@ function Background(mediator, backgroundSettings) {
             },
         });
     mediator.subscribe("fieldScaled", function () {
-        redraw();
+        if (!lastBounds.contains(view.bounds)) {
+            redraw();
+        }
     });
     mediator.subscribe("fieldMoved", function () {
-        redraw();
+        if (!lastBounds.contains(view.bounds)) {
+            redraw();
+        }
     });
 }

@@ -25,6 +25,6 @@ function Scaling(mediator, scalingSettings, canvas)
         var mousePos = new Point(e.clientX - canvasRect.left, e.clientY - canvasRect.top);
         var coef = 1 - (step * Math.sign(delta));
         view.scale(coef, view.viewToProject(mousePos));
-        mediator.publish("fieldScaled");
+        mediator.publish("fieldScaled", coef);
     });
 }

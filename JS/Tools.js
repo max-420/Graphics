@@ -6,7 +6,7 @@ function Tools(mediator, drawingSettings, drawingLayers, binding, previewLayer) 
     var circle = new Circle();
     var scale = new Scale();
     var rotate = new Rotate();
-	var pathLine = new PathLine();
+    var pathLine = new PathLine();
     var drawer = new Drawer();
 
     function PathLine() {
@@ -25,22 +25,23 @@ function Tools(mediator, drawingSettings, drawingLayers, binding, previewLayer) 
             path.add(point);
         }
     }
-	function Line() {
+
+    function Line() {
         var path;
-		var startPoint;
+        var startPoint;
         var line = new DrawingTool();
         line.init = function (event, targetItems) {
             path = new Path();
             targetItems.addChild(path);
             var point = binding.getPoint(event.point);
-			startPoint = point;
+            startPoint = point;
         }
         line.draw = function (event, targetItems) {
             var point = binding.getPoint(event.point);
-			path.remove();
+            path.remove();
             path = new Path(startPoint, point);
-			targetItems.addChild(path);
-			path.strokeColor = drawingSettings.strokeColor;
+            targetItems.addChild(path);
+            path.strokeColor = drawingSettings.strokeColor;
             path.strokeWidth = drawingSettings.strokeWidth;
         }
     }
@@ -171,7 +172,7 @@ function Tools(mediator, drawingSettings, drawingLayers, binding, previewLayer) 
         //this.init;
         //this.draw;
         var tool = new ToolWrapper();
-
+        tool.showBindings = true;
         tool.onMouseDown = function (event) {
             previewLayer.activate();
             targetItems = new Group();
@@ -192,6 +193,7 @@ function Tools(mediator, drawingSettings, drawingLayers, binding, previewLayer) 
         var targetItems;
         //this.init;
         //this.transform;
+
         this.selection = function (event) {
             var hitOptions = {
                 segments: true,
@@ -207,10 +209,7 @@ function Tools(mediator, drawingSettings, drawingLayers, binding, previewLayer) 
             }
         };
         var tool = new ToolWrapper();
-
-        tool.onMouseMove = function (event) {
-            binding.drawPoint(event.point)
-        };
+        tool.showBindings = true;
 
         tool.onMouseDown = function (event) {
             this.selection(event);
@@ -225,6 +224,7 @@ function Tools(mediator, drawingSettings, drawingLayers, binding, previewLayer) 
         }.bind(this);
 
         tool.onMouseUp = function (event) {
+            tool.showBindings = false;
             drawer.saveSelection();
         }.bind(this);
     }
@@ -232,8 +232,7 @@ function Tools(mediator, drawingSettings, drawingLayers, binding, previewLayer) 
     function Drawer() {
         var selectedItems;
         var selectedItemsCopy;
-        this.getSelection = function()
-        {
+        this.getSelection = function () {
             selectedItems = new Group(project.selectedItems);
             selectedItemsCopy = selectedItems.clone();
             drawingLayers.addChild(selectedItems);
@@ -241,8 +240,7 @@ function Tools(mediator, drawingSettings, drawingLayers, binding, previewLayer) 
             selectedItemsCopy.selected = false;
             return selectedItemsCopy;
         }
-        this.saveSelection = function()
-        {
+        this.saveSelection = function () {
             if (!selectedItemsCopy) return;
             selectedItemsCopy.selected = true;
             drawingLayers.addChildren(selectedItemsCopy.children);
@@ -253,21 +251,18 @@ function Tools(mediator, drawingSettings, drawingLayers, binding, previewLayer) 
             mediator.publish("drawingChanged");
 
         }
-        this.save = function(newItems)
-        {
+        this.save = function (newItems) {
             drawingLayers.addChildren(newItems);
             previewLayer.removeChildren();
             mediator.publish("drawingChanged");
         }
-        this.delete = function(items)
-        {
+        this.delete = function (items) {
             items.forEach(function (item) {
                 item.remove();
             });
             mediator.publish("drawingChanged");
         }
-        this.cancel = function()
-        {
+        this.cancel = function () {
             previewLayer.removeChildren();
             project.deselectAll();
         }
@@ -275,8 +270,11 @@ function Tools(mediator, drawingSettings, drawingLayers, binding, previewLayer) 
 
     function ToolWrapper() {
         var tool = new Tool();
+        //tool.minDistance = 5;
         this.cancelled = false;
+        this.showBindings = false;
         tool.onMouseMove = function (event) {
+            if (this.showBindings) binding.drawPoint(event.point);
             if (this.onMouseMove) this.onMouseMove(event);
         }.bind(this);
         tool.onMouseDown = function (event) {
@@ -286,6 +284,7 @@ function Tools(mediator, drawingSettings, drawingLayers, binding, previewLayer) 
 
         tool.onMouseDrag = function (event) {
             if (this.cancelled) return;
+            if (this.showBindings) binding.drawPoint(event.point);
             if (this.onMouseDrag) this.onMouseDrag(event);
         }.bind(this);
 

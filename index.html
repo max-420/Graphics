@@ -184,10 +184,10 @@
     window.onload = function () {
         paper.setup('myCanvas');
         var background = new Background(mediator, settingsManager.settings.background);
-        var binding = new Binding(mediator, settingsManager.settings.binding);
         var scaling = new Scaling(mediator, settingsManager.settings.scaling, canvas);
         var preview = new Layer();
         var drawing = new Layer();
+        var binding = new Binding(mediator, settingsManager.settings.binding, drawing);
         var tools = new Tools(mediator, settingsManager.settings.drawing, drawing, binding, preview);
         undoRedo = new UndoRedo(mediator, drawing);
     }
