@@ -1,78 +1,123 @@
-$(document).ready(function(){
-    var gridColorAxisHTML =  $('#gridColorAxis');
+$(document).ready(function () {
+    var gridColorAxisHTML = $('#gridColorAxis');
     var gridColorPickerHTML = $('#gridColorPicker');
     var activeColorPickerHTML = $('#ActiveColorPicker');
 
-    var constColor = { 'black': '#000000',
+    var constColor = {
+        'black': '#000000',
         'white': '#ffffff',
         'red': '#FF0000',
         'default': '#777777',
         'primary': '#337ab7',
         'success': '#5cb85c',
         'info': '#5bc0de',
-        'warning':  '#f0ad4e',
-        'danger': '#d9534f' };
+        'warning': '#f0ad4e',
+        'danger': '#d9534f'
+    };
 
 
-    gridColorAxisHTML.colorpicker({ colorSelectors: constColor
-    }).on('hidePicker',function ()
-    {
+    gridColorAxisHTML.colorpicker({
+        colorSelectors: constColor
+    }).on('hidePicker', function () {
         settingsManager.settings.background.axisColor = gridColorAxisHTML.colorpicker('getValue');
     });
 
-    activeColorPickerHTML.colorpicker({ colorSelectors: constColor
-    }).on('hidePicker',function ()
-    {
+    activeColorPickerHTML.colorpicker({
+        colorSelectors: constColor
+    }).on('hidePicker', function () {
         settingsManager.settings.drawing.strokeColor = activeColorPickerHTML.colorpicker('getValue');
     });
 
-    gridColorPickerHTML.colorpicker({ colorSelectors: constColor
-    }).on('hidePicker',function () {
+    gridColorPickerHTML.colorpicker({
+        colorSelectors: constColor
+    }).on('hidePicker', function () {
         settingsManager.settings.background.gridColor = gridColorPickerHTML.colorpicker('getValue');
     });
 
 
-    $('#undo').popover({title: "Undo", content: "Undo", placement: "left", trigger:"hover"});
-    $('#redo').popover({title: "Redo", content: "Redo", placement: "bottom", trigger:"hover"});
-
-    var check = true;
-    var leftElementPanelHTML = $(".leftElementPanel");
-    var rightElementPanelHTML = $(".rightElementPanel");
-    var panelSettingsHTML = $("#panelSetting");
+    $('#undo').popover({ title: "Undo", content: "Undo", placement: "left", trigger: "hover" });
+    $('#redo').popover({ title: "Redo", content: "Redo", placement: "bottom", trigger: "hover" });
 
 
-    var sizePanelSettings = parseInt(panelSettingsHTML.css("height"));
+
+    //bindingPanelSettings
+    var checkBindingSettings = true;
+    var leftElementPanelHTML = $("#leftmenu");
+
+    var bindingPanelSettingssHTML = $("#bindingPanelSettings");
+    var sizebindingPanelSettingss = parseInt(bindingPanelSettingssHTML.css("height"));
     var sizeLeftElementPanel = parseInt(leftElementPanelHTML.css("top"));
-    var sizeRightElementPanel = parseInt(rightElementPanelHTML.css("top"));
-    $('#settingBtn').click(function(){
-        var panelSettings = $("#panelSetting");
+    
+    $('#bindingSettings').click(function () {
+        var bindingPanelSettingss = $("#bindingPanelSettings");
 
-        if(check){
-            panelSettings.show("fast");
-            leftElementPanelHTML.animate({"top":sizeLeftElementPanel + sizePanelSettings},"fast");
-            rightElementPanelHTML.animate({"top":sizeRightElementPanel + sizePanelSettings},"fast");
-            check = false;
+        if (checkBindingSettings) {
+            bindingPanelSettingss.show("fast");
+            leftElementPanelHTML.animate({ "top": sizeLeftElementPanel + sizebindingPanelSettingss }, "fast");
+            checkBindingSettings = false;
         }
-        else{
-            panelSettings.hide("fast");
-            leftElementPanelHTML.animate({"top" : sizeLeftElementPanel},"fast");
-            rightElementPanelHTML.animate({"top" : sizeRightElementPanel},"fast");
-            check = true;
+        else {
+            bindingPanelSettingss.hide("fast");
+            leftElementPanelHTML.animate({ "top": sizeLeftElementPanel }, "fast");
+            checkBindingSettings = true;
         }
+    });
+    
+    //mainPanelSettings  // mainSettings // mainPanelSettings
 
+    var mainPanelSettintHTML = $("#mainPanelSettings");
+    var sizeMainPanelSettings = parseInt(mainPanelSettintHTML.css("height"));
+    var checkPanelSettings = true;
+
+    $('#mainSettings').click(function () {
+        var bindingPanelSettingss = $("#mainPanelSettings");
+
+        if (checkPanelSettings) {
+            bindingPanelSettingss.show("fast");
+            leftElementPanelHTML.animate({ "top": sizeLeftElementPanel + sizeMainPanelSettings }, "fast");
+            checkPanelSettings = false;
+        }
+        else {
+            bindingPanelSettingss.hide("fast");
+            leftElementPanelHTML.animate({ "top": sizeLeftElementPanel }, "fast");
+            checkPanelSettings = true;
+        }
     });
 
+    //Grid  // gridSettings // gridPanelSettings
+
+    var gridPanelSettings = $("#gridPanelSettings");
+    var sizeGridPanel = parseInt(gridPanelSettings.css("height"));
+    var checkgridPanelSettings = true;
+
+    $('#gridSettings').click(function () {
+        var bindingPanelSettingss = $("#gridPanelSettings");
+
+        if (checkgridPanelSettings) {
+            bindingPanelSettingss.show("fast");
+            leftElementPanelHTML.animate({ "top": sizeLeftElementPanel + sizeGridPanel }, "fast");
+            checkgridPanelSettings = false;
+        }
+        else {
+            bindingPanelSettingss.hide("fast");
+            leftElementPanelHTML.animate({ "top": sizeLeftElementPanel }, "fast");
+            checkgridPanelSettings = true;
+        }
+    });
+
+    //Close panel elements
     var closePanel = $("#ClosePanel");
-    $(closePanel).click(function(){
-        if(check == false){
-            panelSettingsHTML.hide("fast");
-            leftElementPanelHTML.animate({"top" : sizeLeftElementPanel},"fast");
-            panelSettingsHTML.animate({"top" : sizeRightElementPanel},"fast");
-            check = true;
-        }
+    $(closePanel).click(function () {
+            leftElementPanelHTML.animate({ "top": sizeLeftElementPanel }, "fast");
+            bindingPanelSettingssHTML.hide("fast");
+            bindingPanelSettingssHTML.animate({ "top": sizeLeftElementPanel }, "fast");
+            mainPanelSettintHTML.hide("fast");
+            mainPanelSettintHTML.animate({ "top": sizeLeftElementPanel }, "fast");
+            gridPanelSettings.hide("fast");
+            gridPanelSettings.animate({ "top": sizeLeftElementPanel }, "fast");
     });
 
-
+    //
     //EVENT LIST FOR SET NEW VALUE
     var stepHTML = $('#step');
     var showGridHTML = $('#showGrid');
@@ -115,7 +160,7 @@ $(document).ready(function(){
         if (!$(this).is(':checked')) {
             settingsManager.settings.background.showGrid = false;
         }
-        else{
+        else {
             settingsManager.settings.background.showGrid = true;
         }
     });
@@ -123,18 +168,18 @@ $(document).ready(function(){
         if (!$(this).is(':checked')) {
             settingsManager.settings.background.showAxis = false;
         }
-        else{
+        else {
             settingsManager.settings.background.showAxis = true;
         }
     });
 
     //stepBinding
-    stepBinderHTML.click(function() {
+    stepBinderHTML.click(function () {
         if (!$(this).is(':checked')) {
             settingsManager.settings.binding.bindToGrid = false;
             $('#stepBindingGrid').attr("disabled", "disabled");
         }
-        else{
+        else {
             settingsManager.settings.binding.bindToGrid = true;
             $('#stepBindingGrid').removeAttr("disabled");
         }

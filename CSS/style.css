@@ -160,18 +160,41 @@ li.dropdown {
     -moz-border-radius: 6px 0 6px 6px;
     border-radius: 6px 0 6px 6px;
     }
-    .bouton-image:before {
-        content: "";
-        width: 16px;
-        height: 16px;
+    .your-icon {
+        position: relative;
+        top: 1px;
         display: inline-block;
-        margin-right: 5px;
-        vertical-align: text-top;
-        background-color: transparent;
-        background-position : center center;
-        background-repeat:no-repeat;
+        font-style: normal;
+        font-weight: normal;
+        line-height: 1;
+        float: left;
+        display: block; /* This is required */
     }
     
-    .monBouton:before{
-         background-image : url(https://icomoon.io/icons1b2a269/1/73.png);
+    .your-icon.icon-home {
+        background: url("icon/925.png");
+        background-size: cover;
+    }
+
+
+
+
+    .your-icon.normal {
+        width: 32px;
+        height: 32px;
+    }
+
+    .your-icon.small {
+        width: 16px;
+        height: 16px;
+    }
+
+    .your-icon.medium {
+        width: 64px;
+        height: 64px;
+    }
+
+    .your-icon.large {
+        width: 128px;
+        height: 128px;
     }
