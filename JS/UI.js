@@ -1,5 +1,4 @@
 $(document).ready(function(){
-
     var gridColorAxisHTML =  $('#gridColorAxis');
     var gridColorPickerHTML = $('#gridColorPicker');
     var activeColorPickerHTML = $('#ActiveColorPicker');
