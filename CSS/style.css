@@ -175,6 +175,34 @@ li.dropdown {
         background: url("icon/925.png");
         background-size: cover;
     }
+    .your-icon.icon-circle {
+        background: url("icon/circle.png");
+        background-size: cover;
+    }
+    .your-icon.icon-hand {
+        background: url("icon/hand.png");
+        background-size: cover;
+    }
+    .your-icon.icon-line {
+        background: url("icon/line.png");
+        background-size: cover;
+    }
+    .your-icon.icon-move {
+        background: url("icon/move.png");
+        background-size: cover;
+    }
+    .your-icon.icon-path {
+        background: url("icon/path.png");
+        background-size: cover;
+    }
+    .your-icon.icon-rotate {
+        background: url("icon/rotate.png");
+        background-size: cover;
+    }
+    .your-icon.icon-Select{
+        background: url("icon/Select.png");
+        background-size: cover;
+    }
 
 
 

@@ -283,35 +283,37 @@
 
     <ul class="dropdown-menu" role="menu" aria-labelledby="dropdownMenu" style="display: block; position: absolute; left: 40px; top: 100px; min-width:20px;" id="leftmenu">
          <!--Line-->
-        <li><a href="#" onclick="tools[0].activate();"><span class="glyphicon glyphicon-pencil" aria-hidden="true"></span></a></li>
+        <li><a href="#" onclick="tools[0].activate();"><span class="your-icon icon-line normal"></span></a></li>
          <!--Move-->
-        <li><a href="#" onclick="tools[1].activate();"><span class="glyphicon glyphicon-hand-up" aria-hidden="true"></span></a></li>
+        <li><a href="#" onclick="tools[1].activate();"><span class="your-icon icon-move normal"></span></span></a></li>
          <!--Hand-->
-        <li><a href="#" onclick="tools[2].activate();"><span class="glyphicon glyphicon-eye-open" aria-hidden="true"></span></a></li>
+        <li><a href="#" onclick="tools[2].activate();"><span class="your-icon icon-hand normal"></span></a></li>
          <!--Select-->
-        <li><a href="#" onclick="tools[3].activate();"><span class="glyphicon glyphicon-eye-open" aria-hidden="true"></span></a></li>
+        <li><a href="#" onclick="tools[3].activate();"><span class="your-icon icon-Select normal"></span></a></li>
         <!--Circle-->
-        <li><a href="#" onclick="tools[4].activate();"><span class="your-icon icon-home small"></span> Circle</a></li>
+        <li><a href="#" onclick="tools[4].activate();"><span class="your-icon icon-circle normal"></span></a></li>
         <!--Rotate-->
-        <li><a href="#" onclick="tools[6].activate();"><i class="bg-logo_bird"></i></a></li>
+        <li><a href="#" onclick="tools[6].activate();"><span class="your-icon icon-rotate normal"></span> </a></li>
         <!--Path-->
-        <li><a href="#" onclick="tools[7].activate();"><span class="glyphicon glyphicon-eye-open" aria-hidden="true"></span></a></li>
-        <li class="divider"></li>
-        <li class="dropdown-submenu">
-        <a tabindex="-1" href="#"><span class="glyphicon glyphicon-eye-open" aria-hidden="true"></span> Path</a>
-        <ul class="dropdown-menu">
-            <li><a tabindex="-1" href="#">Second level</a></li>
+        <li><a href="#" onclick="tools[7].activate();"><span class="your-icon icon-path normal"></span></a></li>
+        <!--
+            <li class="divider"></li>
             <li class="dropdown-submenu">
-                <a href="#">More..</a>
-                <ul class="dropdown-menu">
-                    <li><a href="#">3rd level</a></li>
-                    <li><a href="#">3rd level</a></li>
-                </ul>
+            <a tabindex="-1" href="#"><span class="glyphicon glyphicon-eye-open" aria-hidden="true"></span> Path</a>
+            <ul class="dropdown-menu">
+                <li><a tabindex="-1" href="#">Second level</a></li>
+                <li class="dropdown-submenu">
+                    <a href="#">More..</a>
+                    <ul class="dropdown-menu">
+                        <li><a href="#">3rd level</a></li>
+                        <li><a href="#">3rd level</a></li>
+                    </ul>
+                </li>
+                <li><a href="#">Second level</a></li>
+                <li><a href="#">Second level</a></li>
+            </ul>
             </li>
-            <li><a href="#">Second level</a></li>
-            <li><a href="#">Second level</a></li>
-        </ul>
-        </li>
+        -->
        </ul>
     <canvas id="myCanvas" resize></canvas>
 
