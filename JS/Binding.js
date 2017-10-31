@@ -7,6 +7,7 @@ function Binding(mediator, bindingSettings, drawingLayers) {
         var points = [];
         if(bindingSettings.bindToLineEnds) points = points.concat(bindToLineEnds(point));
         if(bindingSettings.bindToIntersections) points = points.concat(bindToIntersections(point));
+        if(bindingSettings.bindToCenters) points = points.concat(bindToCenters(point));
 
         var nearestPoint = getNearestPoint(point, points, bindingTolerance);
         if(nearestPoint){
@@ -41,6 +42,17 @@ function Binding(mediator, bindingSettings, drawingLayers) {
         var hitResults = drawingLayers.hitTestAll(point, hitOptions);
         return hitResults.map(function (res) {
             return res.segment.point;
+        });
+    }
+
+    function bindToCenters(point) {
+        var hitOptions = {
+            center: true,
+            tolerance: bindingTolerance,
+        };
+        var hitResults = drawingLayers.hitTestAll(point, hitOptions);
+        return hitResults.map(function (res) {
+            return res.point;
         });
     }
 

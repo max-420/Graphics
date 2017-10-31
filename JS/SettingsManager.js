@@ -22,6 +22,7 @@ function Settings() {
             bindToGrid: true,
             bindToLineEnds: true,
             bindToIntersections: true,
+            bindToCenters: true,
             bindingTolerance: 10,
             gridStep: 30,
         };

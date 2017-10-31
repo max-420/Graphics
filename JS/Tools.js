@@ -1,12 +1,12 @@
 function Tools(mediator, drawingSettings, drawingLayers, binding, previewLayer) {
-    var line = new Line();
-    var move = new Move();
-    var hand = new Hand();
-    var select = new Select();
-    var circle = new Circle();
-    var scale = new Scale();
-    var rotate = new Rotate();
-    var pathLine = new PathLine();
+    this.line = new Line();
+    this.move = new Move();
+    this.hand = new Hand();
+    this.select = new Select();
+    this.circle = new Ellipse();
+    this.scale = new Scale();
+    this.rotate = new Rotate();
+    this.pathLine = new PathLine();
     var drawer = new Drawer();
 
     function PathLine() {
@@ -61,6 +61,24 @@ function Tools(mediator, drawingSettings, drawingLayers, binding, previewLayer) 
             var point = binding.getPoint(event.point);
             path.remove();
             path = new Path.Circle(center, point.getDistance(center));
+            targetItems.addChild(path);
+            path.strokeColor = drawingSettings.strokeColor;
+            path.strokeWidth = drawingSettings.strokeWidth;
+        }
+    }
+
+    function Ellipse() {
+        var path;
+        var tool = new DrawingTool();
+        var center;
+        tool.init = function (event, targetItems) {
+            center = binding.getPoint(event.point);
+            path = null;
+        }
+        tool.draw = function (event, targetItems) {
+            var point = binding.getPoint(event.point);
+            if(path) path.remove();
+            path = new Path.Ellipse(new Rectangle(center.multiply(2).subtract(point),point));;
             targetItems.addChild(path);
             path.strokeColor = drawingSettings.strokeColor;
             path.strokeWidth = drawingSettings.strokeWidth;
@@ -165,6 +183,7 @@ function Tools(mediator, drawingSettings, drawingLayers, binding, previewLayer) 
             previewLayer.removeChildren();
             selectMany = false;
         }
+        this.activate = tool.activate;
     }
 
     function DrawingTool() {
@@ -187,6 +206,7 @@ function Tools(mediator, drawingSettings, drawingLayers, binding, previewLayer) 
             drawer.save(targetItems.children);
             targetItems.remove();
         }
+        this.activate = tool.activate;
     }
 
     function TransformTool() {
@@ -202,7 +222,8 @@ function Tools(mediator, drawingSettings, drawingLayers, binding, previewLayer) 
                 tolerance: 5
             };
             if (project.selectedItems.length == 0) {
-                var hitResult = drawingLayers.hitTest(event.point, hitOptions);
+                var point = binding.getPoint(event.point);
+                var hitResult = drawingLayers.hitTest(point, hitOptions);
                 if (hitResult) {
                     hitResult.item.selected = true;
                 }
@@ -224,9 +245,9 @@ function Tools(mediator, drawingSettings, drawingLayers, binding, previewLayer) 
         }.bind(this);
 
         tool.onMouseUp = function (event) {
-            tool.showBindings = false;
             drawer.saveSelection();
         }.bind(this);
+        this.activate = tool.activate;
     }
 
     function Drawer() {
@@ -268,15 +289,19 @@ function Tools(mediator, drawingSettings, drawingLayers, binding, previewLayer) 
         }
     }
 
+
+
     function ToolWrapper() {
         var tool = new Tool();
         //tool.minDistance = 5;
         this.cancelled = false;
         this.showBindings = false;
+
         tool.onMouseMove = function (event) {
             if (this.showBindings) binding.drawPoint(event.point);
             if (this.onMouseMove) this.onMouseMove(event);
         }.bind(this);
+
         tool.onMouseDown = function (event) {
             this.cancelled = false;
             if (this.onMouseDown) this.onMouseDown(event);
@@ -294,9 +319,12 @@ function Tools(mediator, drawingSettings, drawingLayers, binding, previewLayer) 
         }.bind(this);
 
         tool.onKeyDown = function (event) {
-            if (event.key = 'escape') {
+            if (event.key == 'escape') {
                 this.cancelled = true;
                 drawer.cancel();
+            }
+            if (event.key == 'delete') {
+                drawer.delete(project.selectedItems);
             }
             if (this.onKeyDown) this.onKeyDown(event);
         }.bind(this);
