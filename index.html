@@ -202,15 +202,18 @@
     var toolbox;
     window.onload = function () {
         paper.setup('myCanvas');
+
         var preview = new Layer();
         preview.activate();
         var drawing = new Layer();
+
         var background = new Background(mediator, settingsManager.settings.background);
         var scaling = new Scaling(mediator, settingsManager.settings.scaling, canvas);
         var binding = new Binding(mediator, settingsManager.settings.binding, drawing);
         var lineTypes = new LineTypes();
         var drawer = new Drawer(mediator, settingsManager.settings.drawing, drawing, preview, lineTypes);
 
+        preview.activate();
         toolbox = new Tools(mediator, settingsManager.settings.drawing, drawing, binding, preview, drawer);
         undoRedo = new UndoRedo(mediator, drawing);
     }
