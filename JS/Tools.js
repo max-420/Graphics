@@ -134,7 +134,6 @@ function Tools(mediator, drawingSettings, drawingLayers, binding, previewLayer, 
         var selectMany;
         var startPoint;
         var selectionRect;
-        var mainLayer;
         var select = new ToolWrapper();
         select.onMouseDown = function (event) {
             var hitOptions = {
@@ -151,8 +150,6 @@ function Tools(mediator, drawingSettings, drawingLayers, binding, previewLayer, 
         }
         select.onMouseDrag = function (event) {
             if (!selectMany) {
-                mainLayer = project.activeLayer;
-                previewLayer.activate();
                 selectMany = true;
             }
             var prev = selectionRect;
@@ -169,7 +166,6 @@ function Tools(mediator, drawingSettings, drawingLayers, binding, previewLayer, 
             items.forEach(function (item) {
                 item.selected = true;
             })
-            mainLayer.activate();
             drawer.cancel();
             selectMany = false;
         }
@@ -183,7 +179,6 @@ function Tools(mediator, drawingSettings, drawingLayers, binding, previewLayer, 
         var tool = new ToolWrapper();
         tool.showBindings = true;
         tool.onMouseDown = function (event) {
-            previewLayer.activate();
             targetItems = new Group();
             if (this.init) this.init(event, targetItems);
             drawer.applyDrawingSettings([targetItems]);
@@ -273,6 +268,7 @@ function Tools(mediator, drawingSettings, drawingLayers, binding, previewLayer, 
             if (event.key == 'escape') {
                 this.cancelled = true;
                 drawer.cancel();
+                project.deselectAll();
             }
             if (event.key == 'delete') {
                 drawer.delete(project.selectedItems);
