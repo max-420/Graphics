@@ -204,6 +204,26 @@ li.dropdown {
         background-size: cover;
     }
 
+.your-icon.icon-scale {
+    background: url("icon/scale.png");
+    background-size: cover;
+}
+
+.your-icon.icon-ellipse {
+    background: url("icon/ellipse.png");
+    background-size: cover;
+}
+
+.your-icon.icon-rectangle {
+    background: url("icon/rectangle.png");
+    background-size: cover;
+}
+
+.your-icon.icon-polygon {
+    background: url("icon/polygon.png");
+    background-size: cover;
+}
+
 
 
 
