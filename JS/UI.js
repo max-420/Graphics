@@ -125,7 +125,9 @@ $(document).ready(function () {
     var stepBinderHTML = $('#BindingGrid');
     var stepBindingGridHTML = $('#stepBindingGrid');
     var strokeWidthHTML = $('#strokeWidth');
-
+    var bindToLineEnds = $('#bindToLineEnds');
+    var bindToIntersections = $('#bindToIntersections');
+    var bindToCenters = $('#bindToCenters');
 
     function SetSettingInHTMLElements() {
         gridColorAxisHTML.colorpicker('setValue', settingsManager.settings.background.axisColor);
@@ -139,14 +141,40 @@ $(document).ready(function () {
         if (settingsManager.settings.background.showAxis) {
             showAxisHTML.prop('checked', true);
         }
-        if (settingsManager.settings.background.showGrid) {
+        if (!settingsManager.settings.background.showGrid) {
             showGridHTML.prop('checked', true);
         }
+        if (settingsManager.settings.binding.bindToGrid) {
+            stepBinderHTML.prop('checked', true);
+        }
+        if (!settingsManager.settings.binding.bindToGrid) {
+            stepBinderHTML.prop('checked', false);
+        }
+        if (settingsManager.settings.binding.bindToLineEnds) {
+            bindToLineEnds.prop('checked', true);
+        }
+        if (!settingsManager.settings.binding.bindToLineEnds) {
+            bindToLineEnds.prop('checked', false);
+        }
+        if (settingsManager.settings.binding.bindToIntersections) {
+            bindToIntersections.prop('checked', true);
+        }
+        if (!settingsManager.settings.binding.bindToIntersections) {
+            bindToIntersections.prop('checked', false);
+        }
+        if (settingsManager.settings.binding.bindToCenters) {
+            bindToCenters.prop('checked', true);
+        }
+        if (!settingsManager.settings.binding.bindToCenters) {
+            bindToCenters.prop('checked', false);
+        }
+
 
     };
     SetSettingInHTMLElements();
 
     stepHTML.change(function () {
+        alert(parseInt(stepHTML.val()));
         settingsManager.settings.background.step = parseInt(stepHTML.val());
     });
     strokeWidthHTML.change(function () {
@@ -164,14 +192,43 @@ $(document).ready(function () {
             settingsManager.settings.background.showGrid = true;
         }
     });
-    showAxisHTML.click(function () {
+    bindToIntersections.click(function () {
         if (!$(this).is(':checked')) {
-            settingsManager.settings.background.showAxis = false;
+            settingsManager.settings.background.bindToIntersections = false;
         }
         else {
-            settingsManager.settings.background.showAxis = true;
+            settingsManager.settings.background.bindToIntersections = true;
         }
     });
+
+
+    bindToLineEnds.click(function () {
+        if (!$(this).is(':checked')) {
+            settingsManager.settings.binding.bindToLineEnds = false;
+        }
+        else {
+            settingsManager.settings.binding.bindToLineEnds = true;
+        }
+    });
+
+    bindToLineEnds.click(function () {
+        if (!$(this).is(':checked')) {
+            settingsManager.settings.binding.bindToLineEnds = false;
+        }
+        else {
+            settingsManager.settings.binding.bindToLineEnds = true;
+        }
+    });
+
+    bindToCenters.click(function () {
+        if (!$(this).is(':checked')) {
+            settingsManager.settings.binding.bindToCenters = false;
+        }
+        else {
+            settingsManager.settings.binding.bindToCenters = true;
+        }
+    });
+
 
     //stepBinding
     stepBinderHTML.click(function () {

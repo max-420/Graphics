@@ -84,6 +84,7 @@
                         </div>
                     </div>
             </div>
+            <!--Binding-->
             <div class="col-lg-4">
                     <div class="panel panel-default" style="margin-top:20px; padding-left:20px; padding-bottom:20px;">
                             <form>
@@ -95,6 +96,17 @@
                                 </div>
                                 <div class="checkbox">
                                    <label><input type="checkbox" id="BindingGrid" value="">Binding</label>
+                                </div>
+                                <div class="checkbox">
+                                    <label><input type="checkbox" id="bindToLineEnds" value="">Binding to line
+                                        ends</label>
+                                </div>
+                                <div class="checkbox">
+                                    <label><input type="checkbox" id="bindToIntersections" value="">Binding to enter
+                                        sections</label>
+                                </div>
+                                <div class="checkbox">
+                                    <label><input type="checkbox" id="bindToCenters" value="">Binding to center</label>
                                 </div>
                                 <input class="form-control" id="stepBindingGrid" type="number" value="Enter step binding" style="width:50%" disabled>
                             </form>
@@ -130,155 +142,11 @@
         </div>  
     </div>
     <div class="container-fluid" hidden="true" id="mainPanelSettings">
-        <div class="row">
-            <div class="col-lg-4">
-                    <div class="panel panel-success" style="margin-top:20px">
-                        <div class="panel-body">
-                            <form class="form-horizontal">
-                                <div class="form-group">
-                                    <div class="form-group">
-                                        dsadsa
-                                    </div>  
-                                    <div class="form-group">
-                                        dasdas
-                                    </div>
-                                    
-                                    <div class="form-group">
-                                        dsadsads
-                                    </div>
-                                </div>
-                            </form> 
-                        </div>
-                    </div>
-            </div>
-            <div class="col-lg-4">
-                    <div class="panel panel-default" style="margin-top:20px; padding-left:20px; padding-bottom:20px;">
-                            <form>
-                                <div class="checkbox">
-                                    <label><input type="checkbox" id="showGrid" value="">Show grid</label>
-                                </div>
-                                <div class="checkbox">
-                                    <label><input type="checkbox" id="showAxis" value="">Show axis</label>
-                                </div>
-                                <div class="checkbox">
-                                   <label><input type="checkbox" id="BindingGrid" value="">Binding</label>
-                                </div>
-                                <input class="form-control" id="stepBindingGrid" type="number" value="Enter step binding" style="width:50%" disabled>
-                            </form>
-                    </div>
-            </div>
-            <div class="col-lg-4">
-                    <div class="panel panel-default" style="margin-top:20px">
-                            <div class="panel-body">
-                                <form class="form-horizontal">
-                                    <div class="form-group">
-                                        <div class="form-group">
-                                            <label class="control-label col-sm-2">Active color</label>
-                                            <div class="col-sm-10">
-                                                <div id="ActiveColorPicker" data-format="alias"
-                                                     class="input-group colorpicker-component" style="width: 90%">
-                                                    <input type="text" value="primary" class="form-control" />
-                                                    <span class="input-group-addon"><i></i></span>
-                                                </div>
-                                            </div>
-                                        </div>
-                                        <div class="form-group">
-                                            <label class="control-label col-sm-2">Stroke width</label>
-                                            <div class="col-sm-10">
-                                                <input class="form-control" id="strokeWidth" type="number" value="Enter stroke width" style="width:50%">
-                                            </div>
-                                        </div>
-                                    </div>
-                                </form>
-                                </div>
-                            </div>
-                    </div>
-            </div>
-        </div>  
+        Here something main settings
+    </div>
     </div>
     <div class="container-fluid" hidden="true" id="gridPanelSettings">
-        <div class="row">
-            <div class="col-lg-4">
-                    <div class="panel panel-success" style="margin-top:20px">
-                        <div class="panel-body">
-                            <form class="form-horizontal">
-                                <div class="form-group">
-                                    <div class="form-group">
-                                        <label class="control-label col-sm-2">Grid color </label>
-                                        <div class="col-sm-10">
-                                            <div id="gridColorPicker" data-format="alias"
-                                                 class="input-group colorpicker-component" style="width: 90%">
-                                                <input type="text" value="primary" class="form-control"/>
-                                                <span class="input-group-addon"><i></i></span>
-                                            </div>
-                                        </div>
-                                    </div>  
-                                    <div class="form-group">
-                                        <label class="control-label col-sm-2">Axies color </label>
-                                        <div class="col-sm-10">
-                                            <div id="gridColorAxis" data-format="alias"
-                                                 class="input-group colorpicker-component" style="width: 90%">
-                                                <input type="text" value="primary" class="form-control" />
-                                                <span class="input-group-addon"><i></i></span>
-                                            </div>
-                                        </div>
-                                    </div>
-                                    
-                                    <div class="form-group">
-                                        <label class="control-label col-sm-2">Step grid</label>
-                                        <div class="col-sm-10">
-                                        <input class="form-control" id="step" type="number" value="Enter step grid" style="width:50%">
-                                        </div>
-                                    </div>
-                                </div>
-                            </form> 
-                        </div>
-                    </div>
-            </div>
-            <div class="col-lg-4">
-                    <div class="panel panel-default" style="margin-top:20px; padding-left:20px; padding-bottom:20px;">
-                            <form>
-                                <div class="checkbox">
-                                    <label><input type="checkbox" id="showGrid" value="">Show grid</label>
-                                </div>
-                                <div class="checkbox">
-                                    <label><input type="checkbox" id="showAxis" value="">Show axis</label>
-                                </div>
-                                <div class="checkbox">
-                                   <label><input type="checkbox" id="BindingGrid" value="">Binding</label>
-                                </div>
-                                <input class="form-control" id="stepBindingGrid" type="number" value="Enter step binding" style="width:50%" disabled>
-                            </form>
-                    </div>
-            </div>
-            <div class="col-lg-4">
-                    <div class="panel panel-default" style="margin-top:20px">
-                            <div class="panel-body">
-                                <form class="form-horizontal">
-                                    <div class="form-group">
-                                        <div class="form-group">
-                                            <label class="control-label col-sm-2">Active color</label>
-                                            <div class="col-sm-10">
-                                                <div id="ActiveColorPicker" data-format="alias"
-                                                     class="input-group colorpicker-component" style="width: 90%">
-                                                    <input type="text" value="primary" class="form-control" />
-                                                    <span class="input-group-addon"><i></i></span>
-                                                </div>
-                                            </div>
-                                        </div>
-                                        <div class="form-group">
-                                            <label class="control-label col-sm-2">Stroke width</label>
-                                            <div class="col-sm-10">
-                                                <input class="form-control" id="strokeWidth" type="number" value="Enter stroke width" style="width:50%">
-                                            </div>
-                                        </div>
-                                    </div>
-                                </form>
-                                </div>
-                            </div>
-                    </div>
-            </div>
-        </div>  
+        Here grid settings
     </div>
 
 
