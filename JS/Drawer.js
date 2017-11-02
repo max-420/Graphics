@@ -33,7 +33,6 @@ function Drawer(mediator, drawingSettings, drawingLayers, previewLayer, lineType
     }
     this.cancel = function () {
         previewLayer.removeChildren();
-        project.deselectAll();
     }
     this.applyDrawingSettings = function (items) {
         items.forEach(function (item) {
@@ -42,6 +41,7 @@ function Drawer(mediator, drawingSettings, drawingLayers, previewLayer, lineType
             item.strokeScaling = drawingSettings.strokeScaling;
             item.dashArray = lineTypes.getDashArray(drawingSettings.lineType);
             item.strokeCap = 'round';
+            item.fillColor = drawingSettings.fillColor;
         });
     }
 }

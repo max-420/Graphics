@@ -331,10 +331,11 @@
 
     window.onload = function () {
         paper.setup('myCanvas');
+        var preview = new Layer();
+        preview.activate();
+        var drawing = new Layer();
         var background = new Background(mediator, settingsManager.settings.background);
         var scaling = new Scaling(mediator, settingsManager.settings.scaling, canvas);
-        var preview = new Layer();
-        var drawing = new Layer();
         var binding = new Binding(mediator, settingsManager.settings.binding, drawing);
         var lineTypes = new LineTypes();
         var drawer = new Drawer(mediator, settingsManager.settings.drawing, drawing, preview, lineTypes);
