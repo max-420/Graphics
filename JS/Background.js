@@ -6,7 +6,11 @@ function Background(mediator, backgroundSettings) {
     var redraw = function () {
         console.log("redraw");
         lastBounds = new Rectangle(view.bounds.point.subtract(margin), view.size.add(margin));
-        if (!backgroundSettings.showGrid && !backgroundSettings.showAxis) return;
+        if (!backgroundSettings.showGrid && !backgroundSettings.showAxis)
+        {
+            layout.removeChildren();
+            return;
+        }
         var prevLayer = project.activeLayer;
         layout.activate();
         var prevState = new Group([layout.firstChild, layout.lastChild]);

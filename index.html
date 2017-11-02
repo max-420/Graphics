@@ -12,6 +12,8 @@
     <script type="text/javascript" src="JS\Scaling.js"></script>
     <script type="text/javascript" src="JS\UndoRedo.js"></script>
     <script type="text/javascript" src="JS\Binding.js"></script>
+    <script type="text/javascript" src="JS\LineTypes.js"></script>
+    <script type="text/javascript" src="JS\Drawer.js"></script>
     <script type="text/javascript" src="JS\bootstrap.min.js"></script>
     <script type="text/javascript" src ="JS\bootstrap-colorpicker.min.js"></script>
     <script type="text/javascript" src="JS\UI.js"></script>
@@ -336,7 +338,10 @@
         var preview = new Layer();
         var drawing = new Layer();
         var binding = new Binding(mediator, settingsManager.settings.binding, drawing);
-        var tools = new Tools(mediator, settingsManager.settings.drawing, drawing, binding, preview);
+        var lineTypes = new LineTypes();
+        var drawer = new Drawer(mediator, settingsManager.settings.drawing, drawing, preview, lineTypes);
+
+        var tools = new Tools(mediator, settingsManager.settings.drawing, drawing, binding, preview, drawer);
         undoRedo = new UndoRedo(mediator, drawing);
     }
 </script>

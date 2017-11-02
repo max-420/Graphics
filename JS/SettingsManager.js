@@ -4,6 +4,8 @@ function Settings() {
             strokeColor: 'red',
             strokeWidth: 1,
             strokeScaling: true,
+            lineType: 'twoDotsOneDash',
+            fillColor: 'green',
         };
     this.background =
         {
@@ -27,6 +29,7 @@ function Settings() {
             gridStep: 30,
         };
 }
+
 function SettingsManager(mediator) {
     this.settings = {};
     var settingsObj = new Settings();
@@ -39,7 +42,7 @@ function SettingsManager(mediator) {
                 dest[s] = {};
                 setWrappers(source[s], dest[s], prevProps.concat(s));
                 Object.defineProperty(dest, s, {
-                    writable:false
+                    writable: false
                 });
             }
             else {
@@ -65,29 +68,28 @@ function SettingsManager(mediator) {
         }
     }
 
-    var saveSettings = function ()
-    {
-        if(!localStorage) return;
+    var saveSettings = function () {
+        if (!localStorage) return;
         var json = JSON.stringify(settingsObj);
         localStorage.removeItem('settings');
-        localStorage.setItem('settings',json);
+        localStorage.setItem('settings', json);
     }.bind(this);
 
     var loadSettings = function () {
-        if(!localStorage) return;
+        if (!localStorage) return;
         var json = localStorage.getItem('settings');
-        if(!json) return;
+        if (!json) return;
         var savedSettings = JSON.parse(json);
-        $.extend( true,settingsObj,savedSettings );
+        $.extend(true, settingsObj, savedSettings);
     }.bind(this);
 
-    this.reset = function()
-    {
+    this.reset = function () {
         this.settings = {};
         var settingsObj = new Settings();
         setWrappers(settingsObj, this.settings);
         saveSettings();
     }
+
     this.reset();
     loadSettings();
 }
