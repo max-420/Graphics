@@ -14,7 +14,7 @@ $(document).ready(function () {
         'warning': '#f0ad4e',
         'danger': '#d9534f'
     };
-
+    var panelCheck;
 
     gridColorAxisHTML.colorpicker({
         colorSelectors: constColor
@@ -108,6 +108,7 @@ $(document).ready(function () {
     //Close panel elements
     var closePanel = $("#ClosePanel");
     $(closePanel).click(function () {
+        if (panelCheck) {
             leftElementPanelHTML.animate({ "top": sizeLeftElementPanel }, "fast");
             bindingPanelSettingssHTML.hide("fast");
             bindingPanelSettingssHTML.animate({ "top": sizeLeftElementPanel }, "fast");
@@ -115,6 +116,8 @@ $(document).ready(function () {
             mainPanelSettintHTML.animate({ "top": sizeLeftElementPanel }, "fast");
             gridPanelSettings.hide("fast");
             gridPanelSettings.animate({ "top": sizeLeftElementPanel }, "fast");
+        }
+
     });
 
     //
@@ -138,34 +141,42 @@ $(document).ready(function () {
         stepBindingGridHTML.val(settingsManager.settings.binding.gridStep);
         strokeWidthHTML.val(settingsManager.settings.drawing.strokeWidth);
 
+
+        if (settingsManager.settings.background.showGrid) {
+            showGridHTML.prop('checked', true);
+        }
+        else if (!settingsManager.settings.background.showGrid) {
+            showGridHTML.prop('checked', true);
+        }
+
         if (settingsManager.settings.background.showAxis) {
             showAxisHTML.prop('checked', true);
         }
-        if (!settingsManager.settings.background.showGrid) {
-            showGridHTML.prop('checked', true);
+        else if (!settingsManager.settings.background.showAxis) {
+            showAxisHTML.prop('checked', true);
         }
         if (settingsManager.settings.binding.bindToGrid) {
             stepBinderHTML.prop('checked', true);
         }
-        if (!settingsManager.settings.binding.bindToGrid) {
+        else if (!settingsManager.settings.binding.bindToGrid) {
             stepBinderHTML.prop('checked', false);
         }
         if (settingsManager.settings.binding.bindToLineEnds) {
             bindToLineEnds.prop('checked', true);
         }
-        if (!settingsManager.settings.binding.bindToLineEnds) {
+        else if (!settingsManager.settings.binding.bindToLineEnds) {
             bindToLineEnds.prop('checked', false);
         }
         if (settingsManager.settings.binding.bindToIntersections) {
             bindToIntersections.prop('checked', true);
         }
-        if (!settingsManager.settings.binding.bindToIntersections) {
+        else if (!settingsManager.settings.binding.bindToIntersections) {
             bindToIntersections.prop('checked', false);
         }
         if (settingsManager.settings.binding.bindToCenters) {
             bindToCenters.prop('checked', true);
         }
-        if (!settingsManager.settings.binding.bindToCenters) {
+        else if (!settingsManager.settings.binding.bindToCenters) {
             bindToCenters.prop('checked', false);
         }
 
@@ -182,6 +193,16 @@ $(document).ready(function () {
     });
     stepBindingGridHTML.change(function () {
         settingsManager.settings.binding.gridStep = stepBindingGridHTML.val();
+    });
+
+
+    showAxisHTML.click(function () {
+        if (!$(this).is(':checked')) {
+            settingsManager.settings.background.showAxis = false;
+        }
+        else {
+            settingsManager.settings.background.showAxis = true;
+        }
     });
 
     showGridHTML.click(function () {
