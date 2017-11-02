@@ -210,7 +210,7 @@
         var lineTypes = new LineTypes();
         var drawer = new Drawer(mediator, settingsManager.settings.drawing, drawing, preview, lineTypes);
 
-        var tools = new Tools(mediator, settingsManager.settings.drawing, drawing, binding, preview, drawer);
+        var toolbox = new Tools(mediator, settingsManager.settings.drawing, drawing, binding, preview, drawer);
         undoRedo = new UndoRedo(mediator, drawing);
     }
 </script>

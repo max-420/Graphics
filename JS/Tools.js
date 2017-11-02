@@ -22,6 +22,7 @@ function Tools(mediator, drawingSettings, drawingLayers, binding, previewLayer, 
             var point = binding.getPoint(event.point);
             path.add(point);
         }
+        this.activate = line.activate;
     }
 
     function Line() {
@@ -40,6 +41,7 @@ function Tools(mediator, drawingSettings, drawingLayers, binding, previewLayer, 
             path = new Path(startPoint, point);
             targetItems.addChild(path);
         }
+        this.activate = line.activate;
     }
 
     function Circle() {
@@ -57,6 +59,7 @@ function Tools(mediator, drawingSettings, drawingLayers, binding, previewLayer, 
             path = new Path.Circle(center, point.getDistance(center));
             targetItems.addChild(path);
         }
+        this.activate = circle.activate;
     }
 
     function Ellipse() {
@@ -73,6 +76,7 @@ function Tools(mediator, drawingSettings, drawingLayers, binding, previewLayer, 
             path = new Path.Ellipse(new Rectangle(center.multiply(2).subtract(point), point));
             targetItems.addChild(path);
         }
+        this.activate = tool.activate;
     }
 
     function Move() {
@@ -88,38 +92,41 @@ function Tools(mediator, drawingSettings, drawingLayers, binding, previewLayer, 
             lastPoint = point;
             targetItems.translate(delta);
         }
+        this.activate = move.activate;
     }
 
     function Scale() {
         var lastDistance;
-        var move = new TransformTool();
-        move.init = function (event, targetItems) {
+        var tool = new TransformTool();
+        tool.init = function (event, targetItems) {
             var point = binding.getPoint(event.point);
             lastDistance = targetItems.position.getDistance(point);
         }
-        move.transform = function (event, targetItems) {
+        tool.transform = function (event, targetItems) {
             var point = binding.getPoint(event.point);
             var distance = targetItems.position.getDistance(point);
             targetItems.scale(distance / lastDistance);
             lastDistance = distance;
         }
+        this.activate = tool.activate;
     }
 
     function Rotate() {
         var lastAngle;
         var pos;
-        var move = new TransformTool();
-        move.init = function (event, targetItems) {
+        var tool = new TransformTool();
+        tool.init = function (event, targetItems) {
             var point = binding.getPoint(event.point);
             pos = targetItems.position;
             lastAngle = point.subtract(pos).angle;
         }
-        move.transform = function (event, targetItems) {
+        tool.transform = function (event, targetItems) {
             var point = binding.getPoint(event.point);
             var angle = point.subtract(pos).angle;
             targetItems.rotate(angle - lastAngle, pos);
             lastAngle = angle;
         }
+        this.activate = tool.activate;
     }
 
     function Hand() {
@@ -128,14 +135,15 @@ function Tools(mediator, drawingSettings, drawingLayers, binding, previewLayer, 
             view.translate(event.point.subtract(event.downPoint));
             mediator.publish("fieldMoved");
         }
+        this.activate = hand.activate;
     }
 
     function Select() {
         var selectMany;
         var startPoint;
         var selectionRect;
-        var select = new ToolWrapper();
-        select.onMouseDown = function (event) {
+        var tool = new ToolWrapper();
+        tool.onMouseDown = function (event) {
             var hitOptions = {
                 segments: true,
                 stroke: true,
@@ -148,7 +156,7 @@ function Tools(mediator, drawingSettings, drawingLayers, binding, previewLayer, 
                 hitResult.item.selected = !hitResult.item.selected;
             }
         }
-        select.onMouseDrag = function (event) {
+        tool.onMouseDrag = function (event) {
             if (!selectMany) {
                 selectMany = true;
             }
@@ -160,7 +168,7 @@ function Tools(mediator, drawingSettings, drawingLayers, binding, previewLayer, 
             selectionRect.strokeScaling = false;
             if (prev) prev.remove();
         }
-        select.onMouseUp = function (event) {
+        tool.onMouseUp = function (event) {
             if (!selectMany) return;
             var items = drawingLayers.getItems({inside: new Rectangle(startPoint, event.point)});
             items.forEach(function (item) {
