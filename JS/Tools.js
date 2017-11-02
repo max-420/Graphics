@@ -1,13 +1,13 @@
-function Tools(mediator, drawingSettings, drawingLayers, binding, previewLayer) {
+function Tools(mediator, drawingSettings, drawingLayers, binding, previewLayer, drawer) {
     this.line = new Line();
     this.move = new Move();
     this.hand = new Hand();
     this.select = new Select();
-    this.circle = new Ellipse();
+    this.ellipse = new Ellipse();
+    this.circle = new Circle();
     this.scale = new Scale();
     this.rotate = new Rotate();
     this.pathLine = new PathLine();
-    var drawer = new Drawer();
 
     function PathLine() {
         var path;
@@ -17,8 +17,6 @@ function Tools(mediator, drawingSettings, drawingLayers, binding, previewLayer) 
             targetItems.addChild(path);
             var point = binding.getPoint(event.point);
             path.add(point);
-            path.strokeColor = drawingSettings.strokeColor;
-            path.strokeWidth = drawingSettings.strokeWidth;
         }
         line.draw = function (event, targetItems) {
             var point = binding.getPoint(event.point);
@@ -41,8 +39,6 @@ function Tools(mediator, drawingSettings, drawingLayers, binding, previewLayer) 
             path.remove();
             path = new Path(startPoint, point);
             targetItems.addChild(path);
-            path.strokeColor = drawingSettings.strokeColor;
-            path.strokeWidth = drawingSettings.strokeWidth;
         }
     }
 
@@ -54,16 +50,12 @@ function Tools(mediator, drawingSettings, drawingLayers, binding, previewLayer) 
             center = binding.getPoint(event.point);
             path = new Path.Circle(center, 0);
             targetItems.addChild(path);
-            path.strokeColor = drawingSettings.strokeColor;
-            path.strokeWidth = drawingSettings.strokeWidth;
         }
         circle.draw = function (event, targetItems) {
             var point = binding.getPoint(event.point);
             path.remove();
             path = new Path.Circle(center, point.getDistance(center));
             targetItems.addChild(path);
-            path.strokeColor = drawingSettings.strokeColor;
-            path.strokeWidth = drawingSettings.strokeWidth;
         }
     }
 
@@ -77,11 +69,9 @@ function Tools(mediator, drawingSettings, drawingLayers, binding, previewLayer) 
         }
         tool.draw = function (event, targetItems) {
             var point = binding.getPoint(event.point);
-            if(path) path.remove();
-            path = new Path.Ellipse(new Rectangle(center.multiply(2).subtract(point),point));;
+            if (path) path.remove();
+            path = new Path.Ellipse(new Rectangle(center.multiply(2).subtract(point), point));
             targetItems.addChild(path);
-            path.strokeColor = drawingSettings.strokeColor;
-            path.strokeWidth = drawingSettings.strokeWidth;
         }
     }
 
@@ -180,7 +170,7 @@ function Tools(mediator, drawingSettings, drawingLayers, binding, previewLayer) 
                 item.selected = true;
             })
             mainLayer.activate();
-            previewLayer.removeChildren();
+            drawer.cancel();
             selectMany = false;
         }
         this.activate = tool.activate;
@@ -196,10 +186,12 @@ function Tools(mediator, drawingSettings, drawingLayers, binding, previewLayer) 
             previewLayer.activate();
             targetItems = new Group();
             if (this.init) this.init(event, targetItems);
+            drawer.applyDrawingSettings([targetItems]);
         }.bind(this);
 
         tool.onMouseDrag = function (event) {
             if (this.draw) this.draw(event, targetItems);
+            drawer.applyDrawingSettings([targetItems]);
         }.bind(this);
 
         tool.onMouseUp = function (event) {
@@ -249,47 +241,6 @@ function Tools(mediator, drawingSettings, drawingLayers, binding, previewLayer) 
         }.bind(this);
         this.activate = tool.activate;
     }
-
-    function Drawer() {
-        var selectedItems;
-        var selectedItemsCopy;
-        this.getSelection = function () {
-            selectedItems = new Group(project.selectedItems);
-            selectedItemsCopy = selectedItems.clone();
-            drawingLayers.addChild(selectedItems);
-            previewLayer.addChild(selectedItemsCopy);
-            selectedItemsCopy.selected = false;
-            return selectedItemsCopy;
-        }
-        this.saveSelection = function () {
-            if (!selectedItemsCopy) return;
-            selectedItemsCopy.selected = true;
-            drawingLayers.addChildren(selectedItemsCopy.children);
-            selectedItems.remove();
-            selectedItemsCopy = null;
-            selectedItems = null;
-            previewLayer.removeChildren();
-            mediator.publish("drawingChanged");
-
-        }
-        this.save = function (newItems) {
-            drawingLayers.addChildren(newItems);
-            previewLayer.removeChildren();
-            mediator.publish("drawingChanged");
-        }
-        this.delete = function (items) {
-            items.forEach(function (item) {
-                item.remove();
-            });
-            mediator.publish("drawingChanged");
-        }
-        this.cancel = function () {
-            previewLayer.removeChildren();
-            project.deselectAll();
-        }
-    }
-
-
 
     function ToolWrapper() {
         var tool = new Tool();
