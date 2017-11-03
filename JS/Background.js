@@ -1,5 +1,5 @@
 function Background(mediator, backgroundSettings) {
-    var layout;
+    var layout = new Layer();
     var margin = 200;
     var lastBounds = new Rectangle(view.bounds.point.subtract(margin), view.size.add(margin));
     view.translate(view.viewSize.divide(2));
@@ -12,7 +12,6 @@ function Background(mediator, backgroundSettings) {
             return;
         }
         var prevLayer = project.activeLayer;
-        if(!layout) layout = new Layer();
         layout.activate();
         var prevState = new Group([layout.firstChild, layout.lastChild]);
         if (backgroundSettings.showGrid) drawGrid();

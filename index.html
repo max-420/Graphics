@@ -157,11 +157,12 @@
         <li><a href="#" onclick="toolbox.circle.activate()"><span class="your-icon icon-circle normal"></span></a></li>
         <li><a href="#" onclick="toolbox.ellipse.activate()"><span class="your-icon icon-ellipse normal"></span></a>
         </li>
-        <li><a href="#" onclick="toolbox.ellipse.activate()"><span class="your-icon icon-rectangle normal"></span></a>
+        <li><a href="#" onclick="toolbox.rectangle.activate()"><span class="your-icon icon-rectangle normal"></span></a>
         </li>
-        <li><a href="#" onclick="toolbox.ellipse.activate()"><span class="your-icon icon-polygon normal"></span></a>
+        <li><a href="#" onclick="toolbox.polygon.activate()"><span class="your-icon icon-polygon normal"></span></a>
         </li>
-
+        <li><a href="#" onclick="toolbox.star.activate()"><span class="your-icon icon-polygon normal"></span></a>
+        </li>
         <li><a href="#" onclick="toolbox.move.activate()"><span class="your-icon icon-move normal"></span></span></a>
         </li>
         <li><a href="#" onclick="toolbox.rotate.activate()"><span class="your-icon icon-rotate normal"></span> </a></li>
@@ -206,17 +207,16 @@
     window.onload = function () {
         paper.setup('myCanvas');
 
-        var preview = new Layer();
-        preview.activate();
-        var drawing = new Layer();
 
         var background = new Background(mediator, settingsManager.settings.background);
         var scaling = new Scaling(mediator, settingsManager.settings.scaling, canvas);
+        var drawing = new Layer();
+        var preview = new Layer();
         var binding = new Binding(mediator, settingsManager.settings.binding, drawing);
         var lineTypes = new LineTypes();
         var drawer = new Drawer(mediator, settingsManager.settings.drawing, drawing, preview, lineTypes);
-
         preview.activate();
+
         toolbox = new Tools(mediator, settingsManager.settings.drawing, drawing, binding, preview, drawer);
         undoRedo = new UndoRedo(mediator, drawing);
     }

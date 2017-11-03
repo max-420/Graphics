@@ -1,4 +1,7 @@
 function Tools(mediator, drawingSettings, drawingLayers, binding, previewLayer, drawer) {
+    this.rectangle = new Rect();
+    this.polygon = new Polygon();
+    this.star = new Star();
     this.line = new Line();
     this.move = new Move();
     this.hand = new Hand();
@@ -42,6 +45,60 @@ function Tools(mediator, drawingSettings, drawingLayers, binding, previewLayer, 
             targetItems.addChild(path);
         }
         this.activate = function(){line.activate()};
+    }
+
+    function Rect() {
+        var path;
+        var startPoint;
+        var rectangle = new DrawingTool();
+        rectangle.init = function (event, targetItems) {
+            startPoint = binding.getPoint(event.point);
+            path = new Path.Rectangle(startPoint, startPoint);
+            targetItems.addChild(path);
+        }
+        rectangle.draw = function (event, targetItems) {
+            var point = binding.getPoint(event.point);
+            path.remove();
+            path = new Path.Rectangle(startPoint, point);
+            targetItems.addChild(path);
+        }
+        this.activate = function(){rectangle.activate()};
+    }
+
+    function Polygon() {
+        var path;
+        var tool = new DrawingTool();
+        var center;
+        tool.init = function (event, targetItems) {
+            center = binding.getPoint(event.point);
+            path = new Path.RegularPolygon(center, 5, 0);
+            targetItems.addChild(path);
+        }
+        tool.draw = function (event, targetItems) {
+            var point = binding.getPoint(event.point);
+            path.remove();
+            path = new Path.RegularPolygon(center,5, point.getDistance(center));
+            targetItems.addChild(path);
+        }
+        this.activate = function(){tool.activate()};
+    }
+
+    function Star() {
+        var path;
+        var tool = new DrawingTool();
+        var center;
+        tool.init = function (event, targetItems) {
+            center = binding.getPoint(event.point);
+            path = new Path.Star(center, 5, 0,0);
+            targetItems.addChild(path);
+        }
+        tool.draw = function (event, targetItems) {
+            var point = binding.getPoint(event.point);
+            path.remove();
+            path = new Path.Star(center,5,point.getDistance(center)/2, point.getDistance(center));
+            targetItems.addChild(path);
+        }
+        this.activate = function(){tool.activate()};
     }
 
     function Circle() {
