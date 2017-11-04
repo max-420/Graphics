@@ -172,55 +172,55 @@ li.dropdown {
     }
     
     .your-icon.icon-home {
-        background: url("CSS/icon/925.png");
+        background: url("icon/925.png");
         background-size: cover;
     }
     .your-icon.icon-circle {
-        background: url("CSS/icon/circle.png");
+        background: url("icon/circle.png");
         background-size: cover;
     }
     .your-icon.icon-hand {
-        background: url("CSS/icon/hand.png");
+        background: url("icon/hand.png");
         background-size: cover;
     }
     .your-icon.icon-line {
-        background: url("CSS/icon/line.png");
+        background: url("icon/line.png");
         background-size: cover;
     }
     .your-icon.icon-move {
-        background: url("CSS/icon/move.png");
+        background: url("icon/move.png");
         background-size: cover;
     }
     .your-icon.icon-path {
-        background: url("CSS/icon/path.png");
+        background: url("icon/path.png");
         background-size: cover;
     }
     .your-icon.icon-rotate {
-        background: url("CSS/icon/rotate.png");
+        background: url("icon/rotate.png");
         background-size: cover;
     }
     .your-icon.icon-Select{
-        background: url("CSS/icon/Select.png");
+        background: url("icon/Select.png");
         background-size: cover;
     }
 
 .your-icon.icon-scale {
-    background: url("CSS/icon/scale.png");
+    background: url("icon/scale.png");
     background-size: cover;
 }
 
 .your-icon.icon-ellipse {
-    background: url("CSS/icon/ellipse.png");
+    background: url("icon/ellipse.png");
     background-size: cover;
 }
 
 .your-icon.icon-rectangle {
-    background: url("CSS/icon/rectangle.png");
+    background: url("icon/rectangle.png");
     background-size: cover;
 }
 
 .your-icon.icon-polygon {
-    background: url("CSS/icon/polygon.png");
+    background: url("icon/polygon.png");
     background-size: cover;
 }
 
