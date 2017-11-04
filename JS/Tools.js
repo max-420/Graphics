@@ -1,4 +1,7 @@
 function Tools(mediator, drawingSettings, drawingLayers, binding, previewLayer, drawer) {
+    this.rectangle = new Rect();
+    this.polygon = new Polygon();
+    this.star = new Star();
     this.line = new Line();
     this.move = new Move();
     this.hand = new Hand();
@@ -22,7 +25,7 @@ function Tools(mediator, drawingSettings, drawingLayers, binding, previewLayer, 
             var point = binding.getPoint(event.point);
             path.add(point);
         }
-        this.activate = line.activate;
+        this.activate = function(){line.activate()};
     }
 
     function Line() {
@@ -41,7 +44,61 @@ function Tools(mediator, drawingSettings, drawingLayers, binding, previewLayer, 
             path = new Path(startPoint, point);
             targetItems.addChild(path);
         }
-        this.activate = line.activate;
+        this.activate = function(){line.activate()};
+    }
+
+    function Rect() {
+        var path;
+        var startPoint;
+        var rectangle = new DrawingTool();
+        rectangle.init = function (event, targetItems) {
+            startPoint = binding.getPoint(event.point);
+            path = new Path.Rectangle(startPoint, startPoint);
+            targetItems.addChild(path);
+        }
+        rectangle.draw = function (event, targetItems) {
+            var point = binding.getPoint(event.point);
+            path.remove();
+            path = new Path.Rectangle(startPoint, point);
+            targetItems.addChild(path);
+        }
+        this.activate = function(){rectangle.activate()};
+    }
+
+    function Polygon() {
+        var path;
+        var tool = new DrawingTool();
+        var center;
+        tool.init = function (event, targetItems) {
+            center = binding.getPoint(event.point);
+            path = new Path.RegularPolygon(center, 5, 0);
+            targetItems.addChild(path);
+        }
+        tool.draw = function (event, targetItems) {
+            var point = binding.getPoint(event.point);
+            path.remove();
+            path = new Path.RegularPolygon(center,5, point.getDistance(center));
+            targetItems.addChild(path);
+        }
+        this.activate = function(){tool.activate()};
+    }
+
+    function Star() {
+        var path;
+        var tool = new DrawingTool();
+        var center;
+        tool.init = function (event, targetItems) {
+            center = binding.getPoint(event.point);
+            path = new Path.Star(center, 5, 0,0);
+            targetItems.addChild(path);
+        }
+        tool.draw = function (event, targetItems) {
+            var point = binding.getPoint(event.point);
+            path.remove();
+            path = new Path.Star(center,5,point.getDistance(center)/2, point.getDistance(center));
+            targetItems.addChild(path);
+        }
+        this.activate = function(){tool.activate()};
     }
 
     function Circle() {
@@ -59,7 +116,7 @@ function Tools(mediator, drawingSettings, drawingLayers, binding, previewLayer, 
             path = new Path.Circle(center, point.getDistance(center));
             targetItems.addChild(path);
         }
-        this.activate = circle.activate;
+        this.activate = function(){circle.activate()};
     }
 
     function Ellipse() {
@@ -76,7 +133,7 @@ function Tools(mediator, drawingSettings, drawingLayers, binding, previewLayer, 
             path = new Path.Ellipse(new Rectangle(center.multiply(2).subtract(point), point));
             targetItems.addChild(path);
         }
-        this.activate = tool.activate;
+        this.activate = function(){tool.activate()};
     }
 
     function Move() {
@@ -92,7 +149,7 @@ function Tools(mediator, drawingSettings, drawingLayers, binding, previewLayer, 
             lastPoint = point;
             targetItems.translate(delta);
         }
-        this.activate = move.activate;
+        this.activate = function(){move.activate()};
     }
 
     function Scale() {
@@ -108,7 +165,7 @@ function Tools(mediator, drawingSettings, drawingLayers, binding, previewLayer, 
             targetItems.scale(distance / lastDistance);
             lastDistance = distance;
         }
-        this.activate = tool.activate;
+        this.activate = function(){tool.activate()};
     }
 
     function Rotate() {
@@ -126,7 +183,7 @@ function Tools(mediator, drawingSettings, drawingLayers, binding, previewLayer, 
             targetItems.rotate(angle - lastAngle, pos);
             lastAngle = angle;
         }
-        this.activate = tool.activate;
+        this.activate = function(){tool.activate()};
     }
 
     function Hand() {
@@ -135,7 +192,7 @@ function Tools(mediator, drawingSettings, drawingLayers, binding, previewLayer, 
             view.translate(event.point.subtract(event.downPoint));
             mediator.publish("fieldMoved");
         }
-        this.activate = hand.activate;
+        this.activate = function(){hand.activate()};
     }
 
     function Select() {
@@ -177,7 +234,7 @@ function Tools(mediator, drawingSettings, drawingLayers, binding, previewLayer, 
             drawer.cancel();
             selectMany = false;
         }
-        this.activate = tool.activate;
+        this.activate = function(){tool.activate()};
     }
 
     function DrawingTool() {
@@ -201,7 +258,7 @@ function Tools(mediator, drawingSettings, drawingLayers, binding, previewLayer, 
             drawer.save(targetItems.children);
             targetItems.remove();
         }
-        this.activate = tool.activate;
+        this.activate = function(){tool.activate()};
     }
 
     function TransformTool() {
@@ -242,7 +299,7 @@ function Tools(mediator, drawingSettings, drawingLayers, binding, previewLayer, 
         tool.onMouseUp = function (event) {
             drawer.saveSelection();
         }.bind(this);
-        this.activate = tool.activate;
+        this.activate = function(){tool.activate()};
     }
 
     function ToolWrapper() {
@@ -250,13 +307,13 @@ function Tools(mediator, drawingSettings, drawingLayers, binding, previewLayer, 
         //tool.minDistance = 5;
         this.cancelled = false;
         this.showBindings = false;
-
         tool.onMouseMove = function (event) {
             if (this.showBindings) binding.drawPoint(event.point);
             if (this.onMouseMove) this.onMouseMove(event);
         }.bind(this);
 
         tool.onMouseDown = function (event) {
+
             this.cancelled = false;
             if (this.onMouseDown) this.onMouseDown(event);
         }.bind(this);
@@ -283,6 +340,6 @@ function Tools(mediator, drawingSettings, drawingLayers, binding, previewLayer, 
             }
             if (this.onKeyDown) this.onKeyDown(event);
         }.bind(this);
-        this.activate = tool.activate;
+        this.activate = function(){tool.activate()};
     }
 }

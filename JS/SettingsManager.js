@@ -4,8 +4,8 @@ function Settings() {
             strokeColor: 'red',
             strokeWidth: 1,
             strokeScaling: true,
-            lineType: 'twoDotsOneDash',
-            fillColor: 'green',
+            lineType: 'dotDash',
+            fillColor: 'rgba(0, 0, 200, 0)',
         };
     this.background =
         {
