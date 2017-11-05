@@ -223,6 +223,14 @@ li.dropdown {
     background: url("icon/polygon.png");
     background-size: cover;
 }
+.your-icon.icon-star {
+    background: url("icon/star.png");
+    background-size: cover;
+}
+.your-icon.icon-simple-line {
+    background: url("icon/simple_line.png");
+    background-size: cover;
+}
 
 
 
