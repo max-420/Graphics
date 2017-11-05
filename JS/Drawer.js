@@ -1,4 +1,4 @@
-function Drawer(mediator, drawingSettings, lineTypes, layerManager) {
+function Drawer(mediator, layerManager) {
     var selectedItems;
     var selectedItemsCopy;
 
@@ -34,15 +34,5 @@ function Drawer(mediator, drawingSettings, lineTypes, layerManager) {
     }
     this.cancel = function () {
         layerManager.appLayers.children['preview'].removeChildren();
-    }
-    this.applyDrawingSettings = function (items) {
-        items.forEach(function (item) {
-            item.strokeColor = drawingSettings.strokeColor;
-            item.strokeWidth = drawingSettings.strokeWidth;
-            item.strokeScaling = drawingSettings.strokeScaling;
-            item.dashArray = lineTypes.getDashArray(drawingSettings.lineType);
-            item.strokeCap = 'round';
-            item.fillColor = drawingSettings.fillColor;
-        });
     }
 }

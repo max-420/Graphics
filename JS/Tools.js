@@ -1,4 +1,4 @@
-function Tools(mediator, drawingSettings, drawingLayers, binding, drawer) {
+function Tools(mediator, drawingLayers, binding, drawer, stylesManager) {
     this.rectangle = new Rect();
     this.polygon = new Polygon();
     this.star = new Star();
@@ -219,10 +219,7 @@ function Tools(mediator, drawingSettings, drawingLayers, binding, drawer) {
             }
             var prev = selectionRect;
             selectionRect = new Path.Rectangle(startPoint, event.point);
-            selectionRect.strokeColor = 'grey';
-            selectionRect.strokeWidth = 1;
-            selectionRect.dashArray = [10, 4];
-            selectionRect.strokeScaling = false;
+            stylesManager.applyDrawingSettings(selectionRect,'selection');
             if (prev) prev.remove();
         }
         tool.onMouseUp = function (event) {
@@ -246,12 +243,12 @@ function Tools(mediator, drawingSettings, drawingLayers, binding, drawer) {
         tool.onMouseDown = function (event) {
             targetItems = new Group();
             if (this.init) this.init(event, targetItems);
-            drawer.applyDrawingSettings([targetItems]);
+            stylesManager.applyDrawingSettings(targetItems, 'drawing');
         }.bind(this);
 
         tool.onMouseDrag = function (event) {
             if (this.draw) this.draw(event, targetItems);
-            drawer.applyDrawingSettings([targetItems]);
+            stylesManager.applyDrawingSettings(targetItems, 'drawing');
         }.bind(this);
 
         tool.onMouseUp = function (event) {

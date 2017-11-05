@@ -39,7 +39,7 @@ $(document).ready(function () {
     activeColorPickerHTML.colorpicker({
         colorSelectors: constColor
     }).on('hidePicker', function () {
-        settingsManager.settings.drawing.strokeColor = activeColorPickerHTML.colorpicker('getValue');
+        settingsManager.settings.styles.drawing.strokeColor = activeColorPickerHTML.colorpicker('getValue');
     });
 
     gridColorPickerHTML.colorpicker({
@@ -155,11 +155,11 @@ $(document).ready(function () {
     function SetSettingInHTMLElements() {
         gridColorAxisHTML.colorpicker('setValue', settingsManager.settings.background.axisColor);
         gridColorPickerHTML.colorpicker('setValue', settingsManager.settings.background.gridColor);
-        activeColorPickerHTML.colorpicker('setValue', settingsManager.settings.drawing.strokeColor);
+        activeColorPickerHTML.colorpicker('setValue', settingsManager.settings.styles.drawing.strokeColor);
 
         stepHTML.val(settingsManager.settings.background.gridStep);
         stepBindingGridHTML.val(settingsManager.settings.binding.gridStep);
-        strokeWidthHTML.val(settingsManager.settings.drawing.strokeWidth);
+        strokeWidthHTML.val(settingsManager.settings.styles.drawing.strokeWidth);
 
 
         if (settingsManager.settings.background.showGrid) {
@@ -209,7 +209,7 @@ $(document).ready(function () {
         settingsManager.settings.background.step = parseInt(stepHTML.val());
     });
     strokeWidthHTML.change(function () {
-        settingsManager.settings.drawing.strokeWidth = strokeWidthHTML.val();
+        settingsManager.settings.styles.drawing.strokeWidth = strokeWidthHTML.val();
     });
     stepBindingGridHTML.change(function () {
         settingsManager.settings.binding.gridStep = stepBindingGridHTML.val();

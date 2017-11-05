@@ -1,33 +1,53 @@
 function Settings() {
-    this.drawing =
+    this.styles =
+    {
+        drawing:
         {
             strokeColor: 'red',
             strokeWidth: 1,
             strokeScaling: true,
+            opacity: 1,
             lineType: 'dotDash',
-            fillColor: 'rgba(0, 0, 200, 0)',
-        };
+            lineScaling: 10,
+            fillColor: 'rgba(0, 0, 0, 0)',
+            shadowColor: 'rgba(0, 0, 0, 0)',
+            shadowBlur: 0,
+            shadowOffset: 0,
+        },
+        predrawing:
+        {
+
+        },
+        selection:
+        {
+            strokeColor:'grey',
+            strokeWidth: 1,
+            strokeScaling: false,
+            lineType: 'dashed',
+            lineScaling: 2,
+        },
+    }
     this.background =
-        {
-            showAxis: true,
-            axisColor: 'red',
-            showGrid: true,
-            gridColor: 'orange',
-            gridStep: 30,
-        };
+    {
+        showAxis: true,
+        axisColor: 'red',
+        showGrid: true,
+        gridColor: 'orange',
+        gridStep: 30,
+    };
     this.scaling =
-        {
-            step: 0.1,
-        };
+    {
+        step: 0.1,
+    };
     this.binding =
-        {
-            bindToGrid: true,
-            bindToLineEnds: true,
-            bindToIntersections: true,
-            bindToCenters: true,
-            bindingTolerance: 10,
-            gridStep: 30,
-        };
+    {
+        bindToGrid: true,
+        bindToLineEnds: true,
+        bindToIntersections: true,
+        bindToCenters: true,
+        bindingTolerance: 10,
+        gridStep: 30,
+    };
 }
 
 function SettingsManager(mediator) {

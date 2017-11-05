@@ -12,7 +12,7 @@
     <script type="text/javascript" src="JS\Scaling.js"></script>
     <script type="text/javascript" src="JS\UndoRedo.js"></script>
     <script type="text/javascript" src="JS\Binding.js"></script>
-    <script type="text/javascript" src="JS\LineTypes.js"></script>
+    <script type="text/javascript" src="JS\StylesManager.js"></script>
     <script type="text/javascript" src="JS\Drawer.js"></script>
     <script type="text/javascript" src="JS\Layers.js"></script>
     <script type="text/javascript" src="JS\bootstrap.min.js"></script>
@@ -209,18 +209,17 @@
     var layerManager;
     window.onload = function () {
         paper.setup('myCanvas');
-
         layerManager = new Layers(mediator);
         var background = new Background(mediator, settingsManager.settings.background);
         var scaling = new Scaling(mediator, settingsManager.settings.scaling, canvas);
 
         var binding = new Binding(mediator, settingsManager.settings.binding, layerManager.userLayers);
 
-        var lineTypes = new LineTypes();
+        var stylesManager = new StylesManager(mediator, settingsManager.settings.styles);
 
-        var drawer = new Drawer(mediator, settingsManager.settings.drawing, lineTypes, layerManager);
+        var drawer = new Drawer(mediator, layerManager);
 
-        toolbox = new Tools(mediator, settingsManager.settings.drawing, layerManager.userLayers, binding, drawer);
+        toolbox = new Tools(mediator, layerManager.userLayers, binding, drawer, stylesManager);
         undoRedo = new UndoRedo(mediator, layerManager.userLayers);
     }
 </script>
