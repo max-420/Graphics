@@ -20,11 +20,12 @@ function Binding(mediator, bindingSettings, drawingLayers) {
         return point;
     }
     this.drawPoint = function (point) {
-        bindingsLayer.removeChildren();
+        mediator.publish("bindingDrawingStarted");
         var bindedPoint = this.getPoint(point);
         if (!bindedPoint.equals(point)) {
-            bindingsLayer.addChild(signs.gridBinding.place(bindedPoint));
+            signs.gridBinding.place(bindedPoint);
         }
+        mediator.publish("bindingDrawingFinished");
     }
     this.clear = function () {
         bindingsLayer.removeChildren();

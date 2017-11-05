@@ -1,28 +1,29 @@
-function Drawer(mediator, drawingSettings, drawingLayers, previewLayer, lineTypes) {
+function Drawer(mediator, drawingSettings, lineTypes, layerManager) {
     var selectedItems;
     var selectedItemsCopy;
+
     this.getSelection = function () {
         selectedItems = new Group(project.selectedItems);
         selectedItemsCopy = selectedItems.clone();
-        drawingLayers.addChild(selectedItems);
-        previewLayer.addChild(selectedItemsCopy);
+        layerManager.activeUserLayer.addChild(selectedItems);
+        layerManager.appLayers.children['preview'].addChild(selectedItemsCopy);
         selectedItemsCopy.selected = false;
         return selectedItemsCopy;
     }
     this.saveSelection = function () {
         if (!selectedItemsCopy) return;
         selectedItemsCopy.selected = true;
-        drawingLayers.addChildren(selectedItemsCopy.children);
+        layerManager.activeUserLayer.addChildren(selectedItemsCopy.children);
         selectedItems.remove();
         selectedItemsCopy = null;
         selectedItems = null;
-        previewLayer.removeChildren();
+        layerManager.appLayers.children['preview'].removeChildren();
         mediator.publish("drawingChanged");
 
     }
     this.save = function (newItems) {
-        drawingLayers.addChildren(newItems);
-        previewLayer.removeChildren();
+        layerManager.activeUserLayer.addChildren(newItems);
+        //previewLayer.removeChildren();
         mediator.publish("drawingChanged");
     }
     this.delete = function (items) {
@@ -32,7 +33,7 @@ function Drawer(mediator, drawingSettings, drawingLayers, previewLayer, lineType
         mediator.publish("drawingChanged");
     }
     this.cancel = function () {
-        previewLayer.removeChildren();
+        layerManager.appLayers.children['preview'].removeChildren();
     }
     this.applyDrawingSettings = function (items) {
         items.forEach(function (item) {

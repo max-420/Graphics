@@ -1,24 +1,90 @@
-function Layers() {
-    var dashArrays =
-        {
-            solid : [],//обычная
-            dotted : [1,2],//..........
-            dashed : [5,4],//-------------------
-            dotDash : [5,3,1,3],//-.-.-.-.-.-.-.-.-
-            twoDotsOneDash : [5,2,1,2,1,2],//-..-..-..-..-..
-        }
-    var userLayers = [];
+function Layers(mediator) {
+    this.appLayers = new Group();
+    this.userLayers = new Group();
+    this.activeUserLayer;
 
     this.addLayer = function(name)
     {
-        return dashArrays[lineType];
-    };
-    this.setActive(name)
-    {
-        userLayers[name].activate();
+        var layer = new Layer();
+        var index = 1;
+        if(!isNaN(parseInt(name)))
+        {
+            name = '_'+name;
+        }
+        var newName = name;
+        while(this.userLayers.children[newName])
+        {
+            newName=name+(index++);
+        }
+        layer.name = newName;
+        this.userLayers.addChild(layer);
+        this.setActive(newName);
     }
-    this.deleteLayer(name)
+    this.setActive = function(name)
     {
-        userLayers[name].remove();
+        this.activeUserLayer = this.userLayers.children[name];
     }
+    this.hide = function(name)
+    {
+        this.userLayers.children[name].visible = false;
+    }
+    this.removeLayer = function(name)
+    {
+        if(this.userLayers.children.length == 1) return;
+        if(this.userLayers.children[name] == this.activeUserLayer)
+        {
+            this.activeUserLayer = userLayers.children[0];
+        }
+        this.userLayers.children[name].remove();
+    }
+    this.getLayers = function()
+    {
+        var activeLayer = this.activeUserLayer;
+        return this.userLayers.children.map(function (layer) {
+            var summary =
+            {
+                name:layer.name,
+                visible:layer.visible,
+                active:layer == activeLayer,
+            }
+            return summary;
+        });
+    }
+    var initLayers = function ()
+    {
+        var background = new Layer();
+        background.name = 'background';
+        this.appLayers.addChild(background);
+
+        var main = new Layer();
+        main.name = 'main';
+        this.userLayers.addChild(main);
+        this.activeUserLayer = main;
+
+        var preview = new Layer();
+        preview.name = 'preview';
+        this.appLayers.addChild(preview);
+
+        var binding = new Layer();
+        binding.name = 'binding';
+        this.appLayers.addChild(binding);
+
+        preview.activate();
+    }.bind(this)();
+
+
+    mediator.subscribe("backgroundDrawingStarted", function () {
+        this.appLayers.children['background'].removeChildren();
+        this.appLayers.children['background'].activate();
+    }.bind(this));
+    mediator.subscribe("backgroundDrawingFinished", function () {
+        this.appLayers.children['preview'].activate();
+    }.bind(this));
+    mediator.subscribe("bindingDrawingStarted", function () {
+        this.appLayers.children['binding'].removeChildren();
+        this.appLayers.children['binding'].activate();
+    }.bind(this));
+    mediator.subscribe("bindingDrawingFinished", function () {
+        this.appLayers.children['preview'].activate();
+    }.bind(this));
 }

@@ -14,6 +14,7 @@
     <script type="text/javascript" src="JS\Binding.js"></script>
     <script type="text/javascript" src="JS\LineTypes.js"></script>
     <script type="text/javascript" src="JS\Drawer.js"></script>
+    <script type="text/javascript" src="JS\Layers.js"></script>
     <script type="text/javascript" src="JS\bootstrap.min.js"></script>
     <script type="text/javascript" src ="JS\bootstrap-colorpicker.min.js"></script>
     <script type="text/javascript" src="JS\UI\VaruableList.js"></script>
@@ -205,21 +206,22 @@
 
     var undoRedo;
     var toolbox;
+    var layerManager;
     window.onload = function () {
         paper.setup('myCanvas');
 
-
+        layerManager = new Layers(mediator);
         var background = new Background(mediator, settingsManager.settings.background);
         var scaling = new Scaling(mediator, settingsManager.settings.scaling, canvas);
-        var drawing = new Layer();
-        var preview = new Layer();
-        var binding = new Binding(mediator, settingsManager.settings.binding, drawing);
-        var lineTypes = new LineTypes();
-        var drawer = new Drawer(mediator, settingsManager.settings.drawing, drawing, preview, lineTypes);
-        preview.activate();
 
-        toolbox = new Tools(mediator, settingsManager.settings.drawing, drawing, binding, preview, drawer);
-        undoRedo = new UndoRedo(mediator, drawing);
+        var binding = new Binding(mediator, settingsManager.settings.binding, layerManager.userLayers);
+
+        var lineTypes = new LineTypes();
+
+        var drawer = new Drawer(mediator, settingsManager.settings.drawing, lineTypes, layerManager);
+
+        toolbox = new Tools(mediator, settingsManager.settings.drawing, layerManager.userLayers, binding, drawer);
+        undoRedo = new UndoRedo(mediator, layerManager.userLayers);
     }
 </script>
 </body>

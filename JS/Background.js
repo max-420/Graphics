@@ -1,25 +1,14 @@
 function Background(mediator, backgroundSettings) {
-    var layout = new Layer();
     var margin = 200;
     var lastBounds = new Rectangle(view.bounds.point.subtract(margin), view.size.add(margin));
     view.translate(view.viewSize.divide(2));
     var redraw = function () {
         console.log("redraw");
         lastBounds = new Rectangle(view.bounds.point.subtract(margin), view.size.add(margin));
-        if (!backgroundSettings.showGrid && !backgroundSettings.showAxis)
-        {
-            layout.removeChildren();
-            return;
-        }
-        var prevLayer = project.activeLayer;
-        layout.activate();
-        var prevState = new Group([layout.firstChild, layout.lastChild]);
+        mediator.publish("backgroundDrawingStarted");
         if (backgroundSettings.showGrid) drawGrid();
         if (backgroundSettings.showAxis) drawAxis();
-        layout.style.strokeScaling = false;
-        prevState.removeChildren();
-        prevState.remove();
-        prevLayer.activate();
+        mediator.publish("backgroundDrawingFinished");
 
     }
 
@@ -48,8 +37,6 @@ function Background(mediator, backgroundSettings) {
         for (x = xStart; x < boundRect.right + scaledMargin; x += cellSize) {
             grid.addChild(vertLine.place(new Point(x, view.center.y)));
         }
-
-
     }
     var drawAxis = function () {
         var scaledMargin = margin;

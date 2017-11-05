@@ -1,4 +1,4 @@
-function Tools(mediator, drawingSettings, drawingLayers, binding, previewLayer, drawer) {
+function Tools(mediator, drawingSettings, drawingLayers, binding, drawer) {
     this.rectangle = new Rect();
     this.polygon = new Polygon();
     this.star = new Star();
