@@ -60,6 +60,7 @@ $(document).ready(function () {
     var sizeLeftElementPanel = parseInt(leftElementPanelHTML.css("top"));
     
     $('#bindingSettings').click(function () {
+        CloseAllPanels();
         if (checkBindingSettings) {
             if(CheckAllPanel){
                 bindingPanelSettingss.show("fast");
@@ -81,6 +82,7 @@ $(document).ready(function () {
     var sizeMainPanelSetting = parseInt(mainPanelSetting.css("height"));
     //mainPanelSettings  // mainSettings // mainPanelSettings
     $('#mainSettings').click(function () {
+        CloseAllPanels();
         if (checkMainSetting) {
             if(CheckAllPanel){
                 mainPanelSetting.show("fast");
@@ -102,7 +104,7 @@ $(document).ready(function () {
     var sizeGridPanel = parseInt(gridPanelSettings.css("height"));
 
     $('#gridSettings').click(function () {
-
+        CloseAllPanels();
         if (checkGridSetting) {
             if(CheckAllPanel) {
                 gridPanelSettings.show("fast");
@@ -124,6 +126,10 @@ $(document).ready(function () {
     //Close panel elements
     var closePanel = $("#ClosePanel");
     closePanel.click(function () {
+        CloseAllPanels();
+    });
+
+    function CloseAllPanels(){
         if (!CheckAllPanel) {
             if(!checkBindingSettings){
                 bindingPanelSettingss.hide("fast");
@@ -144,10 +150,7 @@ $(document).ready(function () {
                 CheckAllPanel = true;
             }
         }
-
-    });
-
-
+    }
 
     function SetSettingInHTMLElements() {
         gridColorAxisHTML.colorpicker('setValue', settingsManager.settings.background.axisColor);
