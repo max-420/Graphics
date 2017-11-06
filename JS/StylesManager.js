@@ -58,4 +58,15 @@ function StylesManager(mediator, styles) {
             return num * coef;
         });
     };
+
+    mediator.subscribe("settingsChanged", function (path, value) {
+            project.selectedItems.forEach(function (item) {
+                this.applyDrawingSettings(item, 'drawing');
+            }.bind(this))
+        }.bind(this),
+        {
+            predicate: function (path, value) {
+                return path.startsWith("styles.drawing");
+            },
+        });
 }
