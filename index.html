@@ -16,132 +16,136 @@
     <script type="text/javascript" src="JS\Drawer.js"></script>
     <script type="text/javascript" src="JS\Layers.js"></script>
     <script type="text/javascript" src="JS\bootstrap.min.js"></script>
-    <script type="text/javascript" src ="JS\bootstrap-colorpicker.min.js"></script>
+    <script type="text/javascript" src="JS\bootstrap-colorpicker.min.js"></script>
     <script type="text/javascript" src="JS\UI\VaruableList.js"></script>
     <script type="text/javascript" src="JS\UI\UI.js"></script>
     <!---CSS-->
     <link rel="stylesheet" type="text/css" href="CSS\bootstrap.css">
     <link rel="stylesheet" type="text/css" href="CSS\bootstrap.min.css">
-    <link rel="stylesheet" type="text/css" href="CSS\style.css"/>
-    <link rel="stylesheet" type="text/css" href="CSS\bootstrap-colorpicker.min.css"/>
+    <link rel="stylesheet" type="text/css" href="CSS\style.css" />
+    <link rel="stylesheet" type="text/css" href="CSS\bootstrap-colorpicker.min.css" />
 </head>
 <body>
 
     <nav class="navbar navbar-default">
+        <div class="collapse navbar-collapse" id="myNavbar">
             <div class="navbar-header" style="padding:none">
-                    <a class="navbar-brand" href="#"><img src="CSS\icon\logo_bird.png" style="padding:none"></a>
-                  </div>
-          <div class="collapse navbar-collapse" id="myNavbar">
+                <a class="navbar-brand" href="#"><img src="CSS\icon\logo_bird.png" style="padding:none"></a>
+            </div>
             <ul class="nav navbar-nav navbar-left">
                 <li>
-                    <button class="btn btn-danger navbar-btn" id="ClosePanel" style="margin-right:20px"><span
-                            class="glyphicon glyphicon-remove-circle" aria-hidden="true" ></span> Close
+                    <button class="btn btn-danger navbar-btn" id="ClosePanel">
+                        <span class="glyphicon glyphicon-remove-circle" aria-hidden="true"></span> Close
                     </button>
                 </li>
                 <li><button class="btn btn-danger navbar-btn bouton-image monBouton " id="mainSettings"> Main</button></li>
-                <li><button class="btn btn-danger navbar-btn bouton-image monBouton " id="bindingSettings" style="margin-left:10px"> Binding</button></li>
-                <li><button class="btn btn-danger navbar-btn bouton-image monBouton " id="gridSettings" style="margin-left:10px"> Grid</button></li>
+                <li><button class="btn btn-danger navbar-btn bouton-image monBouton " id="bindingSettings"> Binding</button></li>
+                <li><button class="btn btn-danger navbar-btn bouton-image monBouton " id="gridSettings"> Grid</button></li>
             </ul>
             <ul class="nav navbar-nav navbar-right">
                 <li><a href="#"><span class="glyphicon glyphicon-thumbs-up"></span> Press F11</a></li>
             </ul>
-          </div>
+        </div>
     </nav>
     <div class="container-fluid" hidden="true" id="bindingPanelSettings">
         <div class="row">
             <div class="col-lg-4">
-                    <div class="panel panel-success" style="margin-top:20px">
-                        <div class="panel-body">
-                            <form class="form-horizontal">
+                <div class="panel panel-success" style="margin-top:20px">
+                    <div class="panel-body">
+                        <form class="form-horizontal">
+                            <div class="form-group">
                                 <div class="form-group">
-                                    <div class="form-group">
-                                        <label class="control-label col-sm-2">Grid color </label>
-                                        <div class="col-sm-10">
-                                            <div id="gridColorPicker" data-format="alias"
-                                                 class="input-group colorpicker-component" style="width: 90%">
-                                                <input type="text" value="primary" class="form-control"/>
-                                                <span class="input-group-addon"><i></i></span>
-                                            </div>
-                                        </div>
-                                    </div>  
-                                    <div class="form-group">
-                                        <label class="control-label col-sm-2">Axies color </label>
-                                        <div class="col-sm-10">
-                                            <div id="gridColorAxis" data-format="alias"
-                                                 class="input-group colorpicker-component" style="width: 90%">
-                                                <input type="text" value="primary" class="form-control" />
-                                                <span class="input-group-addon"><i></i></span>
-                                            </div>
-                                        </div>
-                                    </div>
-                                    
-                                    <div class="form-group">
-                                        <label class="control-label col-sm-2">Step grid</label>
-                                        <div class="col-sm-10">
-                                        <input class="form-control" id="step" type="number" value="Enter step grid" style="width:50%">
+                                    <label class="control-label col-sm-2">Grid color </label>
+                                    <div class="col-sm-10">
+                                        <div id="gridColorPicker" data-format="alias"
+                                             class="input-group colorpicker-component" style="width: 90%">
+                                            <input type="text" value="primary" class="form-control" />
+                                            <span class="input-group-addon"><i></i></span>
                                         </div>
                                     </div>
                                 </div>
-                            </form> 
-                        </div>
+                                <div class="form-group">
+                                    <label class="control-label col-sm-2">Axies color </label>
+                                    <div class="col-sm-10">
+                                        <div id="gridColorAxis" data-format="alias"
+                                             class="input-group colorpicker-component" style="width: 90%">
+                                            <input type="text" value="primary" class="form-control" />
+                                            <span class="input-group-addon"><i></i></span>
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <div class="form-group">
+                                    <label class="control-label col-sm-2">Step grid</label>
+                                    <div class="col-sm-10">
+                                        <input class="form-control" id="step" type="number" value="Enter step grid" style="width:50%">
+                                    </div>
+                                </div>
+                            </div>
+                        </form>
                     </div>
+                </div>
             </div>
             <!--Binding-->
             <div class="col-lg-4">
-                    <div class="panel panel-default" style="margin-top:20px; padding-left:20px; padding-bottom:20px;">
-                            <form>
-                                <div class="checkbox">
-                                    <label><input type="checkbox" id="showGrid" value="">Show grid</label>
-                                </div>
-                                <div class="checkbox">
-                                    <label><input type="checkbox" id="showAxis" value="">Show axis</label>
-                                </div>
-                                <div class="checkbox">
-                                   <label><input type="checkbox" id="BindingGrid" value="">Binding</label>
-                                </div>
-                                <div class="checkbox">
-                                    <label><input type="checkbox" id="bindToLineEnds" value="">Binding to line
-                                        ends</label>
-                                </div>
-                                <div class="checkbox">
-                                    <label><input type="checkbox" id="bindToIntersections" value="">Binding to enter
-                                        sections</label>
-                                </div>
-                                <div class="checkbox">
-                                    <label><input type="checkbox" id="bindToCenters" value="">Binding to center</label>
-                                </div>
-                                <input class="form-control" id="stepBindingGrid" type="number" value="Enter step binding" style="width:50%" disabled>
-                            </form>
-                    </div>
+                <div class="panel panel-default" style="margin-top:20px; padding-left:20px; padding-bottom:20px;">
+                    <form>
+                        <div class="checkbox">
+                            <label><input type="checkbox" id="showGrid" value="">Show grid</label>
+                        </div>
+                        <div class="checkbox">
+                            <label><input type="checkbox" id="showAxis" value="">Show axis</label>
+                        </div>
+                        <div class="checkbox">
+                            <label><input type="checkbox" id="BindingGrid" value="">Binding</label>
+                        </div>
+                        <div class="checkbox">
+                            <label>
+                                <input type="checkbox" id="bindToLineEnds" value="">Binding to line
+                                ends
+                            </label>
+                        </div>
+                        <div class="checkbox">
+                            <label>
+                                <input type="checkbox" id="bindToIntersections" value="">Binding to enter
+                                sections
+                            </label>
+                        </div>
+                        <div class="checkbox">
+                            <label><input type="checkbox" id="bindToCenters" value="">Binding to center</label>
+                        </div>
+                        <input class="form-control" id="stepBindingGrid" type="number" value="Enter step binding" style="width:50%" disabled>
+                    </form>
+                </div>
             </div>
             <div class="col-lg-4">
-                    <div class="panel panel-default" style="margin-top:20px">
-                            <div class="panel-body">
-                                <form class="form-horizontal">
-                                    <div class="form-group">
-                                        <div class="form-group">
-                                            <label class="control-label col-sm-2">Active color</label>
-                                            <div class="col-sm-10">
-                                                <div id="ActiveColorPicker" data-format="alias"
-                                                     class="input-group colorpicker-component" style="width: 90%">
-                                                    <input type="text" value="primary" class="form-control" />
-                                                    <span class="input-group-addon"><i></i></span>
-                                                </div>
-                                            </div>
-                                        </div>
-                                        <div class="form-group">
-                                            <label class="control-label col-sm-2">Stroke width</label>
-                                            <div class="col-sm-10">
-                                                <input class="form-control" id="strokeWidth" type="number" value="Enter stroke width" style="width:50%">
-                                            </div>
+                <div class="panel panel-default" style="margin-top:20px">
+                    <div class="panel-body">
+                        <form class="form-horizontal">
+                            <div class="form-group">
+                                <div class="form-group">
+                                    <label class="control-label col-sm-2">Active color</label>
+                                    <div class="col-sm-10">
+                                        <div id="ActiveColorPicker" data-format="alias"
+                                             class="input-group colorpicker-component" style="width: 90%">
+                                            <input type="text" value="primary" class="form-control" />
+                                            <span class="input-group-addon"><i></i></span>
                                         </div>
                                     </div>
-                                </form>
+                                </div>
+                                <div class="form-group">
+                                    <label class="control-label col-sm-2">Stroke width</label>
+                                    <div class="col-sm-10">
+                                        <input class="form-control" id="strokeWidth" type="number" value="Enter stroke width" style="width:50%">
+                                    </div>
                                 </div>
                             </div>
+                        </form>
                     </div>
+                </div>
             </div>
-        </div>  
+        </div>
+    </div>
     </div>
     <div class="container-fluid" hidden="true" id="mainPanelSettings">
         Mark xyu
@@ -157,15 +161,20 @@
         <li><a href="#" onclick="toolbox.line.activate();"><span class="your-icon icon-simple-line normal"></span></a></li>
         <li><a href="#" onclick="toolbox.pathLine.activate()"><span class="your-icon icon-line normal"></span></a></li>
         <li><a href="#" onclick="toolbox.circle.activate()"><span class="your-icon icon-circle normal"></span></a></li>
-        <li><a href="#" onclick="toolbox.ellipse.activate()"><span class="your-icon icon-ellipse normal"></span></a>
+        <li>
+            <a href="#" onclick="toolbox.ellipse.activate()"><span class="your-icon icon-ellipse normal"></span></a>
         </li>
-        <li><a href="#" onclick="toolbox.rectangle.activate()"><span class="your-icon icon-rectangle normal"></span></a>
+        <li>
+            <a href="#" onclick="toolbox.rectangle.activate()"><span class="your-icon icon-rectangle normal"></span></a>
         </li>
-        <li><a href="#" onclick="toolbox.polygon.activate()"><span class="your-icon icon-polygon normal"></span></a>
+        <li>
+            <a href="#" onclick="toolbox.polygon.activate()"><span class="your-icon icon-polygon normal"></span></a>
         </li>
-        <li><a href="#" onclick="toolbox.star.activate()"><span class="your-icon icon-star normal"></span></a>
+        <li>
+            <a href="#" onclick="toolbox.star.activate()"><span class="your-icon icon-star normal"></span></a>
         </li>
-        <li><a href="#" onclick="toolbox.move.activate()"><span class="your-icon icon-move normal"></span></span></a>
+        <li>
+            <a href="#" onclick="toolbox.move.activate()"><span class="your-icon icon-move normal"></span></span></a>
         </li>
         <li><a href="#" onclick="toolbox.rotate.activate()"><span class="your-icon icon-rotate normal"></span> </a></li>
         <li><a href="#" onclick="toolbox.scale.activate()"><span class="your-icon icon-scale normal"></span></a></li>
@@ -191,37 +200,37 @@
             </ul>
             </li>
         -->
-       </ul>
+    </ul>
     <canvas id="myCanvas" resize></canvas>
 
 
-<script type="text/javascript">
-    var mediator = new Mediator();
-    var settingsManager = new SettingsManager(mediator);
+    <script type="text/javascript">
+        var mediator = new Mediator();
+        var settingsManager = new SettingsManager(mediator);
 
-    var canvas = document.getElementById('myCanvas');
+        var canvas = document.getElementById('myCanvas');
 
 
-    paper.install(window);
+        paper.install(window);
 
-    var undoRedo;
-    var toolbox;
-    var layerManager;
-    window.onload = function () {
-        paper.setup('myCanvas');
-        layerManager = new Layers(mediator);
-        var background = new Background(mediator, settingsManager.settings.background);
-        var scaling = new Scaling(mediator, settingsManager.settings.scaling, canvas);
+        var undoRedo;
+        var toolbox;
+        var layerManager;
+        window.onload = function () {
+            paper.setup('myCanvas');
+            layerManager = new Layers(mediator);
+            var background = new Background(mediator, settingsManager.settings.background);
+            var scaling = new Scaling(mediator, settingsManager.settings.scaling, canvas);
 
-        var binding = new Binding(mediator, settingsManager.settings.binding, layerManager.userLayers);
+            var binding = new Binding(mediator, settingsManager.settings.binding, layerManager.userLayers);
 
-        var stylesManager = new StylesManager(mediator, settingsManager.settings.styles);
+            var stylesManager = new StylesManager(mediator, settingsManager.settings.styles);
 
-        var drawer = new Drawer(mediator, layerManager);
+            var drawer = new Drawer(mediator, layerManager);
 
-        toolbox = new Tools(mediator, settingsManager.settings.tools, layerManager.userLayers, binding, drawer, stylesManager);
-        undoRedo = new UndoRedo(mediator, layerManager.userLayers);
-    }
-</script>
+            toolbox = new Tools(mediator, settingsManager.settings.tools, layerManager.userLayers, binding, drawer, stylesManager);
+            undoRedo = new UndoRedo(mediator, layerManager.userLayers);
+        }
+    </script>
 </body>
 </html>

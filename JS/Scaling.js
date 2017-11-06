@@ -1,5 +1,9 @@
 function Scaling(mediator, scalingSettings, canvas)
 {
+	function sign(x) {
+		return ((x > 0) - (x < 0)) || +x;
+	}
+	
     function addOnWheel(elem, handler) {
         if (elem.addEventListener) {
             if ('onwheel' in document) {
@@ -23,7 +27,7 @@ function Scaling(mediator, scalingSettings, canvas)
         var delta = e.deltaY || e.detail || e.wheelDelta;
         var canvasRect = canvas.getBoundingClientRect();
         var mousePos = new Point(e.clientX - canvasRect.left, e.clientY - canvasRect.top);
-        var coef = 1 - (step * Math.sign(delta));
+        var coef = 1 - (step * sign(delta));
         view.scale(coef, view.viewToProject(mousePos));
         mediator.publish("fieldScaled", coef);
     });
