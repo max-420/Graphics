@@ -15,6 +15,7 @@
     <script type="text/javascript" src="JS\StylesManager.js"></script>
     <script type="text/javascript" src="JS\Drawer.js"></script>
     <script type="text/javascript" src="JS\Layers.js"></script>
+    <script type="text/javascript" src="JS\Selection.js"></script>
     <script type="text/javascript" src="JS\bootstrap.min.js"></script>
     <script type="text/javascript" src ="JS\bootstrap-colorpicker.min.js"></script>
     <script type="text/javascript" src="JS\UI\VaruableList.js"></script>
@@ -217,9 +218,10 @@
 
         var stylesManager = new StylesManager(mediator, settingsManager.settings.styles);
 
+        var selection = new Selection(mediator, layerManager.userLayers);
         var drawer = new Drawer(mediator, layerManager);
 
-        toolbox = new Tools(mediator, settingsManager.settings.tools, layerManager.userLayers, binding, drawer, stylesManager);
+        toolbox = new Tools(mediator, settingsManager.settings.tools, binding, drawer, selection, stylesManager);
         undoRedo = new UndoRedo(mediator, layerManager.userLayers);
     }
 </script>

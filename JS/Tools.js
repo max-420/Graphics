@@ -1,4 +1,4 @@
-function Tools(mediator, toolsSettings, drawingLayers, binding, drawer, stylesManager) {
+function Tools(mediator, toolsSettings, binding, drawer, selection, stylesManager) {
     this.rectangle = new Rect();
     this.polygon = new Polygon();
     this.star = new Star();
@@ -201,17 +201,8 @@ function Tools(mediator, toolsSettings, drawingLayers, binding, drawer, stylesMa
         var selectionRect;
         var tool = new ToolWrapper();
         tool.onMouseDown = function (event) {
-            var hitOptions = {
-                segments: true,
-                stroke: true,
-                fill: true,
-                tolerance: 5
-            };
             startPoint = event.point;
-            var hitResult = drawingLayers.hitTest(event.point, hitOptions);
-            if (hitResult) {
-                hitResult.item.selected = !hitResult.item.selected;
-            }
+            selection.selectPoint(startPoint);
         }
         tool.onMouseDrag = function (event) {
             if (!selectMany) {
@@ -224,10 +215,7 @@ function Tools(mediator, toolsSettings, drawingLayers, binding, drawer, stylesMa
         }
         tool.onMouseUp = function (event) {
             if (!selectMany) return;
-            var items = drawingLayers.getItems({inside: new Rectangle(startPoint, event.point)});
-            items.forEach(function (item) {
-                item.selected = true;
-            })
+            selection.selectRectangle(new Rectangle(startPoint, event.point));
             drawer.cancel();
             selectMany = false;
         }
@@ -268,18 +256,9 @@ function Tools(mediator, toolsSettings, drawingLayers, binding, drawer, stylesMa
         //this.transform;
 
         this.selection = function (event) {
-            var hitOptions = {
-                segments: true,
-                stroke: true,
-                fill: true,
-                tolerance: 5
-            };
-            if (project.selectedItems.length == 0) {
+            if (selection.getSelection().length == 0) {
                 var point = binding.getPoint(event.point);
-                var hitResult = drawingLayers.hitTest(point, hitOptions);
-                if (hitResult) {
-                    hitResult.item.selected = true;
-                }
+                selection.selectPoint(point);
             }
         };
         var tool = new ToolWrapper();
