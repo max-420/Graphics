@@ -1,4 +1,4 @@
-function Tools(mediator, drawingLayers, binding, drawer, stylesManager) {
+function Tools(mediator, toolsSettings, drawingLayers, binding, drawer, stylesManager) {
     this.rectangle = new Rect();
     this.polygon = new Polygon();
     this.star = new Star();
@@ -71,13 +71,13 @@ function Tools(mediator, drawingLayers, binding, drawer, stylesManager) {
         var center;
         tool.init = function (event, targetItems) {
             center = binding.getPoint(event.point);
-            path = new Path.RegularPolygon(center, 5, 0);
+            path = new Path.RegularPolygon(center, toolsSettings.polygon.sides, 0);
             targetItems.addChild(path);
         }
         tool.draw = function (event, targetItems) {
             var point = binding.getPoint(event.point);
             path.remove();
-            path = new Path.RegularPolygon(center,5, point.getDistance(center));
+            path = new Path.RegularPolygon(center,toolsSettings.polygon.sides, point.getDistance(center));
             targetItems.addChild(path);
         }
         this.activate = function(){tool.activate()};
@@ -89,13 +89,13 @@ function Tools(mediator, drawingLayers, binding, drawer, stylesManager) {
         var center;
         tool.init = function (event, targetItems) {
             center = binding.getPoint(event.point);
-            path = new Path.Star(center, 5, 0,0);
+            path = new Path.Star(center, toolsSettings.star.points, 0,0);
             targetItems.addChild(path);
         }
         tool.draw = function (event, targetItems) {
             var point = binding.getPoint(event.point);
             path.remove();
-            path = new Path.Star(center,5,point.getDistance(center)/2, point.getDistance(center));
+            path = new Path.Star(center,toolsSettings.star.points,point.getDistance(center)/2, point.getDistance(center));
             targetItems.addChild(path);
         }
         this.activate = function(){tool.activate()};
@@ -244,14 +244,18 @@ function Tools(mediator, drawingLayers, binding, drawer, stylesManager) {
             targetItems = new Group();
             if (this.init) this.init(event, targetItems);
             stylesManager.applyDrawingSettings(targetItems, 'drawing');
+            stylesManager.applyDrawingSettings(targetItems, 'predrawing');
         }.bind(this);
 
         tool.onMouseDrag = function (event) {
             if (this.draw) this.draw(event, targetItems);
             stylesManager.applyDrawingSettings(targetItems, 'drawing');
+            stylesManager.applyDrawingSettings(targetItems, 'predrawing');
         }.bind(this);
 
         tool.onMouseUp = function (event) {
+            if (this.draw) this.draw(event, targetItems);
+            stylesManager.applyDrawingSettings(targetItems, 'drawing');
             drawer.save(targetItems.children);
             targetItems.remove();
         }

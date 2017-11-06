@@ -27,6 +27,17 @@ function Settings() {
             lineScaling: 2,
         },
     }
+    this.tools =
+    {
+        polygon:
+        {
+            sides: 6,
+        },
+        star:
+        {
+            points: 5,
+        }
+    }
     this.background =
     {
         showAxis: true,

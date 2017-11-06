@@ -219,7 +219,7 @@
 
         var drawer = new Drawer(mediator, layerManager);
 
-        toolbox = new Tools(mediator, layerManager.userLayers, binding, drawer, stylesManager);
+        toolbox = new Tools(mediator, settingsManager.settings.tools, layerManager.userLayers, binding, drawer, stylesManager);
         undoRedo = new UndoRedo(mediator, layerManager.userLayers);
     }
 </script>

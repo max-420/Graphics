@@ -3,7 +3,6 @@ function Background(mediator, backgroundSettings) {
     var lastBounds = new Rectangle(view.bounds.point.subtract(margin), view.size.add(margin));
     view.translate(view.viewSize.divide(2));
     var redraw = function () {
-        console.log("redraw");
         lastBounds = new Rectangle(view.bounds.point.subtract(margin), view.size.add(margin));
         mediator.publish("backgroundDrawingStarted");
         if (backgroundSettings.showGrid) drawGrid();
