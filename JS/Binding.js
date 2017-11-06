@@ -1,6 +1,5 @@
 function Binding(mediator, bindingSettings, drawingLayers) {
     var bindingTolerance;
-    var bindingsLayer = new Layer();
     var signs = new Signs();
     this.getPoint = function (point) {
         bindingTolerance = bindingSettings.bindingTolerance/view.zoom;
@@ -28,7 +27,8 @@ function Binding(mediator, bindingSettings, drawingLayers) {
         mediator.publish("bindingDrawingFinished");
     }
     this.clear = function () {
-        bindingsLayer.removeChildren();
+        mediator.publish("bindingDrawingStarted");
+        mediator.publish("bindingDrawingFinished");
     }
 
     function bindToGrid(point) {

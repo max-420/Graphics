@@ -255,17 +255,18 @@ function Tools(mediator, toolsSettings, binding, drawer, selection, stylesManage
         //this.init;
         //this.transform;
 
-        this.selection = function (event) {
-            if (selection.getSelection().length == 0) {
+        this.select = function (event) {
+            if (!selection.anythingSelected()) {
                 var point = binding.getPoint(event.point);
                 selection.selectPoint(point);
+                if(!selection.anythingSelected()) tool.cancel();
             }
         };
         var tool = new ToolWrapper();
         tool.showBindings = true;
 
         tool.onMouseDown = function (event) {
-            this.selection(event);
+            this.select(event);
 
             targetItems = drawer.getSelection();
 
@@ -285,7 +286,7 @@ function Tools(mediator, toolsSettings, binding, drawer, selection, stylesManage
     function ToolWrapper() {
         var tool = new Tool();
         //tool.minDistance = 5;
-        this.cancelled = false;
+        var cancelled = false;
         this.showBindings = false;
         tool.onMouseMove = function (event) {
             if (this.showBindings) binding.drawPoint(event.point);
@@ -294,24 +295,24 @@ function Tools(mediator, toolsSettings, binding, drawer, selection, stylesManage
 
         tool.onMouseDown = function (event) {
 
-            this.cancelled = false;
+            cancelled = false;
             if (this.onMouseDown) this.onMouseDown(event);
         }.bind(this);
 
         tool.onMouseDrag = function (event) {
-            if (this.cancelled) return;
+            if (cancelled) return;
             if (this.showBindings) binding.drawPoint(event.point);
             if (this.onMouseDrag) this.onMouseDrag(event);
         }.bind(this);
 
         tool.onMouseUp = function (event) {
-            if (this.cancelled) return;
+            if (cancelled) return;
             if (this.onMouseUp) this.onMouseUp(event);
         }.bind(this);
 
         tool.onKeyDown = function (event) {
             if (event.key == 'escape') {
-                this.cancelled = true;
+                this.cancel();
                 drawer.cancel();
                 project.deselectAll();
             }
@@ -320,6 +321,14 @@ function Tools(mediator, toolsSettings, binding, drawer, selection, stylesManage
             }
             if (this.onKeyDown) this.onKeyDown(event);
         }.bind(this);
-        this.activate = function(){tool.activate()};
+        this.cancel = function()
+        {
+            cancelled = true;
+            binding.clear();
+        }
+        this.activate = function(){
+            tool.activate();
+            binding.clear();
+        };
     }
 }

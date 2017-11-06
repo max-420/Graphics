@@ -20,19 +20,24 @@ function Background(mediator, backgroundSettings) {
         var rightPoint = [boundRect.right + scaledMargin, 0];
         var leftPoint = [boundRect.left - scaledMargin, 0];
         var horLine = new Symbol(new Path.Line(rightPoint, leftPoint));
+
         var topPoint = [0, boundRect.bottom + scaledMargin];
         var bottomPoint = [0, boundRect.top - scaledMargin];
         var vertLine = new Symbol(new Path.Line(topPoint, bottomPoint));
+
         horLine.definition.strokeColor = backgroundSettings.gridColor;
         vertLine.definition.strokeColor = backgroundSettings.gridColor;
         horLine.definition.strokeScaling = false;
         vertLine.definition.strokeScaling = false;
+
         var yStart = Math.round((boundRect.top - scaledMargin) / cellSize) * cellSize;
 
         for (y = yStart; y < boundRect.bottom + scaledMargin; y += cellSize) {
             grid.addChild(horLine.place(new Point(view.center.x, y)));
         }
+
         var xStart = Math.round((boundRect.left - scaledMargin) / cellSize) * cellSize;
+
         for (x = xStart; x < boundRect.right + scaledMargin; x += cellSize) {
             grid.addChild(vertLine.place(new Point(x, view.center.y)));
         }
@@ -61,7 +66,8 @@ function Background(mediator, backgroundSettings) {
             },
         });
     mediator.subscribe("fieldScaled", function () {
-        if (!lastBounds.contains(view.bounds)) {
+        if (!lastBounds.contains(view.bounds) ||
+            (lastBounds.size.width - view.bounds.size.width > 2 * margin)) {
             redraw();
         }
     });

@@ -6,7 +6,7 @@ function Drawer(mediator, layerManager) {
         selectedItems = new Group(project.selectedItems);
         selectedItemsCopy = selectedItems.clone();
         layerManager.activeUserLayer.addChild(selectedItems);
-        layerManager.appLayers.children['preview'].addChild(selectedItemsCopy);
+        //layerManager.appLayers.children['preview'].addChild(selectedItemsCopy);
         selectedItemsCopy.selected = false;
         return selectedItemsCopy;
     }
@@ -19,7 +19,6 @@ function Drawer(mediator, layerManager) {
         selectedItems = null;
         layerManager.appLayers.children['preview'].removeChildren();
         mediator.publish("drawingChanged");
-
     }
     this.save = function (newItems) {
         layerManager.activeUserLayer.addChildren(newItems);

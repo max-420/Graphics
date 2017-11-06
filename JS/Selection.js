@@ -5,8 +5,9 @@ function Selection(mediator, hitTestObj) {
     this.deselectAll = function () {
         hitTestObj.selected = false;
     }
-    this.getSelection = function () {
-        return project.selectedItems;
+    this.anythingSelected = function()
+    {
+        return project.selectedItems.length > 0;
     }
     this.selectPoint = function (point) {
         this.deselectAll();
@@ -20,7 +21,6 @@ function Selection(mediator, hitTestObj) {
         if (hitResult) {
             hitResult.item.selected = true;
         }
-        return hitResult.item;
     }
     this.selectRectangle = function (rectangle) {
         this.deselectAll();
@@ -34,6 +34,5 @@ function Selection(mediator, hitTestObj) {
         items.forEach(function (item) {
             item.selected = true;
         });
-        return project.selectedItems;
     }
 }
