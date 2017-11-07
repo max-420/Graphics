@@ -11,6 +11,7 @@ function Tools(mediator, toolsSettings, binding, drawer, selection, stylesManage
     this.scale = new Scale();
     this.rotate = new Rotate();
     this.pathLine = new PathLine();
+    this.text = new Text();
 
     function PathLine() {
         var path;
@@ -195,6 +196,46 @@ function Tools(mediator, toolsSettings, binding, drawer, selection, stylesManage
         this.activate = function(){hand.activate()};
     }
 
+    function Text() {
+        var text;
+        var textCursor;
+        var tool = new ToolWrapper();
+        tool.showBindings = true;
+        tool.onMouseDown = function (event) {
+            if(text)
+            {
+                this.showBindings = true;
+                if(text.content.length > 0) {
+                    drawer.save([text]);
+                }
+                text = null;
+                drawer.cancel();
+                return;
+            }
+
+            this.showBindings = false;
+            binding.clear();
+            var point = binding.getPoint(event.point);
+            text = new PointText(point);
+            text.content='';
+            stylesManager.applyTextStyle(text, 'drawing');
+            textCursor = new Path.Line(text.bounds.topRight,text.bounds.bottomRight);
+            stylesManager.applyStyle(textCursor, 'textCursor');
+
+            textCursor.on('frame', function (event) {
+                if(event.count%20 != 0) return;
+                this.visible = !this.visible;
+            });
+        }
+        tool.onKeyDown = function (event) {
+            text.content+=event.character;
+            textCursor.position = new Point(text.bounds.right, textCursor.position.y);
+        }
+        this.activate = function(){
+            tool.activate();
+            tool.text = null;
+        };
+    }
     function Select() {
         var selectMany;
         var startPoint;
@@ -210,7 +251,7 @@ function Tools(mediator, toolsSettings, binding, drawer, selection, stylesManage
             }
             var prev = selectionRect;
             selectionRect = new Path.Rectangle(startPoint, event.point);
-            stylesManager.applyDrawingSettings(selectionRect,'selection');
+            stylesManager.applyStyle(selectionRect,'selection');
             if (prev) prev.remove();
         }
         tool.onMouseUp = function (event) {
@@ -222,6 +263,7 @@ function Tools(mediator, toolsSettings, binding, drawer, selection, stylesManage
         this.activate = function(){tool.activate()};
     }
 
+
     function DrawingTool() {
         var targetItems;
         //this.init;
@@ -231,19 +273,19 @@ function Tools(mediator, toolsSettings, binding, drawer, selection, stylesManage
         tool.onMouseDown = function (event) {
             targetItems = new Group();
             if (this.init) this.init(event, targetItems);
-            stylesManager.applyDrawingSettings(targetItems, 'drawing');
-            stylesManager.applyDrawingSettings(targetItems, 'predrawing');
+            stylesManager.applyStyle(targetItems, 'drawing');
+            stylesManager.applyStyle(targetItems, 'predrawing');
         }.bind(this);
 
         tool.onMouseDrag = function (event) {
             if (this.draw) this.draw(event, targetItems);
-            stylesManager.applyDrawingSettings(targetItems, 'drawing');
-            stylesManager.applyDrawingSettings(targetItems, 'predrawing');
+            stylesManager.applyStyle(targetItems, 'drawing');
+            stylesManager.applyStyle(targetItems, 'predrawing');
         }.bind(this);
 
         tool.onMouseUp = function (event) {
             if (this.draw) this.draw(event, targetItems);
-            stylesManager.applyDrawingSettings(targetItems, 'drawing');
+            stylesManager.applyStyle(targetItems, 'drawing');
             drawer.save(targetItems.children);
             targetItems.remove();
         }

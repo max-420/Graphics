@@ -26,7 +26,34 @@ function Settings() {
             lineType: 'dashed',
             lineScaling: 2,
         },
-    }
+        textCursor:
+        {
+            strokeColor:'grey',
+            strokeWidth: 1,
+            strokeScaling: false,
+        },
+    };
+    this.textStyles =
+    {
+        drawing:
+        {
+            strokeColor: 'red',
+            strokeWidth: 1,
+            strokeScaling: false,
+            opacity: 1,
+            lineType: 'dotted',
+            lineScaling: 1,
+            fillColor: 'black',
+            shadowColor: 'rgba(0, 0, 0, 0)',
+            shadowBlur: 0,
+            shadowOffset: 0,
+            fontFamily: 'sans-serif',
+            fontWeight: 'normal',
+            fontSize: 30,
+            font: 'sans-serif',
+            justification: 'left',
+        },
+    };
     this.tools =
     {
         polygon:

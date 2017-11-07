@@ -55,6 +55,7 @@ function Background(mediator, backgroundSettings) {
 
         axis.strokeColor = backgroundSettings.axisColor;
         axis.strokeWidth = backgroundSettings.strokeWidth;
+        axis.strokeScaling = false;
     }
     redraw();
     mediator.subscribe("settingsChanged", function (path, value) {

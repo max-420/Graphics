@@ -172,6 +172,9 @@
             <a href="#" onclick="toolbox.polygon.activate()"><span class="your-icon icon-polygon normal"></span></a>
         </li>
         <li>
+            <a href="#" onclick="toolbox.text.activate()"><span class="your-icon icon-polygon normal"></span></a>
+        </li>
+        <li>
             <a href="#" onclick="toolbox.star.activate()"><span class="your-icon icon-star normal"></span></a>
         </li>
         <li>
@@ -225,7 +228,7 @@
 
             var binding = new Binding(mediator, settingsManager.settings.binding, layerManager.userLayers);
 
-            var stylesManager = new StylesManager(mediator, settingsManager.settings.styles);
+            var stylesManager = new StylesManager(mediator, settingsManager.settings.styles, settingsManager.settings.textStyles);
 
             var selection = new Selection(mediator, layerManager.userLayers);
             var drawer = new Drawer(mediator, layerManager);
