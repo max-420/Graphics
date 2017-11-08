@@ -12,6 +12,7 @@ function Tools(mediator, toolsSettings, binding, drawer, selection, stylesManage
     this.rotate = new Rotate();
     this.pathLine = new PathLine();
     this.text = new Text();
+    this.freeTransform = new FreeTransform();
 
     function PathLine() {
         var path;
@@ -114,7 +115,7 @@ function Tools(mediator, toolsSettings, binding, drawer, selection, stylesManage
         circle.draw = function (event, targetItems) {
             var point = binding.getPoint(event.point);
             path.remove();
-            path = new Path.Circle(center, point.getDistance(center));
+            path = new Path.Circle(center, point.getDistance(center))
             targetItems.addChild(path);
         }
         this.activate = function(){circle.activate()};
@@ -183,6 +184,27 @@ function Tools(mediator, toolsSettings, binding, drawer, selection, stylesManage
             var angle = point.subtract(pos).angle;
             targetItems.rotate(angle - lastAngle, pos);
             lastAngle = angle;
+        }
+        this.activate = function(){tool.activate()};
+    }
+
+    function FreeTransform() {
+        var segment;
+        var tool = new TransformTool();
+        tool.init = function (event, targetItems) {
+            var point = binding.getPoint(event.point);
+            var hitOptions = {
+                segments: true,
+                tolerance: 5
+            };
+            var hitResult = targetItems.hitTest(point, hitOptions);
+            if(!hitResult) return;
+            segment = hitResult.segment;
+        }
+        tool.transform = function (event, targetItems) {
+            if(!segment) return;
+            var point = binding.getPoint(event.point);
+            segment.point = point;
         }
         this.activate = function(){tool.activate()};
     }

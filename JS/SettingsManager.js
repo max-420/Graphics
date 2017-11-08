@@ -5,9 +5,9 @@ function Settings() {
         {
             strokeColor: 'red',
             strokeWidth: 1,
-            strokeScaling: true,
+            strokeScaling: false,
             opacity: 1,
-            lineType: 'dotDash',
+            lineType: 'solid',
             lineScaling: 10,
             fillColor: 'rgba(0, 0, 0, 0)',
             shadowColor: 'rgba(0, 0, 0, 0)',
