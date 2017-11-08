@@ -190,21 +190,40 @@ function Tools(mediator, toolsSettings, binding, drawer, selection, stylesManage
 
     function FreeTransform() {
         var segment;
+        var type;
         var tool = new TransformTool();
         tool.init = function (event, targetItems) {
             var point = binding.getPoint(event.point);
             var hitOptions = {
                 segments: true,
-                tolerance: 5
+                handles:true,
+                tolerance: 10
             };
             var hitResult = targetItems.hitTest(point, hitOptions);
-            if(!hitResult) return;
+            if(!hitResult)
+            {
+                segment = null;
+                type = null;
+                return;
+            }
             segment = hitResult.segment;
+            type = hitResult.type;
         }
         tool.transform = function (event, targetItems) {
             if(!segment) return;
             var point = binding.getPoint(event.point);
-            segment.point = point;
+            if(type == 'segment')
+            {
+                segment.point = point;
+            }
+            if(type == 'handle-in')
+            {
+                segment.handleIn = point.subtract(segment.point);
+            }
+            if(type == 'handle-out')
+            {
+                segment.handleOut = point.subtract(segment.point);
+            }
         }
         this.activate = function(){tool.activate()};
     }
@@ -385,11 +404,13 @@ function Tools(mediator, toolsSettings, binding, drawer, selection, stylesManage
             }
             if (this.onKeyDown) this.onKeyDown(event);
         }.bind(this);
+
         this.cancel = function()
         {
             cancelled = true;
             binding.clear();
         }
+
         this.activate = function(){
             tool.activate();
             binding.clear();

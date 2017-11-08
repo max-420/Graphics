@@ -32,6 +32,12 @@ function Settings() {
             strokeWidth: 1,
             strokeScaling: false,
         },
+        bindingSigns:
+        {
+            strokeColor: 'grey',
+            strokeWidth: 1,
+            strokeScaling: false,
+        }
     };
     this.textStyles =
     {
