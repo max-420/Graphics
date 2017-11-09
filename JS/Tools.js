@@ -12,6 +12,7 @@ function Tools(mediator, toolsSettings, binding, drawer, selection, stylesManage
     this.rotate = new Rotate();
     this.pathLine = new PathLine();
     this.text = new Text();
+    this.freeTransform = new FreeTransform();
 
     function PathLine() {
         var path;
@@ -114,7 +115,7 @@ function Tools(mediator, toolsSettings, binding, drawer, selection, stylesManage
         circle.draw = function (event, targetItems) {
             var point = binding.getPoint(event.point);
             path.remove();
-            path = new Path.Circle(center, point.getDistance(center));
+            path = new Path.Circle(center, point.getDistance(center))
             targetItems.addChild(path);
         }
         this.activate = function(){circle.activate()};
@@ -183,6 +184,46 @@ function Tools(mediator, toolsSettings, binding, drawer, selection, stylesManage
             var angle = point.subtract(pos).angle;
             targetItems.rotate(angle - lastAngle, pos);
             lastAngle = angle;
+        }
+        this.activate = function(){tool.activate()};
+    }
+
+    function FreeTransform() {
+        var segment;
+        var type;
+        var tool = new TransformTool();
+        tool.init = function (event, targetItems) {
+            var point = binding.getPoint(event.point);
+            var hitOptions = {
+                segments: true,
+                handles:true,
+                tolerance: 10
+            };
+            var hitResult = targetItems.hitTest(point, hitOptions);
+            if(!hitResult)
+            {
+                segment = null;
+                type = null;
+                return;
+            }
+            segment = hitResult.segment;
+            type = hitResult.type;
+        }
+        tool.transform = function (event, targetItems) {
+            if(!segment) return;
+            var point = binding.getPoint(event.point);
+            if(type == 'segment')
+            {
+                segment.point = point;
+            }
+            if(type == 'handle-in')
+            {
+                segment.handleIn = point.subtract(segment.point);
+            }
+            if(type == 'handle-out')
+            {
+                segment.handleOut = point.subtract(segment.point);
+            }
         }
         this.activate = function(){tool.activate()};
     }
@@ -363,11 +404,13 @@ function Tools(mediator, toolsSettings, binding, drawer, selection, stylesManage
             }
             if (this.onKeyDown) this.onKeyDown(event);
         }.bind(this);
+
         this.cancel = function()
         {
             cancelled = true;
             binding.clear();
         }
+
         this.activate = function(){
             tool.activate();
             binding.clear();
