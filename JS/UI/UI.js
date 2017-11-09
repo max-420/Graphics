@@ -38,6 +38,8 @@ $(document).ready(function () {
     var mainPanelSetting = $("#mainPanelSettings");
     var gridPanelSettings = $("#gridPanelSettings");
     var bindingPanelSettingss = $("#bindingPanelSettings");
+    var gridColorStroke = $("#gridColorStroke");
+    var gridColorFillColor = $("#gridColorFillColor");
 
     //SET SETTING ON COLORPICKER
     gridColorAxisHTML.colorpicker({
@@ -56,6 +58,17 @@ $(document).ready(function () {
         colorSelectors: constColor
     }).on('hidePicker', function () {
         settingsManager.settings.background.gridColor = gridColorPickerHTML.colorpicker('getValue');
+    });
+
+    gridColorStroke.colorpicker({
+        colorSelectors: constColor
+    }).on('hidePicker', function () {
+        settingsManager.settings.styles.drawing.strokeColor = gridColorStroke.colorpicker('getValue');
+    });
+    gridColorFillColor.colorpicker({
+        colorSelectors: constColor
+    }).on('hidePicker', function () {
+        settingsManager.settings.styles.drawing.fillColor = gridColorFillColor.colorpicker('getValue');
     });
 
 
@@ -274,4 +287,37 @@ $(document).ready(function () {
             $('#stepBindingGrid').removeAttr("disabled");
         }
     });
+
+    $("#bootstrap-slider").slider();
+    $("#bootstrap-slider").on("slide", function (slideEvt) {
+        settingsManager.settings.styles.drawing.strokeWidth = slideEvt.value;
+        $("#sliderValue").text(slideEvt.value);
+    });
+
+    $('.slider').on("click", function () {
+        $("#sliderValue").text(newvalue);
+    });
+
+    $("#OpacitySetting").slider();
+    $("#OpacitySetting").on("slide", function (slideEvt) {
+        settingsManager.settings.styles.drawing.opacity = slideEvt.value;
+        $("#OpacityValue").text(slideEvt.value);
+    });
+
+    $('.slider').on("click", function () {
+        $("#OpacityValue").text(newvalue);
+    });
+
+
+    //
+    $("#LineScalingSetting").slider();
+    $("#LineScalingSetting").on("slide", function (slideEvt) {
+        settingsManager.settings.styles.drawing.lineScaling = slideEvt.value;
+        $("#LineScalingValue").text(slideEvt.value);
+    });
+
+    $('.slider').on("click", function () {
+        $("#LineScalingValue").text(newvalue);
+    });
+
 });
