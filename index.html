@@ -48,55 +48,12 @@
             </ul>
         </div>
     </nav>
-    <div class="container-fluid" hidden="true" id="bindingPanelSettings">
+    <div class="container-fluid" hidden="true" id="bindingPanelSettings" style="height:20%">
         <div class="row">
-            <div class="col-lg-4">
-                <div class="panel panel-success" style="margin-top:20px">
-                    <div class="panel-body">
-                        <form class="form-horizontal">
-                            <div class="form-group">
-                                <div class="form-group">
-                                    <label class="control-label col-sm-2">Grid color </label>
-                                    <div class="col-sm-10">
-                                        <div id="gridColorPicker" data-format="alias"
-                                             class="input-group colorpicker-component" style="width: 90%">
-                                            <input type="text" value="primary" class="form-control" />
-                                            <span class="input-group-addon"><i></i></span>
-                                        </div>
-                                    </div>
-                                </div>
-                                <div class="form-group">
-                                    <label class="control-label col-sm-2">Axies color </label>
-                                    <div class="col-sm-10">
-                                        <div id="gridColorAxis" data-format="alias"
-                                             class="input-group colorpicker-component" style="width: 90%">
-                                            <input type="text" value="primary" class="form-control" />
-                                            <span class="input-group-addon"><i></i></span>
-                                        </div>
-                                    </div>
-                                </div>
-
-                                <div class="form-group">
-                                    <label class="control-label col-sm-2">Step grid</label>
-                                    <div class="col-sm-10">
-                                        <input class="form-control" id="step" type="number" value="Enter step grid" style="width:50%">
-                                    </div>
-                                </div>
-                            </div>
-                        </form>
-                    </div>
-                </div>
-            </div>
             <!--Binding-->
             <div class="col-lg-4">
                 <div class="panel panel-default" style="margin-top:20px; padding-left:20px; padding-bottom:20px;">
                     <form>
-                        <div class="checkbox">
-                            <label><input type="checkbox" id="showGrid" value="">Show grid</label>
-                        </div>
-                        <div class="checkbox">
-                            <label><input type="checkbox" id="showAxis" value="">Show axis</label>
-                        </div>
                         <div class="checkbox">
                             <label><input type="checkbox" id="BindingGrid" value="">Binding</label>
                         </div>
@@ -148,12 +105,50 @@
         </div>
     </div>
     </div>
-    <div class="container-fluid" hidden="true" id="mainPanelSettings">
-        Mark xyu
+    <div class="container-fluid" hidden="true" id="mainPanelSettings"  style="height:20%">
+        <div class="row">
+            <div class="col-sm-2">
+            <div class="panel panel-default" style="margin-top:20px;">
+                    <div class="panel-heading">Panel Heading</div>
+                    <div class="btn-group">
+                            <button type="button" class="btn btn-primary">Undo</button>
+                            <button type="button" class="btn btn-primary">Redo</button>
+                    </div>
+            </div>
+            </div>
+        </div>
     </div>
     </div>
-    <div class="container-fluid" hidden="true" id="gridPanelSettings">
-        Here grid settings
+    <div class="container-fluid" hidden="true" id="gridPanelSettings"  style="height:20%">
+            
+            <form class="form-inline">                   
+                    <div class="checkbox">
+                        <label><input type="checkbox" id="showGrid" value="">Show grid</label>
+                    </div>
+                    <div class="checkbox">
+                        <label><input type="checkbox" id="showAxis" value="">Show axis</label>
+                    </div>
+                    <div class="form-group">
+                            <label for="step">Step grid:</label>
+                            <input type="number" value="Enter step grid" class="form-control" id="step">
+                    </div>
+                    <div class="form-group">
+                            <label class="control-label">Grid color </label>
+                            <div id="gridColorPicker" data-format="alias"
+                                     class="input-group colorpicker-component" style="width: 90%">
+                                <input type="text" value="primary" class="form-control" />
+                                <span class="input-group-addon"><i></i></span>
+                            </div>
+                    </div>
+                    <div class="form-group">
+                            <label class="control-label">Axies color </label>
+                                <div id="gridColorAxis" data-format="alias"
+                                     class="input-group colorpicker-component" style="width: 90%">
+                                    <input type="text" value="primary" class="form-control" />
+                                    <span class="input-group-addon"><i></i></span>
+                                </div>
+                        </div>
+                  </form> 
     </div>
 
 

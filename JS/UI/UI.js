@@ -1,3 +1,13 @@
+class configuration {
+    constructor(checkBindingSettings, checkGridSetting, checkLeftPanelShow, checkMainSetting, showLeftPanel) {
+        this.checkBindingSettings = checkBindingSettings;
+        this.checkGridSetting = checkGridSetting;
+        this.checkLeftPanelShow = checkLeftPanelShow;
+        this.checkMainSetting = checkMainSetting;
+        this.showLeftPanel = showLeftPanel;
+    }
+}
+let conf = new configuration(true,true,true,true, true);
 $(document).ready(function () {
     //VARIABLE LIST
     var gridColorAxisHTML = $('#gridColorAxis');
@@ -47,79 +57,54 @@ $(document).ready(function () {
     }).on('hidePicker', function () {
         settingsManager.settings.background.gridColor = gridColorPickerHTML.colorpicker('getValue');
     });
-    //ENG SETTING ON COLORPICKER
-    //bindingPanelSettings
-    var CheckAllPanel = true; //VARIABLE FOR close panel
 
 
-    var checkBindingSettings = true;
-    var checkMainSetting = true;
-    var checkGridSetting = true;
 
-    var sizebindingPanelSettingss = parseInt(bindingPanelSettingss.css("height"));
     var sizeLeftElementPanel = parseInt(leftElementPanelHTML.css("top"));
     
     $('#bindingSettings').click(function () {
-        CloseAllPanels();
-        if (checkBindingSettings) {
-            if(CheckAllPanel){
-                bindingPanelSettingss.show("fast");
-                leftElementPanelHTML.animate({ "top": sizeLeftElementPanel + sizebindingPanelSettingss }, "fast");
-                checkBindingSettings = false;
-                CheckAllPanel = false;
-            }
+        if (conf.checkBindingSettings) {
+            CloseAllPanels();
+            leftPanelShow();
+            bindingPanelSettingss.show();
+            conf.checkBindingSettings = false;
         }
-        else if (!checkBindingSettings){
-            if(!CheckAllPanel){
-                bindingPanelSettingss.hide("fast");
-                leftElementPanelHTML.animate({ "top": sizeLeftElementPanel }, "fast");
-                checkBindingSettings = true;
-                CheckAllPanel = true;
-            }
+        else if (!conf.checkBindingSettings){
+            leftPanelHide();
+            bindingPanelSettingss.hide("fast");
+            conf.checkBindingSettings = true;
         }
     });
 
     var sizeMainPanelSetting = parseInt(mainPanelSetting.css("height"));
     //mainPanelSettings  // mainSettings // mainPanelSettings
     $('#mainSettings').click(function () {
-        CloseAllPanels();
-        if (checkMainSetting) {
-            if(CheckAllPanel){
-                mainPanelSetting.show("fast");
-                leftElementPanelHTML.animate({ "top": sizeLeftElementPanel + sizeMainPanelSetting }, "fast");
-                checkMainSetting = false;
-                CheckAllPanel = false;
-            }
+        if (conf.checkMainSetting) {
+            CloseAllPanels();
+            leftPanelShow();
+            mainPanelSetting.show();
+            conf.checkMainSetting = false;
         }
-        else if(!checkMainSetting){
-            if(!CheckAllPanel) {
-                mainPanelSetting.hide("fast");
-                leftElementPanelHTML.animate({"top": sizeLeftElementPanel}, "fast");
-                checkMainSetting = true;
-                CheckAllPanel = true;
-            }
+        else if(!conf.checkMainSetting){
+            leftPanelHide();
+            mainPanelSetting.hide();
+            conf.checkMainSetting = true;
         }
     });
+
     //Grid  // gridSettings // gridPanelSettings
     var sizeGridPanel = parseInt(gridPanelSettings.css("height"));
-
     $('#gridSettings').click(function () {
-        CloseAllPanels();
-        if (checkGridSetting) {
-            if(CheckAllPanel) {
-                gridPanelSettings.show("fast");
-                leftElementPanelHTML.animate({"top": sizeLeftElementPanel + sizeGridPanel}, "fast");
-                checkGridSetting = false;
-                CheckAllPanel = false;
-            }
+        if (conf.checkGridSetting) {
+                CloseAllPanels();
+                leftPanelShow();
+                gridPanelSettings.show();
+                conf.checkGridSetting = false;
         }
-        else if (!checkGridSetting){
-            if(!CheckAllPanel) {
-                gridPanelSettings.hide("fast");
-                leftElementPanelHTML.animate({"top": sizeLeftElementPanel}, "fast");
-                checkGridSetting = true;
-                CheckAllPanel = true;
-            }
+        else if (!conf.checkGridSetting){
+                leftPanelHide();
+                gridPanelSettings.hide();
+                conf.checkGridSetting = true;
         }
     });
 
@@ -127,29 +112,37 @@ $(document).ready(function () {
     var closePanel = $("#ClosePanel");
     closePanel.click(function () {
         CloseAllPanels();
+        leftPanelHide();
     });
 
     function CloseAllPanels(){
-        if (!CheckAllPanel) {
-            if(!checkBindingSettings){
+            if(!conf.checkBindingSettings){
                 bindingPanelSettingss.hide("fast");
-                leftElementPanelHTML.animate({ "top": sizeLeftElementPanel }, "fast");
-                checkBindingSettings = true;
-                CheckAllPanel = true;
+                conf.checkBindingSettings = true;
             }
-            if(!checkGridSetting){
+            if(!conf.checkGridSetting){
                 gridPanelSettings.hide("fast");
-                leftElementPanelHTML.animate({ "top": sizeLeftElementPanel }, "fast");
-                checkGridSetting = true;
-                CheckAllPanel = true;
+                conf.checkGridSetting = true;
             }
-            if(!checkMainSetting){
+            if(!conf.checkMainSetting){
                 mainPanelSetting.hide("fast");
-                leftElementPanelHTML.animate({ "top": sizeLeftElementPanel }, "fast");
-                checkMainSetting = true;
-                CheckAllPanel = true;
+                conf.checkMainSetting = true;
             }
+    }
+
+    function leftPanelShow(){
+        if(conf.checkLeftPanelShow){
+            leftElementPanelHTML.animate({ "top": sizeLeftElementPanel + 250 });
+            conf.checkLeftPanelShow = false;
         }
+
+    }
+    function leftPanelHide() {
+        if(!conf.checkLeftPanelShow){
+            leftElementPanelHTML.animate({ "top": sizeLeftElementPanel });
+            conf.checkLeftPanelShow = true;
+        }
+
     }
 
     function SetSettingInHTMLElements() {
@@ -205,8 +198,7 @@ $(document).ready(function () {
     SetSettingInHTMLElements();
 
     stepHTML.change(function () {
-        alert(parseInt(stepHTML.val()));
-        settingsManager.settings.background.step = parseInt(stepHTML.val());
+        settingsManager.settings.background.gridStep = parseInt(stepHTML.val());
     });
     strokeWidthHTML.change(function () {
         settingsManager.settings.styles.drawing.strokeWidth = strokeWidthHTML.val();
