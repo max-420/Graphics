@@ -268,10 +268,10 @@ $(document).ready(function () {
 
     bindToCenters.click(function () {
         if (!$(this).is(':checked')) {
-            settingsManager.settings.binding.bindToCenters = false;
+            settingsManager.settings.styles.binding.bindToCenters = false;
         }
         else {
-            settingsManager.settings.binding.bindToCenters = true;
+            settingsManager.settings.styles.binding.bindToCenters = true;
         }
     });
 
@@ -280,13 +280,21 @@ $(document).ready(function () {
     stepBinderHTML.click(function () {
         if (!$(this).is(':checked')) {
             settingsManager.settings.binding.bindToGrid = false;
-            $('#stepBindingGrid').attr("disabled", "disabled");
+            HideStepGridHTML();
         }
         else {
             settingsManager.settings.binding.bindToGrid = true;
-            $('#stepBindingGrid').removeAttr("disabled");
+            ShowStepGridHTML();
         }
     });
+
+    function ShowStepGridHTML() {
+        $('#stepBindingGrid').removeAttr("disabled");
+    }
+
+    function HideStepGridHTML() {
+        $('#stepBindingGrid').attr("disabled", "disabled");
+    }
 
     $("#bootstrap-slider").slider();
     $("#bootstrap-slider").on("slide", function (slideEvt) {
@@ -319,5 +327,25 @@ $(document).ready(function () {
     $('.slider').on("click", function () {
         $("#LineScalingValue").text(newvalue);
     });
-
+    $('#selectTyleLine').on('change', function () {
+        var lineType = $(this).val();
+        if (lineType == 'Solid') {
+            settingsManager.settings.styles.drawing.lineType = 'solid';
+        }
+        else if (lineType == 'Dotted') {
+            settingsManager.settings.styles.drawing.lineType = 'dotted';
+        }
+        else if (lineType == 'Dashed') {
+            settingsManager.settings.styles.drawing.lineType = 'dashed';
+        }
+        else if (lineType == 'DotDash') {
+            settingsManager.settings.styles.drawing.lineType = 'dotDash';
+        }
+        else if (lineType == 'TwoDotsOneDash') {
+            settingsManager.settings.styles.drawing.lineType = 'twoDotsOneDash';
+        }
+        else {
+            settingsManager.settings.styles.drawing.lineType = 'solid';
+        }
+    });
 });
