@@ -1,7 +1,13 @@
 function Layers(mediator) {
     this.appLayers = new Group();
     this.userLayers = new Group();
-    this.activeUserLayer;
+    var activeUserLayerName;
+
+    Object.defineProperty(this, "activeUserLayer", {
+        get: function() {
+            return this.userLayers.children[activeUserLayerName];
+        }
+    });
 
     this.addLayer = function(name)
     {
@@ -22,7 +28,7 @@ function Layers(mediator) {
     }
     this.setActive = function(name)
     {
-        this.activeUserLayer = this.userLayers.children[name];
+        activeUserLayerName = name;
     }
     this.hide = function(name)
     {
@@ -33,7 +39,7 @@ function Layers(mediator) {
         if(this.userLayers.children.length == 1) return;
         if(this.userLayers.children[name] == this.activeUserLayer)
         {
-            this.activeUserLayer = userLayers.children[0];
+            activeUserLayerName = this.userLayers.children[0].name;
         }
         this.userLayers.children[name].remove();
     }
@@ -59,7 +65,7 @@ function Layers(mediator) {
         var main = new Layer();
         main.name = 'main';
         this.userLayers.addChild(main);
-        this.activeUserLayer = main;
+        activeUserLayerName = 'main';
 
         var preview = new Layer();
         preview.name = 'preview';

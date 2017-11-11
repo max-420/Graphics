@@ -56,26 +56,25 @@
                 <div class="panel panel-default" style="margin-top:20px; padding-left:20px; padding-bottom:20px;">
                     <form>
                         <div class="checkbox">
-                            <label><input type="checkbox" id="BindingGrid" value="">Binding</label>
+                            <label><input type="checkbox" id="BindingGrid" value="">Binding to grid</label>
                         </div>
                         <div class="checkbox">
                             <label>
-                                <input type="checkbox" id="bindToLineEnds" value="">Binding to line
-                                ends
+                                <input type="checkbox" id="bindToLineEnds" value="">Binding to line ends
                             </label>
                         </div>
                         <div class="checkbox">
                             <label>
-                                <input type="checkbox" id="bindToIntersections" value="">Binding to inter
-                                sections
+                                <input type="checkbox" id="bindToIntersections" value="">Binding to intersections
                             </label>
                         </div>
                         <div class="checkbox">
-                            <label><input type="checkbox" id="bindToCenters" value="">Binding to center</label>
+                            <label><input type="checkbox" id="bindToCenters" value="">Binding to centers</label>
                         </div>
                         <div class="checkbox">
                             <label><input type="checkbox" id="bindingTolerance" value="">Binding tolerance</label>
                         </div>
+                        <label for="stepBindingGrid">Binding grid step</label>
                         <input class="form-control" id="stepBindingGrid" type="number" value="Enter step binding" style="width:50%" disabled>
                     </form>
                 </div>
@@ -163,10 +162,11 @@
                                 <div class="input-group">
                                     <span class="input-group-addon" for="selectTyleLine">Line type</span>
                                     <select class="form-control" id="selectTyleLine">
-                                        <option>1</option>
-                                        <option>2</option>
-                                        <option>3</option>
-                                        <option>4</option>
+                                        <option>Solid</option>
+                                        <option>Dotted</option>
+                                        <option>Dashed</option>
+                                        <option>DotDash</option>
+                                        <option>TwoDotsOneDash</option>
                                     </select>
                                 </div>
                             </div>
@@ -247,10 +247,6 @@
         </li>
         <li>
             <a href="#" onclick="toolbox.polygon.activate()"><span class="your-icon icon-polygon normal"></span></a>
-        </li>
-        <li>
-            <a href="#" onclick="toolbox.text.activate()"><span class="your-icon icon-polygon normal"></span></a>
-        </li>
         <li>
             <a href="#" onclick="toolbox.star.activate()"><span class="your-icon icon-star normal"></span></a>
         </li>
