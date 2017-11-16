@@ -30,17 +30,23 @@ function Selection(mediator, layerManager) {
         layerManager.appLayers.children['preview'].removeChildren();
         mediator.publish("drawingChanged");
     }
+    this.deleteCopy = function() {
+        if(selectedItemsCopy) selectedItemsCopy.remove();
+        selectedItemsCopy = null;
+        selectedItems = null;
+    }
     this.selectAll = function () {
         hitTestObj.selected = true;
+        mediator.publish("selectionChanged");
     }
     this.deselectAll = function () {
         hitTestObj.selected = false;
+        mediator.publish("selectionChanged");
     }
     this.anythingSelected = function() {
-        return project.selectedItems.length > 0;
+        return project.selectedItems.length;
     }
     this.selectPoint = function (point) {
-        this.deselectAll();
         var hitOptions = {
             segments: true,
             stroke: true,
@@ -53,7 +59,6 @@ function Selection(mediator, layerManager) {
         }
     }
     this.selectInsideRectangle = function (rectangle) {
-        this.deselectAll();
         var items = hitTestObj.getItems({
             inside: rectangle,
             match: function(item)
@@ -72,6 +77,7 @@ function Selection(mediator, layerManager) {
             curves: true,
             tolerance: 10,
         };
+        if(!this.anythingSelected()) return null;
         var hitResult =  this.selectedItems.hitTest(point, hitOptions);
         if(!hitResult) return null;
         hitResult.location.curve.selected = true;

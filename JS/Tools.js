@@ -247,6 +247,7 @@ function Tools(mediator, toolsSettings, binding, drawer, selection, stylesManage
                     handles: true,
                     tolerance: 10,
                 };
+                if(!selection.anythingSelected()) tool.cancel();
                 targetItems = selection.selectedItems;
                 var hitResult = targetItems.hitTest(point, hitOptions);
                 if (hitResult) {
@@ -254,8 +255,10 @@ function Tools(mediator, toolsSettings, binding, drawer, selection, stylesManage
                 }
                 else
                 {
+                    type = null;
                     targetItems = null;
-                    curve = selection.selectCurve(point);
+                    tool.cancel();
+                    curve = null;
                 }
             }
         }.bind(this);
@@ -401,21 +404,17 @@ function Tools(mediator, toolsSettings, binding, drawer, selection, stylesManage
         var targetItems;
         //this.init;
         //this.transform;
-
-        this.select = function (event) {
-            if(!selection.anythingSelected()) select.activateWithCallback(function()
-                {
-                    this.activate();
-                }.bind(this), event
-            )
-        };
         var tool = new ToolWrapper();
         tool.showBindings = true;
 
         tool.onMouseDown = function (event) {
-            this.select();
+            if(!selection.anythingSelected())
+                select.activateWithCallback(function()
+                {
+                    this.activate();
+                }.bind(this), event)
+            if(!selection.anythingSelected()) tool.cancel();
             targetItems = selection.selectedItems;
-
             if (this.init) this.init(event, targetItems);
         }.bind(this);
 
@@ -467,7 +466,6 @@ function Tools(mediator, toolsSettings, binding, drawer, selection, stylesManage
         tool.onKeyDown = function (event) {
             if (event.key == 'escape') {
                 this.cancel();
-                drawer.cancel();
                 project.deselectAll();
             }
             if (event.key == 'delete') {
@@ -480,6 +478,8 @@ function Tools(mediator, toolsSettings, binding, drawer, selection, stylesManage
         {
             cancelled = true;
             binding.clear();
+            selection.deleteCopy();
+            drawer.cancel();
         }
 
         this.activate = function(){
