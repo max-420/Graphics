@@ -5,6 +5,7 @@
     <!--JS-->
     <script src="assets\js\mediator.min.js"></script>
     <script src="assets\js\jquery-3.2.1.min.js"></script>
+	<script src="assets\js\jquery-ui.min.js"></script>
     <script type="text/javascript" src="assets\js\paper.js"></script>
     <script type="text/javascript" src="JS\SettingsManager.js"></script>
     <script type="text/javascript" src="JS\Background.js"></script>
@@ -233,7 +234,11 @@
         </div>
     </div>
 
-
+	<script>
+	$( function() {
+		$( "#leftmenu" ).draggable();
+	} );
+	</script>
 
     <ul class="dropdown-menu" role="menu" aria-labelledby="dropdownMenu" style="display: block; position: absolute; left: 40px; top: 100px; min-width:20px;" id="leftmenu">
         <li><a href="#" onclick="toolbox.line.activate();"><span class="your-icon icon-simple-line normal"></span></a></li>
