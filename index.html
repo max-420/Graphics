@@ -306,7 +306,7 @@
 
             var stylesManager = new StylesManager(mediator, settingsManager.settings.styles, settingsManager.settings.textStyles);
 
-            var selection = new Selection(mediator, layerManager.userLayers);
+            var selection = new Selection(mediator, layerManager);
             var drawer = new Drawer(mediator, layerManager);
 
             toolbox = new Tools(mediator, settingsManager.settings.tools, binding, drawer, selection, stylesManager);

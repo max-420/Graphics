@@ -2,24 +2,14 @@ function Selection(mediator, layerManager) {
     var hitTestObj = layerManager.userLayers;
     var selectedItems;
     var selectedItemsCopy;
-    var selectedCurve;
-    var selectedCurveCopy;
     Object.defineProperty(this, "selectedItems", {
         get: function() {
+            if(!this.anythingSelected()) return null;
             if(!selectedItemsCopy)
             {
                 this.copySelection();
             }
             return selectedItemsCopy;
-        }
-    });
-    Object.defineProperty(this, "selectedCurve", {
-        get: function() {
-            if(!selectedItemsCopy)
-            {
-                this.copySelection();
-            }
-            return selectedCurveCopy;
         }
     });
     this.copySelection = function () {
@@ -46,8 +36,7 @@ function Selection(mediator, layerManager) {
     this.deselectAll = function () {
         hitTestObj.selected = false;
     }
-    this.anythingSelected = function()
-    {
+    this.anythingSelected = function() {
         return project.selectedItems.length > 0;
     }
     this.selectPoint = function (point) {
@@ -78,7 +67,7 @@ function Selection(mediator, layerManager) {
     }
     this.selectCurve = function(point)
     {
-        this.selectPoint();
+        this.selectPoint(point);
         var hitOptions = {
             curves: true,
             tolerance: 10,
@@ -86,7 +75,6 @@ function Selection(mediator, layerManager) {
         var hitResult =  this.selectedItems.hitTest(point, hitOptions);
         if(!hitResult) return null;
         hitResult.location.curve.selected = true;
-        hitResult.location.curve.path.selected = true;
         return hitResult.location.curve;
     }
 }

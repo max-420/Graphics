@@ -238,15 +238,16 @@ function Tools(mediator, toolsSettings, binding, drawer, selection, stylesManage
 
         tool.onMouseDown = function (event) {
             var point = binding.getPoint(event.point);
-            if(!curve){
-                curve = selection.selectCurve(point);
+            var newCurve = selection.selectCurve(point);
+            if(newCurve) {
+                curve = newCurve;
             }
             else {
                 var hitOptions = {
                     handles: true,
                     tolerance: 10,
                 };
-                targetItems = drawer.getSelection();
+                targetItems = selection.selectedItems;
                 var hitResult = targetItems.hitTest(point, hitOptions);
                 if (hitResult) {
                     type = hitResult.type;
@@ -275,7 +276,7 @@ function Tools(mediator, toolsSettings, binding, drawer, selection, stylesManage
         tool.onMouseUp = function (event) {
             if(targetItems)
             {
-                drawer.saveSelection();
+                selection.saveSelection();
                 targetItems = null;
             }
         }.bind(this);
@@ -413,7 +414,7 @@ function Tools(mediator, toolsSettings, binding, drawer, selection, stylesManage
 
         tool.onMouseDown = function (event) {
             this.select();
-            targetItems = drawer.getSelection();
+            targetItems = selection.selectedItems;
 
             if (this.init) this.init(event, targetItems);
         }.bind(this);
@@ -423,13 +424,13 @@ function Tools(mediator, toolsSettings, binding, drawer, selection, stylesManage
         }.bind(this);
 
         tool.onMouseUp = function (event) {
-            drawer.saveSelection();
+            selection.saveSelection();
         }.bind(this);
         this.activate = function(){
             if(!selection.anythingSelected()) select.activateWithCallback(function()
                 {
                     this.activate();
-                }.bind(this), event
+                }.bind(this)
             )
             else {
                 tool.activate();
