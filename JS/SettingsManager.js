@@ -85,7 +85,7 @@ function Settings() {
     };
     this.binding =
     {
-        bindToGrid: false,
+        bindToGrid: true,
         bindToLineEnds: true,
         bindToIntersections: true,
         bindToCenters: true,

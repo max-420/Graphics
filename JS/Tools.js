@@ -13,8 +13,7 @@ function Tools(mediator, toolsSettings, binding, drawer, selection, stylesManage
     this.pathLine = new PathLine();
     this.text = new Text();
     this.freeTransform = new FreeTransform();
-    this.curveTransform = new CurveTransform();
-    var select = this.select;
+
     function PathLine() {
         var path;
         var line = new DrawingTool();
@@ -229,63 +228,6 @@ function Tools(mediator, toolsSettings, binding, drawer, selection, stylesManage
         this.activate = function(){tool.activate()};
     }
 
-    function CurveTransform() {
-        var curve;
-        var type;
-        var targetItems;
-        var tool = new ToolWrapper();
-        tool.showBindings = true;
-
-        tool.onMouseDown = function (event) {
-            var point = binding.getPoint(event.point);
-            var newCurve = selection.selectCurve(point);
-            if(newCurve) {
-                curve = newCurve;
-            }
-            else {
-                var hitOptions = {
-                    handles: true,
-                    tolerance: 10,
-                };
-                if(!selection.anythingSelected()) tool.cancel();
-                targetItems = selection.selectedItems;
-                var hitResult = targetItems.hitTest(point, hitOptions);
-                if (hitResult) {
-                    type = hitResult.type;
-                }
-                else
-                {
-                    type = null;
-                    targetItems = null;
-                    tool.cancel();
-                    curve = null;
-                }
-            }
-        }.bind(this);
-
-        tool.onMouseDrag = function (event) {
-            if(!curve) return;
-            var point = binding.getPoint(event.point);
-            if(type == 'handle-in')
-            {
-                curve.segment2.handleIn = point.subtract(curve.point2);
-            }
-            if(type == 'handle-out')
-            {
-                curve.segment1.handleOut = point.subtract(curve.point1);
-            }
-        }.bind(this);
-
-        tool.onMouseUp = function (event) {
-            if(targetItems)
-            {
-                selection.saveSelection();
-                targetItems = null;
-            }
-        }.bind(this);
-        this.activate = function(){tool.activate()};
-    }
-
     function Hand() {
         var hand = new ToolWrapper();
         hand.onMouseDrag = function (event) {
@@ -340,11 +282,9 @@ function Tools(mediator, toolsSettings, binding, drawer, selection, stylesManage
         var startPoint;
         var selectionRect;
         var tool = new ToolWrapper();
-        var selectionCallback;
         tool.onMouseDown = function (event) {
             startPoint = event.point;
             selection.selectPoint(startPoint);
-            if(selectionCallback && selection.anythingSelected()) selectionCallback();
         }
         tool.onMouseDrag = function (event) {
             if (!selectMany) {
@@ -352,23 +292,16 @@ function Tools(mediator, toolsSettings, binding, drawer, selection, stylesManage
             }
             var prev = selectionRect;
             selectionRect = new Path.Rectangle(startPoint, event.point);
-            stylesManager.applyStyle(selectionRect, 'selection');
+            stylesManager.applyStyle(selectionRect,'selection');
             if (prev) prev.remove();
         }
         tool.onMouseUp = function (event) {
             if (!selectMany) return;
-            selection.selectInsideRectangle(new Rectangle(startPoint, event.point));
+            selection.selectRectangle(new Rectangle(startPoint, event.point));
             drawer.cancel();
             selectMany = false;
-            if(selectionCallback && selection.anythingSelected()) selectionCallback();
         }
         this.activate = function(){tool.activate()};
-        this.activateWithCallback = function(callback, event)
-        {
-            this.activate();
-            selectionCallback = callback;
-            if(event) tool.onMouseDown(event);
-        }
     }
 
 
@@ -404,17 +337,22 @@ function Tools(mediator, toolsSettings, binding, drawer, selection, stylesManage
         var targetItems;
         //this.init;
         //this.transform;
+
+        this.select = function (event) {
+            if (!selection.anythingSelected()) {
+                var point = binding.getPoint(event.point);
+                selection.selectPoint(point);
+                if(!selection.anythingSelected()) tool.cancel();
+            }
+        };
         var tool = new ToolWrapper();
         tool.showBindings = true;
 
         tool.onMouseDown = function (event) {
-            if(!selection.anythingSelected())
-                select.activateWithCallback(function()
-                {
-                    this.activate();
-                }.bind(this), event)
-            if(!selection.anythingSelected()) tool.cancel();
-            targetItems = selection.selectedItems;
+            this.select(event);
+
+            targetItems = drawer.getSelection();
+
             if (this.init) this.init(event, targetItems);
         }.bind(this);
 
@@ -423,18 +361,9 @@ function Tools(mediator, toolsSettings, binding, drawer, selection, stylesManage
         }.bind(this);
 
         tool.onMouseUp = function (event) {
-            selection.saveSelection();
+            drawer.saveSelection();
         }.bind(this);
-        this.activate = function(){
-            if(!selection.anythingSelected()) select.activateWithCallback(function()
-                {
-                    this.activate();
-                }.bind(this)
-            )
-            else {
-                tool.activate();
-            }
-        };
+        this.activate = function(){tool.activate()};
     }
 
     function ToolWrapper() {
@@ -448,6 +377,7 @@ function Tools(mediator, toolsSettings, binding, drawer, selection, stylesManage
         }.bind(this);
 
         tool.onMouseDown = function (event) {
+
             cancelled = false;
             if (this.onMouseDown) this.onMouseDown(event);
         }.bind(this);
@@ -466,6 +396,7 @@ function Tools(mediator, toolsSettings, binding, drawer, selection, stylesManage
         tool.onKeyDown = function (event) {
             if (event.key == 'escape') {
                 this.cancel();
+                drawer.cancel();
                 project.deselectAll();
             }
             if (event.key == 'delete') {
@@ -478,8 +409,6 @@ function Tools(mediator, toolsSettings, binding, drawer, selection, stylesManage
         {
             cancelled = true;
             binding.clear();
-            selection.deleteCopy();
-            drawer.cancel();
         }
 
         this.activate = function(){

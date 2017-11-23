@@ -1,11 +1,13 @@
-function configuration(checkBindingSettings, checkGridSetting, checkLeftPanelShow, checkMainSetting, showLeftPanel) {
+class configuration {
+    constructor(checkBindingSettings, checkGridSetting, checkLeftPanelShow, checkMainSetting, showLeftPanel) {
         this.checkBindingSettings = checkBindingSettings;
         this.checkGridSetting = checkGridSetting;
         this.checkLeftPanelShow = checkLeftPanelShow;
         this.checkMainSetting = checkMainSetting;
         this.showLeftPanel = showLeftPanel;
-};
-var conf = new configuration(true,true,true,true, true);
+    }
+}
+let conf = new configuration(true,true,true,true, true);
 $(document).ready(function () {
     //VARIABLE LIST
     var gridColorAxisHTML = $('#gridColorAxis');
