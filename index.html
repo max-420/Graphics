@@ -3,8 +3,10 @@
 <head>
     <title>Test PaperJS</title>
     <!--JS-->
+
     <script src="assets\js\mediator.min.js"></script>
     <script src="assets\js\jquery-3.2.1.min.js"></script>
+
     <script type="text/javascript" src="assets\js\paper.js"></script>
     <script type="text/javascript" src="JS\SettingsManager.js"></script>
     <script type="text/javascript" src="JS\Background.js"></script>
@@ -18,14 +20,20 @@
     <script type="text/javascript" src="JS\Selection.js"></script>
     <script type="text/javascript" src="JS\bootstrap.min.js"></script>
     <script type="text/javascript" src="JS\bootstrap-colorpicker.min.js"></script>
-    <script type="text/javascript" src="JS\UI\VaruableList.js"></script>
     <script type="text/javascript" src="JS\UI\UI.js"></script>
     <script type="text/javascript" src="JS\UI\Slider.JS"></script>
+
     <!---CSS-->
     <link rel="stylesheet" type="text/css" href="CSS\bootstrap.css">
     <link rel="stylesheet" type="text/css" href="CSS\bootstrap.min.css">
     <link rel="stylesheet" type="text/css" href="CSS\style.css" />
     <link rel="stylesheet" type="text/css" href="CSS\bootstrap-colorpicker.min.css" />
+    <script>
+        $( function() {
+            $( "#leftmenu" ).draggable();
+            $("#layersPanel").draggable();
+        } );
+    </script>
 </head>
 <body>
 
@@ -43,6 +51,8 @@
                 <li><button class="btn btn-danger navbar-btn bouton-image monBouton " id="mainSettings"> Main</button></li>
                 <li><button class="btn btn-danger navbar-btn bouton-image monBouton " id="bindingSettings"> Binding</button></li>
                 <li><button class="btn btn-danger navbar-btn bouton-image monBouton " id="gridSettings"> Grid</button></li>
+                <li><button class="btn btn-danger navbar-btn bouton-image monBouton " id="controlLayersPanel"> Show or hide layers panel</button></li>
+                <li><button class="btn btn-danger navbar-btn bouton-image monBouton " id="controlElementPanel"> Show or hide element panel</button></li>
             </ul>
             <ul class="nav navbar-nav navbar-right">
                 <li><a href="#"><span class="glyphicon glyphicon-thumbs-up"></span> Press F11</a></li>
@@ -130,8 +140,8 @@
                                             style="padding-left: 20px; padding-right: 32px;">Opacity
                                     </button>
                                     <div class="btn btn-default">
-                                        <input id="OpacitySetting" width="200" type="text" data-slider-min="1"
-                                               data-slider-max="2" data-slider-step="1" data-slider-value="0"/>
+                                        <input id="OpacitySetting" width="200" type="text" data-slider-min="0"
+                                               data-slider-max="1" data-slider-step="0.1" data-slider-value="0"/>
                                         <div class="valueLabel"><span id="OpacityValue">0</span></div>
                                     </div>
                                 </div>
@@ -235,7 +245,7 @@
 
 
 
-    <ul class="dropdown-menu" role="menu" aria-labelledby="dropdownMenu" style="display: block; position: absolute; left: 40px; top: 100px; min-width:20px;" id="leftmenu">
+    <ul class="dropdown-menu" role="menu" aria-labelledby="dropdownMenu" style="display: block; position: absolute; left: 40px; top: 100px; min-width:20px;" id="leftmenu" class="ui-widget-content">
         <li><a href="#" onclick="toolbox.line.activate();"><span class="your-icon icon-simple-line normal"></span></a></li>
         <li><a href="#" onclick="toolbox.pathLine.activate()"><span class="your-icon icon-line normal"></span></a></li>
         <li><a href="#" onclick="toolbox.circle.activate()"><span class="your-icon icon-circle normal"></span></a></li>
@@ -280,7 +290,57 @@
             </li>
         -->
     </ul>
-    <canvas id="myCanvas" resize></canvas>
+        <div id="layersPanel" class="panel panel-default" style="position: absolute; top:100px; left: 1000px;" >
+            <!-- Default panel contents -->
+            <div class="panel-heading">Layers</div>
+
+            <!-- List group -->
+            <ul class="list-group">
+                <li class="list-group-item">
+                    Layout1
+                    <div class="material-switch pull-right">
+                        <input id="someSwitchOptionDefault" name="someSwitchOption001" type="checkbox"/>
+                        <label for="someSwitchOptionDefault" class="label-default"></label>
+                    </div>
+                </li>
+                <li class="list-group-item">
+                    Layout2
+                    <div class="material-switch pull-right">
+                        <input id="someSwitchOptionPrimary" name="someSwitchOption001" type="checkbox"/>
+                        <label for="someSwitchOptionPrimary" class="label-primary"></label>
+                    </div>
+                </li>
+                <li class="list-group-item">
+                    Layout3
+                    <div class="material-switch pull-right">
+                        <input id="someSwitchOptionSuccess" name="someSwitchOption001" type="checkbox"/>
+                        <label for="someSwitchOptionSuccess" class="label-success"></label>
+                    </div>
+                </li>
+                <li class="list-group-item">
+                    Layout4
+                    <div class="material-switch pull-right">
+                        <input id="someSwitchOptionInfo" name="someSwitchOption001" type="checkbox"/>
+                        <label for="someSwitchOptionInfo" class="label-info"></label>
+                    </div>
+                </li>
+                <li class="list-group-item">
+                    Layout5
+                    <div class="material-switch pull-right">
+                        <input id="someSwitchOptionWarning" name="someSwitchOption001" type="checkbox"/>
+                        <label for="someSwitchOptionWarning" class="label-warning"></label>
+                    </div>
+                </li>
+                <li class="list-group-item">
+                    Layout6
+                    <div class="material-switch pull-right" style="padding-left:10px;">
+                        <input id="someSwitchOptionDanger" name="someSwitchOption001" type="checkbox"/>
+                        <label for="someSwitchOptionDanger" class="label-danger"></label>
+                    </div>
+                </li>
+            </ul>
+        </div>
+        <canvas id="myCanvas" resize></canvas>
 
 
     <script type="text/javascript">

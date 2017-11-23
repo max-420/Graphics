@@ -348,4 +348,10 @@ $(document).ready(function () {
             settingsManager.settings.styles.drawing.lineType = 'solid';
         }
     });
+    $('#controlLayersPanel').click(function () {
+        $('#layersPanel').toggle();
+    });
+    $('#controlElementPanel').click(function () {
+       $('#leftmenu').toggle();
+    });
 });
