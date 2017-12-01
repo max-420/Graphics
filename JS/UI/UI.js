@@ -40,6 +40,9 @@ $(document).ready(function () {
     var bindingPanelSettingss = $("#bindingPanelSettings");
     var gridColorStroke = $("#gridColorStroke");
     var gridColorFillColor = $("#gridColorFillColor");
+    var showElementPanel = $("#showElementPanel");
+    var toggleLayoutPanel = $("#toggleLayoutPanel");
+    var layoutPanel = $("#layoutPanel");
 
     //SET SETTING ON COLORPICKER
     gridColorAxisHTML.colorpicker({
@@ -89,6 +92,13 @@ $(document).ready(function () {
         }
     });
 
+    showElementPanel.click(function () {
+        leftElementPanelHTML.toggle();
+    });
+
+    toggleLayoutPanel.click(function () {
+        layoutPanel.toggle();
+    });
     var sizeMainPanelSetting = parseInt(mainPanelSetting.css("height"));
     //mainPanelSettings  // mainSettings // mainPanelSettings
     $('#mainSettings').click(function () {
