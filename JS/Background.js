@@ -8,7 +8,6 @@ function Background(mediator, backgroundSettings) {
         if (backgroundSettings.showGrid) drawGrid();
         if (backgroundSettings.showAxis) drawAxis();
         mediator.publish("backgroundDrawingFinished");
-
     }
 
     var drawGrid = function () {
@@ -53,8 +52,23 @@ function Background(mediator, backgroundSettings) {
 
         var axis = new Group([axisLeft, axisRight, axisBottom, axisTop]);
 
-        axis.strokeColor = backgroundSettings.axisColor;
-        axis.strokeWidth = backgroundSettings.strokeWidth;
+        var shift = 5;
+        var zText = new PointText([shift, 2*shift+2]);
+        zText.content = '0';
+        zText.fillColor = "black"
+        //stylesManager.applyTextStyle(zText, 'drawing');
+        if(backgroundSettings.threeAxis)
+        {
+            axisLeft.strokeColor = 'red';
+            axisTop.strokeColor = 'green';
+            axisRight.strokeColor = 'blue';
+            axisBottom.strokeColor = 'blue';
+        }
+        else
+        {
+            axis.strokeColor = backgroundSettings.axisColor;
+        }
+        axis.strokeWidth = backgroundSettings.axisWidth;
         axis.strokeScaling = false;
     }
     redraw();

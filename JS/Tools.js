@@ -434,12 +434,21 @@ function Tools(mediator, toolsSettings, binding, drawer, selection, stylesManage
             if (stage == 2) {
                 var point = binding.getPoint(event.point);
 
-                var ma = (points[1].y - points[0].y)/(points[1].x - points[0].x);
-                var mb = (point.y - points[1].y)/(point.x - points[1].x);
-                var x =(ma*mb*(points[0].y-point.y) + mb*(points[0].x + points[1].x)+ ma*(points[1].x + point.x))/(2*(mb-ma));
-                var y = (-1/ma)*(x-(points[0].x+points[1].x)/2)+((points[0].y+points[1].y)/2);
-                var center = new Point(x,y);
+                // var ma = (points[1].y - points[0].y)/(points[1].x - points[0].x);
+                // var mb = (point.y - points[1].y)/(point.x - points[1].x);
+                // var x =(ma*mb*(points[0].y-point.y) + mb*(points[0].x + points[1].x)+ ma*(points[1].x + point.x))/(2*(mb-ma));
+                // var y = (-1/ma)*(x-(points[0].x+points[1].x)/2)+((points[0].y+points[1].y)/2);
+                var a = points[1].x-points[0].x;
+                var b = points[1].y-points[0].y;
+                var c = point.x-points[0].x;
+                var d = point.y-points[0].y;
+                var e = (a*(points[1].x+points[0].x))+(b*(points[1].y+points[0].y));
+                var f = (c*(point.x+points[0].x))+(d*(point.y+points[0].y));
+                var g = 2*((a*(point.y-points[1].y))+(b*(point.x-points[1].x)));
 
+                var x = ((d*e) - (b*f))/g;
+                var y = ((a*f) - (c*e))/g;
+                var center = new Point(x,y);
                 if(path) path.remove();
                 path = new Path.Circle(center, point.getDistance(center))
                 targetItems.addChild(path);
