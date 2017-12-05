@@ -45,8 +45,10 @@
                 <li><button class="btn btn-danger navbar-btn bouton-image monBouton " id="mainSettings"> Main</button></li>
                 <li><button class="btn btn-danger navbar-btn bouton-image monBouton " id="bindingSettings"> Binding</button></li>
                 <li><button class="btn btn-danger navbar-btn bouton-image monBouton " id="gridSettings"> Grid</button></li>
+                <!--
                 <li><button class="btn btn-danger navbar-btn bouton-image monBouton " id="showElementPanel"> Toggle element panel</button></li>
                 <li><button class="btn btn-danger navbar-btn bouton-image monBouton " id="toggleLayoutPanel"> Toggle layout panel</button></li>
+                -->
             </ul>
             <ul class="nav navbar-nav navbar-right">
                 <li><a href="#"><span class="glyphicon glyphicon-thumbs-up"></span> Press F11</a></li>
@@ -283,44 +285,22 @@
             </li>
         -->
     </ul>
-    <div class="row" id="layoutPanel" style="position: absolute; min-width: 600px; right: 0px; bottom: 20px;">
+    <div class="row" id="layoutPanel" style="position: absolute; min-width: 600px; right: 0px; bottom: 100px;">
         <div class="col-xs-12 col-sm-6 col-md-4 col-sm-offset-3 col-md-offset-4">
             <div class="panel panel-default">
                 <!-- Default panel contents -->
-                <div class="panel-heading">Layouts <span style="float: right; color:green;" class="glyphicon glyphicon-plus"></span></div>
+                <div class="panel-heading">Layouts
+                    <span id="addLayout" style="float: right; color:green;" class="glyphicon glyphicon-plus"></span>
+                </div>
                 <!-- List group -->
-                <ul class="list-group">
-                    <li class="list-group-item">
-                        Layout 1<span class="glyphicon glyphicon-minus" style="color:red;"></span>
-
-                        <div class="material-switch pull-right">
-                            <input id="layout1" name="someSwitchOption001" type="checkbox"/>
-                            <label for="layout1" class="label-success"></label>
-                        </div>
-                    </li>
-                </ul>
-                <ul class="list-group">
-                    <li class="list-group-item">
-                        Layout 1 <span class="glyphicon glyphicon-minus" style="color:red;"></span>
-                        <div class="material-switch pull-right">
-                            <input id="layout2" name="someSwitchOption001" type="checkbox"/>
-                            <label for="layout2" class="label-success"></label>
-                        </div>
-                    </li>
-                </ul>
-                <ul class="list-group">
-                    <li class="list-group-item">
-                        Layout 1 <span class="glyphicon glyphicon-minus" style="color:red;"></span>
-                        <div class="material-switch pull-right">
-                            <input id="layout3" name="someSwitchOption001" type="checkbox"/>
-                            <label for="layout3" class="label-success"></label>
-                        </div>
-                    </li>
+                <ul class="list-group" id="AllLayoutPanel">
                 </ul>
             </div>
         </div>
     </div>
+    <nav class="navbar navbar-default navbar-fixed-bottom" id="propertyPanel">
 
+    </nav>
     <canvas id="myCanvas" resize></canvas>
 
 
