@@ -54,9 +54,7 @@ $(document).ready(function () {
     const someSwith = 'someSwitchLayout';
     const radioButtonLayoutName = 'radioButtonLayout';
     //LAYERS
-    function ShowOrHidePropertyPanel() {
-        propertyPanel.toggle();
-    }
+
     addLayout.click(function () {
 
         AllLayoutPanel.append(GenerateLayoutTemplate(index));
@@ -79,6 +77,10 @@ $(document).ready(function () {
             '<input id="'+radioButtonEventName+'" type="radio" name="activelayout"></div></li>');
         index++; //TODO убрать
         return layoutTemplate;
+    }
+    //PROPERTIES
+    function ShowOrHidePropertyPanel() {
+        propertyPanel.toggle();
     }
     //SET SETTING ON COLORPICKER
     gridColorAxisHTML.colorpicker({
