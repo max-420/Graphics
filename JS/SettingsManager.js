@@ -73,8 +73,10 @@ function Settings() {
     }
     this.background =
     {
+        threeAxis: true,
         showAxis: true,
         axisColor: 'red',
+        axisWidth: 1.5,
         showGrid: true,
         gridColor: 'orange',
         gridStep: 30,
@@ -85,7 +87,7 @@ function Settings() {
     };
     this.binding =
     {
-        bindToGrid: false,
+        bindToGrid: true,
         bindToLineEnds: true,
         bindToIntersections: true,
         bindToCenters: true,
