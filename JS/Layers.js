@@ -47,6 +47,17 @@ function Layers(mediator) {
         }
         this.userLayers.children[name].remove();
     }
+    this.setPosition = function(name, position)
+    {
+        if(position != this.userLayers.children.length - 1)
+        {
+            this.userLayers.children[name].moveBelow(this.userLayers.children[position]);
+        }
+        else
+        {
+            this.userLayers.children[name].bringToFront();
+        }
+    }
     this.getLayers = function()
     {
         var activeLayer = this.activeUserLayer;
