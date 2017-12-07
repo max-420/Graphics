@@ -403,7 +403,7 @@ function Tools(mediator, toolsSettings, binding, drawer, selection, stylesManage
     function Circle3Points() {
         var targetItems;
         var path;
-        var points = [];
+        var points;
         //this.init;
         //this.draw;
         var tool = new ToolWrapper();
@@ -414,7 +414,9 @@ function Tools(mediator, toolsSettings, binding, drawer, selection, stylesManage
             var point = binding.getPoint(event.point);
             if (stage == 1)
             {
+                points = [];
                 targetItems = new Group();
+                path = null;
                 points.push(point);
             }
             if (stage == 2)
@@ -444,13 +446,13 @@ function Tools(mediator, toolsSettings, binding, drawer, selection, stylesManage
                 var d = point.y-points[0].y;
                 var e = (a*(points[1].x+points[0].x))+(b*(points[1].y+points[0].y));
                 var f = (c*(point.x+points[0].x))+(d*(point.y+points[0].y));
-                var g = 2*((a*(point.y-points[1].y))+(b*(point.x-points[1].x)));
+                var g = 2*((a*(point.y-points[1].y))-(b*(point.x-points[1].x)));
 
                 var x = ((d*e) - (b*f))/g;
                 var y = ((a*f) - (c*e))/g;
                 var center = new Point(x,y);
                 if(path) path.remove();
-                path = new Path.Circle(center, point.getDistance(center))
+                path = new Path.Circle(center, point.getDistance(center));
                 targetItems.addChild(path);
                 stylesManager.applyStyle(targetItems, 'drawing');
                 stylesManager.applyStyle(targetItems, 'predrawing');
