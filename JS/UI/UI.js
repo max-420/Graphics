@@ -42,42 +42,10 @@ $(document).ready(function () {
     var gridColorFillColor = $("#gridColorFillColor");
     var showElementPanel = $("#showElementPanel");
     var toggleLayoutPanel = $("#toggleLayoutPanel");
-    var layoutPanel = $("#layoutPanel");
-    var addLayout = $("#addLayout");
-    var AllLayoutPanel = $("#AllLayoutPanel");
+
     var propertyPanel = $("#propertyPanel");
     var removeLayout = $("#removeLayout");
-    var index = 1;//TODO убрать
 
-    const removeLayoutName = 'removeLayout';
-    const layoutNameName = 'layout';
-    const someSwith = 'someSwitchLayout';
-    const radioButtonLayoutName = 'radioButtonLayout';
-    //LAYERS
-
-    addLayout.click(function () {
-
-        AllLayoutPanel.append(GenerateLayoutTemplate(index));
-        var tempRemoveLayoutName = '#' +  removeLayoutName + (index-1);
-        $(tempRemoveLayoutName).bind("click", function () {
-            var id = $(this).attr("data-id");
-            var elementForRemove = '#' + layoutNameName + id;
-           $(elementForRemove).remove();
-        });
-    });
-    function GenerateLayoutTemplate(layoutName) {
-        var removeLayoutEventName = removeLayoutName + layoutName;
-        var layoutNameEventName = layoutNameName + layoutName;
-        var someSwitchEventName = someSwith + layoutName;
-        var radioButtonEventName = radioButtonLayoutName + layoutName;
-        var layoutTemplate = $('<li class="list-group-item" id="'+layoutNameEventName+'">'+layoutNameEventName+'<span data-id="'+index+'" id="'+removeLayoutEventName+'" class="glyphicon glyphicon-minus removeLayout" style="color:red;"></span>' +
-            '<div class="material-switch pull-right">' +
-            '<input id="'+ someSwitchEventName + '" name="'+someSwitchEventName+'" type="checkbox"/>' +
-            '<label for="'+ someSwitchEventName + '" class="label-success"></label>'+
-            '<input id="'+radioButtonEventName+'" type="radio" name="activelayout"></div></li>');
-        index++; //TODO убрать
-        return layoutTemplate;
-    }
     //PROPERTIES
     function ShowOrHidePropertyPanel() {
         propertyPanel.toggle();
