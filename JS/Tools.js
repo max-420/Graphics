@@ -446,7 +446,7 @@ function Tools(mediator, toolsSettings, binding, drawer, selection, stylesManage
                 var d = point.y-points[0].y;
                 var e = (a*(points[1].x+points[0].x))+(b*(points[1].y+points[0].y));
                 var f = (c*(point.x+points[0].x))+(d*(point.y+points[0].y));
-                var g = 2*((a*(point.y-points[1].y))+(b*(point.x-points[1].x)));
+                var g = 2*((a*(point.y-points[1].y))-(b*(point.x-points[1].x)));
 
                 var x = ((d*e) - (b*f))/g;
                 var y = ((a*f) - (c*e))/g;
