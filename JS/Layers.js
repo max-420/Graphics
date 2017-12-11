@@ -40,7 +40,7 @@ function Layers(mediator) {
     }
     this.removeLayer = function(name)
     {
-        if(this.userLayers.children.length == 1) return;
+        if(this.userLayers.children.length == 1) return false;
         if(this.userLayers.children[name] == this.activeUserLayer)
         {
             activeUserLayerName = this.userLayers.children[0].name;

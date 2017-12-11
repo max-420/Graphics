@@ -26,9 +26,14 @@ $(document).ready(function () {
             var id = $(this).attr("data-id");
             var name = $(this).attr("data-name");
             var elementForRemove = '#' + layoutNameName + id;
-            $(elementForRemove).remove();
-            layerManager.removeLayer(name);
-            console.log('remove layer ' + name);
+            var check = layerManager.removeLayer(name);
+            if(check == false){
+                console.log('error remove layer(layers < 1) ' + name);
+            }
+            else{
+                $(elementForRemove).remove();
+                console.log('remove layer ' + name);
+            }
         });
     }
     function GenerateLayoutTemplate(layoutName) {
