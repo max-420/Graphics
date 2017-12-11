@@ -3,7 +3,7 @@ $(document).ready(function () {
     var addLayout = $("#addLayout");
     var AllLayoutPanel = $("#AllLayoutPanel");
     const removeLayoutName = 'removeLayout';
-    const layoutNameName = 'layout';
+    const layoutNameName = 'layer';
     const someSwith = 'someSwitchLayout';
     const radioButtonLayoutName = 'radioButtonLayout';
     const removeNameForDelete = 'layoutID';
@@ -61,6 +61,7 @@ $(document).ready(function () {
         });
     }
     function GenerateLayoutTemplate(layoutName) {
+            // debugger;
             var removeLayoutEventName = removeLayoutName + layoutName;
             var layoutNameEventName = layoutNameName + layoutName;
             var someSwitchEventName = someSwith + layoutName;
@@ -75,7 +76,7 @@ $(document).ready(function () {
 
             var layoutTemplate = $(' <li class="list-group-item" id="'+layoutNameEventName+'">' +
                 '<input id="'+radioButtonEventName+'" type="radio" name="'+ radioButtonChangeLayerName +'" data-id="'+tempRemoveNameForDelete+'" style="margin-right:2%" checked="checked" >' +
-                ''+layoutNameEventName+'' +
+                ''+tempRemoveNameForDelete+'' +
                 '<span style="float:right">'+
                 '<input id="'+someSwitchEventName+'" value="'+tempRemoveNameForDelete+'" type="checkbox" checked="checked"/>' +
                 '<span data-name="'+tempRemoveNameForDelete+'" data-id="'+layoutName+'" id="'+removeLayoutEventName+'" class="glyphicon glyphicon-minus removeLayout" style="color:red;"></span></span>' +
