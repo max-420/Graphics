@@ -1,6 +1,7 @@
 function Layers(mediator) {
-    this.appLayers = new Group();
+    this.appBottomLayers = new Group();
     this.userLayers = new Group();
+    this.appTopLayers = new Group();
     var activeUserLayerName;
 
     Object.defineProperty(this, "activeUserLayer", {
@@ -23,7 +24,7 @@ function Layers(mediator) {
             newName=name+(index++);
         }
         layer.name = newName;
-        this.userLayers.addChild(layer);
+        this.userLayers.appendTop(layer);
         this.setActive(newName);
     }
     this.setActive = function(name)
@@ -75,7 +76,7 @@ function Layers(mediator) {
     {
         var background = new Layer();
         background.name = 'background';
-        this.appLayers.addChild(background);
+        this.appBottomLayers.addChild(background);
 
         var main = new Layer();
         main.name = 'main';
@@ -84,28 +85,28 @@ function Layers(mediator) {
 
         var preview = new Layer();
         preview.name = 'preview';
-        this.appLayers.addChild(preview);
+        this.appTopLayers.addChild(preview);
 
         var binding = new Layer();
         binding.name = 'binding';
-        this.appLayers.addChild(binding);
+        this.appTopLayers.addChild(binding);
 
         preview.activate();
     }.bind(this)();
 
 
     mediator.subscribe("backgroundDrawingStarted", function () {
-        this.appLayers.children['background'].removeChildren();
-        this.appLayers.children['background'].activate();
+        this.appBottomLayers.children['background'].removeChildren();
+        this.appBottomLayers.children['background'].activate();
     }.bind(this));
     mediator.subscribe("backgroundDrawingFinished", function () {
-        this.appLayers.children['preview'].activate();
+        this.appTopLayers.children['preview'].activate();
     }.bind(this));
     mediator.subscribe("bindingDrawingStarted", function () {
-        this.appLayers.children['binding'].removeChildren();
-        this.appLayers.children['binding'].activate();
+        this.appTopLayers.children['binding'].removeChildren();
+        this.appTopLayers.children['binding'].activate();
     }.bind(this));
     mediator.subscribe("bindingDrawingFinished", function () {
-        this.appLayers.children['preview'].activate();
+        this.appTopLayers.children['preview'].activate();
     }.bind(this));
 }
