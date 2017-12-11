@@ -7,7 +7,7 @@ $(document).ready(function () {
     const someSwith = 'someSwitchLayout';
     const radioButtonLayoutName = 'radioButtonLayout';
     const removeNameForDelete = 'layoutID';
-
+    const radioButtonChangeLayerName = 'activelayout';
     var index = 1;//TODO убрать
 
     addLayout.click(function () {
@@ -16,9 +16,17 @@ $(document).ready(function () {
     function AddLayout(name){
             AllLayoutPanel.append(GenerateLayoutTemplate(name));
             BindEventForRemoveLayer(name);
+            BindEventForChangeLayer();
             var tempRemoveNameForDelete = removeNameForDelete + name;
             layerManager.addLayer(tempRemoveNameForDelete);
 
+    }
+    //Event change layout
+    function BindEventForChangeLayer() {
+        $("input[name=activelayout]:radio").change( function() {
+            console.log('set active layout: ' + $(this).attr("data-id")); //TODO удалить
+            layerManager.setActive($(this).attr("data-id"))
+        });
     }
     function BindEventForRemoveLayer(name) {
         var tempRemoveLayoutName = '#' +  removeLayoutName + name;
@@ -53,7 +61,7 @@ $(document).ready(function () {
                 '<div class="material-switch pull-right">' +
                 '<input id="'+ someSwitchEventName + '" name="'+someSwitchEventName+'" type="checkbox"/>' +
                 '<label for="'+ someSwitchEventName + '" class="label-success"></label>'+
-                '<input id="'+radioButtonEventName+'" type="radio" name="activelayout"></div></li>');
+                '<input id="'+radioButtonEventName+'" type="radio" name="'+ radioButtonChangeLayerName +'" data-id="'+tempRemoveNameForDelete+'"></div></li>');
 
             index++; //TODO убрать
         return  layoutTemplate;
