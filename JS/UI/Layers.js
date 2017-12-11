@@ -17,9 +17,25 @@ $(document).ready(function () {
             AllLayoutPanel.append(GenerateLayoutTemplate(name));
             BindEventForRemoveLayer(name);
             BindEventForChangeLayer();
+            BindEventForChangeVisibleLayer(name);
             var tempRemoveNameForDelete = removeNameForDelete + name;
             layerManager.addLayer(tempRemoveNameForDelete);
 
+    }
+    function BindEventForChangeVisibleLayer(name) {
+
+        var tempSomeChangeName = '#' + someSwith + name;
+        $(tempSomeChangeName).change(function () {
+            var name = $(this).val();
+            if($(this).is(':checked')){
+                layerManager.show(name);
+                console.log('set show layer' + name);
+            }
+            else{
+                layerManager.hide(name);
+                console.log('set hide layer' + name);
+            }
+        })
     }
     //Event change layout
     function BindEventForChangeLayer() {
@@ -57,11 +73,13 @@ $(document).ready(function () {
                 tempRemoveNameForDelete = layoutName;
             }
 
-            var layoutTemplate = $('<li class="list-group-item" id="'+layoutNameEventName+'">'+layoutNameEventName+'<span data-name="'+tempRemoveNameForDelete+'" data-id="'+layoutName+'" id="'+removeLayoutEventName+'" class="glyphicon glyphicon-minus removeLayout" style="color:red;"></span>' +
-                '<div class="material-switch pull-right">' +
-                '<input id="'+ someSwitchEventName + '" name="'+someSwitchEventName+'" type="checkbox"/>' +
-                '<label for="'+ someSwitchEventName + '" class="label-success"></label>'+
-                '<input id="'+radioButtonEventName+'" type="radio" name="'+ radioButtonChangeLayerName +'" data-id="'+tempRemoveNameForDelete+'"></div></li>');
+            var layoutTemplate = $(' <li class="list-group-item" id="'+layoutNameEventName+'">' +
+                '<input id="'+radioButtonEventName+'" type="radio" name="'+ radioButtonChangeLayerName +'" data-id="'+tempRemoveNameForDelete+'" style="margin-right:2%" checked="checked" >' +
+                ''+layoutNameEventName+'' +
+                '<span style="float:right">'+
+                '<input id="'+someSwitchEventName+'" value="'+tempRemoveNameForDelete+'" type="checkbox" checked="checked"/>' +
+                '<span data-name="'+tempRemoveNameForDelete+'" data-id="'+layoutName+'" id="'+removeLayoutEventName+'" class="glyphicon glyphicon-minus removeLayout" style="color:red;"></span></span>' +
+                '</li>');
 
             index++; //TODO убрать
         return  layoutTemplate;
@@ -74,8 +92,10 @@ $(document).ready(function () {
     function MainPoint() {
         var layers = layerManager.getLayers();
         $.each(layers, function (index, infoObject) {
-            AllLayoutPanel.append(GenerateLayoutTemplate(infoObject.name));
+            AllLayoutPanel.prepend(GenerateLayoutTemplate(infoObject.name));
             BindEventForRemoveLayer(infoObject.name);
+            BindEventForChangeVisibleLayer(infoObject.name);
+            BindEventForChangeLayer(infoObject.name);
         })
     }
     MainPoint();

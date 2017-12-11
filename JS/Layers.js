@@ -39,6 +39,14 @@ function Layers(mediator) {
     {
         this.userLayers.children[name].visible = true;
     }
+    this.toggle = function (name) {
+        if(this.userLayers.children[name].visible === true){
+            this.userLayers.children[name].visible = false;
+        }
+        else{
+            this.userLayers.children[name].visible = true;
+        }
+    }
     this.removeLayer = function(name)
     {
         if(this.userLayers.children.length == 1) return false;
