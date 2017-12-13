@@ -45,7 +45,8 @@ $(document).ready(function () {
 
     var propertyPanel = $("#propertyPanel");
     var removeLayout = $("#removeLayout");
-
+    leftElementPanelHTML.draggable();
+    $('#layoutPanel').draggable();
     //PROPERTIES
     function ShowOrHidePropertyPanel() {
         propertyPanel.toggle();
