@@ -43,7 +43,8 @@ $(document).ready(function () {
     var showElementPanel = $("#showElementPanel");
     var toggleLayoutPanel = $("#toggleLayoutPanel");
     var fontsize = $("#fontsize");
-
+    var fontColorPicker = $("#fontColorPicker");
+    var fontStrokeColor = $("#fontStrokeColor");
 
     var propertyPanel = $("#propertyPanel");
     var removeLayout = $("#removeLayout");
@@ -71,6 +72,18 @@ $(document).ready(function () {
     }).on('hidePicker', function () {
         settingsManager.settings.background.gridColor = gridColorPickerHTML.colorpicker('getValue');
     });
+
+    fontColorPicker.colorpicker({
+        colorSelectors: constColor
+    }).on('hidePicker', function () {
+        settingsManager.settings.textStyles.drawing.fillColor = fontColorPicker.colorpicker('getValue');
+    });
+    fontStrokeColor.colorpicker({
+        colorSelectors: constColor
+    }).on('hidePicker', function () {
+        settingsManager.settings.textStyles.drawing.strokeColor = fontStrokeColor.colorpicker('getValue');
+    });
+
 
     gridColorStroke.colorpicker({
         colorSelectors: constColor
@@ -181,6 +194,9 @@ $(document).ready(function () {
         gridColorAxisHTML.colorpicker('setValue', settingsManager.settings.background.axisColor);
         gridColorPickerHTML.colorpicker('setValue', settingsManager.settings.background.gridColor);
         activeColorPickerHTML.colorpicker('setValue', settingsManager.settings.styles.drawing.strokeColor);
+        gridColorPickerHTML.colorpicker('setValue', settingsManager.settings.background.gridColor);
+        fontColorPicker.colorpicker('setValue', settingsManager.settings.textStyles.drawing.fillColor);
+        fontStrokeColor.colorpicker('setValue', settingsManager.settings.textStyles.drawing.strokeColor);
 
         stepHTML.val(settingsManager.settings.background.gridStep);
         stepBindingGridHTML.val(settingsManager.settings.binding.gridStep);

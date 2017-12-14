@@ -333,11 +333,31 @@
             <!--</div>-->
             <div class="form-group col-md-2">
                 <div class="input-group">
-                    <span class="input-group-addon" for="FontForText">Line type</span>
+                    <span class="input-group-addon" for="FontForText">Font</span>
                     <select class="form-control" id="FontForText">
                         <option>sans-serif</option>
                         <option>arial</option>
                     </select>
+                </div>
+            </div>
+            <div class="form-group col-md-2">
+                <div class="input-group">
+                    <span class="input-group-addon" for="fontColorPicker">Fill color</span>
+                    <div id="fontColorPicker" data-format="alias" data-align="right"
+                         class="input-group colorpicker-component" style="width: 90%">
+                        <input type="text" value="primary" class="form-control"/>
+                        <span class="input-group-addon"><i></i></span>
+                    </div>
+                </div>
+            </div>
+            <div class="form-group col-md-2">
+                <div class="input-group">
+                    <span class="input-group-addon" for="fontStrokeColor">Stroke color</span>
+                    <div id="fontStrokeColor" data-format="alias" data-align="right"
+                         class="input-group colorpicker-component" style="width: 90%">
+                        <input type="text" value="primary" class="form-control"/>
+                        <span class="input-group-addon"><i></i></span>
+                    </div>
                 </div>
             </div>
         </div>
