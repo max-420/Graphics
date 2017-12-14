@@ -394,6 +394,33 @@ $(document).ready(function () {
             settingsManager.settings.textStyles.drawing.lineType = 'solid';
         }
     });
+    $('#selectFontWeight').on('change', function () {
+        var lineType = $(this).val();
+        if (lineType == 'Bold') {
+            settingsManager.settings.textStyles.drawing.fontWeight = 'normal';
+        }
+        else if (lineType == 'Bolder') {
+            settingsManager.settings.textStyles.drawing.fontWeight = 'bolder';
+        }
+        else if (lineType == 'Lighter') {
+            settingsManager.settings.textStyles.drawing.fontWeight = 'lighter';
+        }
+        else if (lineType == 'Normal') {
+            settingsManager.settings.textStyles.drawing.fontWeight = '100';
+        }
+    });
+    $('#FontForText').on('change', function () {
+        var fontName = $(this).val();
+        if (fontName == 'sans-serif') {
+            settingsManager.settings.textStyles.drawing.fontFamily = 'sans-serif';
+            settingsManager.settings.textStyles.drawing.font = 'sans-serif';
+        }
+        else if (fontName == 'arial') {
+            settingsManager.settings.textStyles.drawing.fontFamily = 'arial';
+            settingsManager.settings.textStyles.drawing.font = 'arial';
+        }
+
+    });
     $('#controlLayersPanel').click(function () {
         $('#layersPanel').toggle();
     });
