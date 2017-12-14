@@ -431,9 +431,17 @@ $(document).ready(function () {
             settingsManager.settings.textStyles.drawing.fontFamily = 'sans-serif';
             settingsManager.settings.textStyles.drawing.font = 'sans-serif';
         }
-        else if (fontName == 'arial') {
-            settingsManager.settings.textStyles.drawing.fontFamily = 'arial';
-            settingsManager.settings.textStyles.drawing.font = 'arial';
+        else if (fontName == 'Arial Black') {
+            settingsManager.settings.textStyles.drawing.fontFamily = 'sans-serif';
+            settingsManager.settings.textStyles.drawing.font = 'sans-serif';
+        }
+        else if (fontName == 'Comic Sans MS') {
+            settingsManager.settings.textStyles.drawing.fontFamily = 'cursive';
+            settingsManager.settings.textStyles.drawing.font = 'cursive';
+        }
+        else if(fontName == 'MS Serif'){
+            settingsManager.settings.textStyles.drawing.fontFamily = 'serif';
+            settingsManager.settings.textStyles.drawing.font = 'serif';
         }
 
     });
