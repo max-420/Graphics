@@ -42,6 +42,8 @@ $(document).ready(function () {
     var gridColorFillColor = $("#gridColorFillColor");
     var showElementPanel = $("#showElementPanel");
     var toggleLayoutPanel = $("#toggleLayoutPanel");
+    var fontsize = $("#fontsize");
+
 
     var propertyPanel = $("#propertyPanel");
     var removeLayout = $("#removeLayout");
@@ -104,7 +106,7 @@ $(document).ready(function () {
     });
 
     toggleLayoutPanel.click(function () {
-        layoutPanel.toggle();
+        propertyPanel.toggle();
     });
     var sizeMainPanelSetting = parseInt(mainPanelSetting.css("height"));
     //mainPanelSettings  // mainSettings // mainPanelSettings
@@ -183,6 +185,7 @@ $(document).ready(function () {
         stepHTML.val(settingsManager.settings.background.gridStep);
         stepBindingGridHTML.val(settingsManager.settings.binding.gridStep);
         strokeWidthHTML.val(settingsManager.settings.styles.drawing.strokeWidth);
+        fontsize.val(settingsManager.settings.textStyles.drawing.fontSize);
 
 
         if (settingsManager.settings.background.showGrid) {
@@ -235,6 +238,9 @@ $(document).ready(function () {
     });
     stepBindingGridHTML.change(function () {
         settingsManager.settings.binding.gridStep = stepBindingGridHTML.val();
+    });
+    fontsize.change(function(){
+        settingsManager.settings.textStyles.drawing.fontSize = $(this).val();
     });
 
 
@@ -347,6 +353,7 @@ $(document).ready(function () {
     $('#selectTyleLine').on('change', function () {
         var lineType = $(this).val();
         if (lineType == 'Solid') {
+
             settingsManager.settings.styles.drawing.lineType = 'solid';
         }
         else if (lineType == 'Dotted') {
@@ -363,6 +370,28 @@ $(document).ready(function () {
         }
         else {
             settingsManager.settings.styles.drawing.lineType = 'solid';
+        }
+    });
+
+    $('#selectTypeLineText').on('change', function () {
+        var lineType = $(this).val();
+        if (lineType == 'Solid') {
+            settingsManager.settings.textStyles.drawing.lineType = 'solid';
+        }
+        else if (lineType == 'Dotted') {
+            settingsManager.settings.textStyles.drawing.lineType = 'dotted';
+        }
+        else if (lineType == 'Dashed') {
+            settingsManager.settings.textStyles.drawing.lineType = 'dashed';
+        }
+        else if (lineType == 'DotDash') {
+            settingsManager.settings.textStyles.drawing.lineType = 'dotDash';
+        }
+        else if (lineType == 'TwoDotsOneDash') {
+            settingsManager.settings.textStyles.drawing.lineType = 'twoDotsOneDash';
+        }
+        else {
+            settingsManager.settings.textStyles.drawing.lineType = 'solid';
         }
     });
     $('#controlLayersPanel').click(function () {

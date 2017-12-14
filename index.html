@@ -49,8 +49,9 @@
                 <li><button class="btn btn-danger navbar-btn bouton-image monBouton " id="gridSettings"> Grid</button></li>
                 <!--
                 <li><button class="btn btn-danger navbar-btn bouton-image monBouton " id="showElementPanel"> Toggle element panel</button></li>
-                <li><button class="btn btn-danger navbar-btn bouton-image monBouton " id="toggleLayoutPanel"> Toggle layout panel</button></li>
                 -->
+                <li><button class="btn btn-danger navbar-btn bouton-image monBouton " id="toggleLayoutPanel"> Toggle layout panel</button></li>
+
             </ul>
             <ul class="nav navbar-nav navbar-right">
                 <li><a href="#"><span class="glyphicon glyphicon-thumbs-up"></span> Press F11</a></li>
@@ -296,10 +297,30 @@
                 <!-- List group -->
                 <ul class="list-group" id="AllLayoutPanel">
                 </ul>
-            </div>  
+            </div>
     </div>
-    <nav class="navbar navbar-default navbar-fixed-bottom" id="propertyPanel">
+    <nav class="navbar navbar-default navbar-fixed-bottom" id="propertyPanel" style="display:none;">
+        <div class="form-row">
+            <div class="form-group col-md-2">
+                <div class="input-group" >
+                    <span class="input-group-addon" for="fontsize">Font Size</span>
+                    <input type="number" class="form-control form-control-sm" id="fontsize" placeholder="fontsize">
+                </div>
+            </div>
 
+            <div class="form-group col-md-2">
+                <div class="input-group">
+                    <span class="input-group-addon" for="selectTypeLineText">Line type</span>
+                    <select class="form-control" id="selectTypeLineText">
+                        <option>Solid</option>
+                        <option>Dotted</option>
+                        <option>Dashed</option>
+                        <option>DotDash</option>
+                        <option>TwoDotsOneDash</option>
+                    </select>
+                </div>
+            </div>
+        </div>
     </nav>
     <canvas id="myCanvas" resize></canvas>
 
