@@ -48,15 +48,15 @@ $(document).ready(function () {
 
     var propertyPanel = $("#propertyPanel");
     var removeLayout = $("#removeLayout");
-    leftElementPanelHTML.draggable();
-    $('#layoutPanel').draggable();
+    leftElementPanelHTML.draggable({containment: "parent"});
+    $('#layoutPanel').draggable({containment: "parent"});
     //PROPERTIES
     function ShowOrHidePropertyPanel() {
         propertyPanel.toggle();
     }
     //SET SETTING ON COLORPICKER
     gridColorAxisHTML.colorpicker({
-        colorSelectors: constColor
+        colorSelectors: constColor,
     }).on('hidePicker', function () {
         settingsManager.settings.background.axisColor = gridColorAxisHTML.colorpicker('getValue');
     });
@@ -79,7 +79,7 @@ $(document).ready(function () {
         settingsManager.settings.textStyles.drawing.fillColor = fontColorPicker.colorpicker('getValue');
     });
     fontStrokeColor.colorpicker({
-        colorSelectors: constColor
+        colorSelectors: constColor,
     }).on('hidePicker', function () {
         settingsManager.settings.textStyles.drawing.strokeColor = fontStrokeColor.colorpicker('getValue');
     });
