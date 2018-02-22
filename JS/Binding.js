@@ -1,13 +1,17 @@
 function Binding(mediator, bindingSettings, drawingLayers) {
     var bindingTolerance;
     var signs = new Signs();
+    this.customBindings = [];
     this.getPoint = function (point) {
         bindingTolerance = bindingSettings.bindingTolerance/view.zoom;
         var points = [];
         if(bindingSettings.bindToLineEnds) points = points.concat(bindToLineEnds(point));
         if(bindingSettings.bindToIntersections) points = points.concat(bindToIntersections(point));
         if(bindingSettings.bindToCenters) points = points.concat(bindToCenters(point));
-
+        var customPoints = this.customBindings.map(function(bind) {
+            return bind(point);
+        });
+        points = points.concat(customPoints);
         var nearestPoint = getNearestPoint(point, points, bindingTolerance);
         if(nearestPoint){
             return nearestPoint;

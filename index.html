@@ -24,6 +24,8 @@
     <script type="text/javascript" src="JS\UI\UI.js"></script>
     <script type="text/javascript" src="JS\UI\Slider.JS"></script>
     <script type="text/javascript" src="JS\UI\Layers.js"></script>
+    <script type="text/javascript" src="JS\LinkLinesDrawer.js"></script>
+    <script type="text/javascript" src="JS\Tools3D.js"></script>
     <!---CSS-->
     <link rel="stylesheet" type="text/css" href="CSS\bootstrap.css">
     <link rel="stylesheet" type="text/css" href="CSS\bootstrap.min.css">
@@ -269,6 +271,7 @@
         <li><a href="#" onclick="toolbox.curveTransform.activate()"><span class="your-icon icon-hand normal"></span></a></li>
         <li><a href="#" onclick="toolbox.text.activate()"><span class="your-icon icon-text normal"></span></a></li>
         <li><a href="#" onclick="toolbox.circle3Points.activate()"><span class="your-icon icon-text normal"></span></a></li>
+        <li><a href="#" onclick="toolbox3D.point.activate()"><span class="your-icon icon-text normal"></span></a></li>
         <!--
             <li class="divider"></li>
             <li class="dropdown-submenu">
@@ -375,10 +378,11 @@
 
 
         paper.install(window);
-
         var undoRedo;
         var toolbox;
+        var toolbox3D;
         var layerManager;
+        var linkLineDrawer;
         window.onload = function () {
             paper.setup('myCanvas');
             layerManager = new Layers(mediator);
@@ -391,10 +395,12 @@
 
             var selection = new Selection(mediator, layerManager);
             var drawer = new Drawer(mediator, layerManager);
-
+            linkLineDrawer = new LinkLinesDrawer(mediator, stylesManager);
             toolbox = new Tools(mediator, settingsManager.settings.tools, binding, drawer, selection, stylesManager);
+            toolbox3D = new Tools3D(mediator, binding, drawer, selection, stylesManager, linkLineDrawer);
             undoRedo = new UndoRedo(mediator, layerManager.userLayers);
         }
+
     </script>
 </body>
 </html>
