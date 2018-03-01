@@ -1,19 +1,17 @@
 function Binding(mediator, bindingSettings, drawingLayers) {
     var bindingTolerance;
     var signs = new Signs();
-    this.customBindings = [];
-    this.getPoint = function (point) {
-        bindingTolerance = bindingSettings.bindingTolerance/view.zoom;
+    this.getPoint = function (point, customBinding) {
+        bindingTolerance = bindingSettings.bindingTolerance / view.zoom;
         var points = [];
-        if(bindingSettings.bindToLineEnds) points = points.concat(bindToLineEnds(point));
-        if(bindingSettings.bindToIntersections) points = points.concat(bindToIntersections(point));
-        if(bindingSettings.bindToCenters) points = points.concat(bindToCenters(point));
-        var customPoints = this.customBindings.map(function(bind) {
-            return bind(point);
-        });
-        points = points.concat(customPoints);
+        if (bindingSettings.bindToLineEnds) points = points.concat(bindToLineEnds(point));
+        if (bindingSettings.bindToIntersections) points = points.concat(bindToIntersections(point));
+        if (bindingSettings.bindToCenters) points = points.concat(bindToCenters(point));
+        if(customBinding) {
+            points = points.concat(customBinding(point, bindingTolerance));
+        }
         var nearestPoint = getNearestPoint(point, points, bindingTolerance);
-        if(nearestPoint){
+        if (nearestPoint) {
             return nearestPoint;
         }
 
@@ -22,13 +20,14 @@ function Binding(mediator, bindingSettings, drawingLayers) {
         }
         return point;
     }
-    this.drawPoint = function (point) {
+    this.drawPoint = function (point, customBinding) {
         mediator.publish("bindingDrawingStarted");
-        var bindedPoint = this.getPoint(point);
+        var bindedPoint = this.getPoint(point, customBinding);
         if (!bindedPoint.equals(point)) {
-            signs.gridBinding.place(bindedPoint);
+                signs.gridBinding.place(bindedPoint);
         }
         mediator.publish("bindingDrawingFinished");
+        return bindedPoint;
     }
     this.clear = function () {
         mediator.publish("bindingDrawingStarted");

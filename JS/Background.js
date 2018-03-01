@@ -1,5 +1,5 @@
-function Background(mediator, backgroundSettings) {
-    var margin = 200;
+function Background(mediator, backgroundSettings, stylesManager) {
+    var margin = 50;
     var lastBounds = new Rectangle(view.bounds.point.subtract(margin), view.size.add(margin));
     view.translate(view.viewSize.divide(2));
     var redraw = function () {
@@ -7,6 +7,7 @@ function Background(mediator, backgroundSettings) {
         mediator.publish("backgroundDrawingStarted");
         if (backgroundSettings.showGrid) drawGrid();
         if (backgroundSettings.showAxis) drawAxis();
+        if (backgroundSettings.showAxisText) drawText();
         mediator.publish("backgroundDrawingFinished");
     }
 
@@ -41,6 +42,34 @@ function Background(mediator, backgroundSettings) {
             grid.addChild(vertLine.place(new Point(x, view.center.y)));
         }
     }
+    var drawText = function()
+    {
+        var shift = 6;
+        var zeroText = new PointText([shift, 2*shift+2]);
+        stylesManager.applyTextStyle(zeroText, 'axisText');
+        zeroText.content = '0';
+        zeroText.scaling = new Point(1,1).divide(view.scaling);
+
+        var xText = new PointText(new Point(view.bounds.left,0).add([6,15]));
+        stylesManager.applyTextStyle(xText, 'axisText');
+        xText.content = 'X';
+        xText.scaling = new Point(1,1).divide(view.scaling);
+
+        var y1Text = new PointText(new Point(0, view.bounds.bottom).add([3,-60/view.zoom]));
+        stylesManager.applyTextStyle(y1Text, 'axisText');
+        y1Text.content = 'Y';
+        y1Text.scaling = new Point(1,1).divide(view.scaling);
+
+        var y2Text = new PointText(new Point(view.bounds.right,0).add([-12, 15]));
+        stylesManager.applyTextStyle(y2Text, 'axisText');
+        y2Text.content = 'Y';
+        y2Text.scaling = new Point(1,1).divide(view.scaling);
+
+        var zText = new PointText(new Point(0, view.bounds.top).add([3, 20]));
+        stylesManager.applyTextStyle(zText, 'axisText');
+        zText.content = 'Z';
+        zText.scaling = new Point(1,1).divide(view.scaling);
+    }
     var drawAxis = function () {
         var scaledMargin = margin;
         var boundRect = view.bounds;
@@ -52,11 +81,6 @@ function Background(mediator, backgroundSettings) {
 
         var axis = new Group([axisLeft, axisRight, axisBottom, axisTop]);
 
-        var shift = 5;
-        var zText = new PointText([shift, 2*shift+2]);
-        zText.content = '0';
-        zText.fillColor = "black"
-        //stylesManager.applyTextStyle(zText, 'drawing');
         if(backgroundSettings.threeAxis)
         {
             axisLeft.strokeColor = 'red';

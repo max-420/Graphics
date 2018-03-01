@@ -24,8 +24,9 @@
     <script type="text/javascript" src="JS\UI\UI.js"></script>
     <script type="text/javascript" src="JS\UI\Slider.JS"></script>
     <script type="text/javascript" src="JS\UI\Layers.js"></script>
-    <script type="text/javascript" src="JS\LinkLinesDrawer.js"></script>
+    <script type="text/javascript" src="JS\ProjectionPointsDrawer.js"></script>
     <script type="text/javascript" src="JS\Tools3D.js"></script>
+    <script type="text/javascript" src="JS\Projection.js"></script>
     <!---CSS-->
     <link rel="stylesheet" type="text/css" href="CSS\bootstrap.css">
     <link rel="stylesheet" type="text/css" href="CSS\bootstrap.min.css">
@@ -382,22 +383,23 @@
         var toolbox;
         var toolbox3D;
         var layerManager;
-        var linkLineDrawer;
         window.onload = function () {
             paper.setup('myCanvas');
             layerManager = new Layers(mediator);
-            var background = new Background(mediator, settingsManager.settings.background);
+
+            var stylesManager = new StylesManager(mediator, settingsManager.settings.styles, settingsManager.settings.textStyles);
+            var background = new Background(mediator, settingsManager.settings.background,stylesManager);
             var scaling = new Scaling(mediator, settingsManager.settings.scaling, canvas);
 
             var binding = new Binding(mediator, settingsManager.settings.binding, layerManager.userLayers);
 
-            var stylesManager = new StylesManager(mediator, settingsManager.settings.styles, settingsManager.settings.textStyles);
+
 
             var selection = new Selection(mediator, layerManager);
             var drawer = new Drawer(mediator, layerManager);
-            linkLineDrawer = new LinkLinesDrawer(mediator, stylesManager);
+            var projectionPointsDrawer = new ProjectionPointsDrawer(mediator, stylesManager);
             toolbox = new Tools(mediator, settingsManager.settings.tools, binding, drawer, selection, stylesManager);
-            toolbox3D = new Tools3D(mediator, binding, drawer, selection, stylesManager, linkLineDrawer);
+            toolbox3D = new Tools3D(mediator, binding, drawer, selection, stylesManager, projectionPointsDrawer, settingsManager.settings.projectionParams);
             undoRedo = new UndoRedo(mediator, layerManager.userLayers);
         }
 

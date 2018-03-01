@@ -1,8 +1,7 @@
 function Settings() {
     this.styles =
     {
-        drawing:
-        {
+        drawing: {
             strokeColor: 'red',
             strokeWidth: 1,
             strokeScaling: false,
@@ -14,35 +13,43 @@ function Settings() {
             shadowBlur: 0,
             shadowOffset: 0,
         },
-        predrawing:
-        {
-
-        },
-        selection:
-        {
-            strokeColor:'grey',
+        predrawing: {},
+        selection: {
+            strokeColor: 'grey',
             strokeWidth: 1,
             strokeScaling: false,
             lineType: 'dashed',
             lineScaling: 2,
         },
-        textCursor:
-        {
-            strokeColor:'grey',
-            strokeWidth: 1,
-            strokeScaling: false,
-        },
-        bindingSigns:
-        {
+        textCursor: {
             strokeColor: 'grey',
             strokeWidth: 1,
             strokeScaling: false,
-        }
+        },
+        bindingSigns: {
+            strokeColor: 'grey',
+            strokeWidth: 1,
+            strokeScaling: false,
+        },
+        linkLine: {
+            strokeColor: 'grey',
+            strokeWidth: 2,
+            strokeScaling: false,
+            lineType: 'dashed',
+            lineScaling: 10,
+        },
+        projectionPoint: {
+            strokeColor: 'red',
+            strokeWidth: 1,
+            strokeScaling: false,
+            lineType: 'solid',
+            lineScaling: 10,
+            fillColor: 'red',
+        },
     };
     this.textStyles =
     {
-        drawing:
-        {
+        drawing: {
             strokeColor: 'red',
             strokeWidth: 1,
             strokeScaling: false,
@@ -59,21 +66,36 @@ function Settings() {
             font: 'sans-serif',
             justification: 'left',
         },
+        pointText: {
+            lineScaling: 1,
+            fillColor: 'red',
+            fontFamily: 'sans-serif',
+            fontSize: 17,
+            font: 'sans-serif',
+            justification: 'left',
+        },
+        axisText: {
+            lineScaling: 1,
+            fillColor: 'black',
+            fontFamily: 'sans-serif',
+            fontSize: 17,
+            font: 'sans-serif',
+            justification: 'left',
+        },
     };
     this.tools =
     {
-        polygon:
-        {
+        polygon: {
             sides: 6,
         },
-        star:
-        {
+        star: {
             points: 5,
         }
     }
     this.background =
     {
         threeAxis: true,
+        showAxisText: true,
         showAxis: true,
         axisColor: 'red',
         axisWidth: 1.5,
@@ -93,6 +115,10 @@ function Settings() {
         bindToCenters: true,
         bindingTolerance: 10,
         gridStep: 30,
+    };
+    this.projectionParams =
+    {
+        showPointText: true,
     };
 }
 

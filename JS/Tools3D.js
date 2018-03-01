@@ -1,98 +1,68 @@
-function Tools3D(mediator, binding, drawer, selection, stylesManager, linkLinesDrawer)
-{
+function Tools3D(mediator, binding, drawer, selection, stylesManager, projectionPointsDrawer, projectionParams) {
     this.point = new Point3D();
     function Point3D() {
-        var stage = 0;
         var points = [];
         var tool = new Tool();
         var cancelled = false;
         var targetItems;
-        function getProjection(point)
-        {
-            if(point.x<0 && point.y<0)
-            {
-                return 'x';
-            }
-            if(point.x<0 && point.y>0)
-            {
-                return 'y';
-            }
-            if(point.x>0 && point.y<0)
-            {
-                return 'z';
-            }
-            return null;
-        }
+        var projection = new Projection();
+        projection.bindingTolerance = 10;
         tool.onMouseMove = function (event) {
-            binding.drawPoint(event.point);
+            var bindedPoint = binding.drawPoint(event.point, function (p, tolerance) {
+                var projections = projection.bind(p);
+                if(projections) {
+                    if (p.xy && p.xy.getDistance(event.point) < tolerance) return [p.xy];
+                    if (p.xz && p.xz.getDistance(event.point) < tolerance) return [p.xz];
+                    if (p.yz && p.yz.getDistance(event.point) < tolerance) return [p.yz];
+                }
+                return [];
+            });
+            var tolerance = projection.bindingTolerance;
+            var projections = projection.bind(event.point);
+            //projections = this.mergePoints(nearest, point3D);
+            if(projections) {
+
+                if (projections.xy != null) {
+                    mediator.publish("bindingDrawingStarted");
+                    projectionPointsDrawer.drawLinkLines(projections);
+                    mediator.publish("bindingDrawingFinished");
+                }
+                if (projections.xz != null) {
+                    mediator.publish("bindingDrawingStarted");
+                    projectionPointsDrawer.drawLinkLines(projections);
+                    mediator.publish("bindingDrawingFinished");
+                }
+                if (projections.yz != null) {
+                    mediator.publish("bindingDrawingStarted");
+                    projectionPointsDrawer.drawLinkLines(projections);
+                    mediator.publish("bindingDrawingFinished");
+                }
+            }
+
         }.bind(this);
 
         tool.onMouseDown = function (event) {
             cancelled = false;
-            if(stage==0) stage++;
-            var point = binding.getPoint(event.point);
-
-            if(stage == 1)
-            {
-                targetItems = new Group();
-                points = [];
-                points.push(point);
-                stage++;
-            }
-            else if(stage == 2)
-            {
-                var projections = [
-                    {
-                        point:points[0],
-                        proj:getProjection(points[0])
-                    },
-                    {
-                        point:point,
-                        proj:getProjection(point)
-                    }];
-                projections.sort(function compare(a, b) {
-                    return a.proj > b.proj ? 1:-1;
-                });
-                if(projections[0].proj == projections[1].proj) return;
-                if(projections[0].proj=='x' && projections[1].proj=='y')
-                {
-                    if(projections[0].point.x != projections[1].point.x) return;
-                    points.push(point);
-                    points.push(new Point(projections[1].point.y,projections[0].point.y));
-                    var icon = new Path.Circle(points[2], 5);
-                    targetItems.addChild(icon);
-                    linkLinesDrawer.drawLinkLine(points[0], point);
-                    linkLinesDrawer.drawLinkLine(points[0], points[2]);
-                    linkLinesDrawer.drawLinkLine(points[1], points[2]);
+            var point = binding.getPoint(event.point, function (p, tolerance) {
+                var projections = projection.bind(p);
+                if(projections) {
+                    if (p.xy && p.xy.getDistance(event.point) < tolerance) return [p.xy];
+                    if (p.xz && p.xz.getDistance(event.point) < tolerance) return [p.xz];
+                    if (p.yz && p.yz.getDistance(event.point) < tolerance) return [p.yz];
                 }
-                if(projections[0].proj=='x' && projections[1].proj=='z')
+                return [];
+            });
+            projection.addPoint(point);
+            targetItems = new Group();
+            projectionPointsDrawer.resetPointText();
+            projection.getProjections().forEach(function (proj) {
+                targetItems.addChild(projectionPointsDrawer.drawLinkLines(proj));
+                targetItems.addChild(projectionPointsDrawer.drawProjectedPoint(proj));
+                if(projectionParams.showPointText)
                 {
-                    if(projections[0].point.y != projections[1].point.y) return;
-                    points.push(point);
-                    points.push(new Point(projections[0].point.x, projections[1].point.x));
-                    var icon = new Path.Circle(points[2], 5);
-                    targetItems.addChild(icon);
-                    linkLinesDrawer.drawLinkLine(points[0], point);
-                    linkLinesDrawer.drawLinkLine(points[0], points[2]);
-                    linkLinesDrawer.drawLinkLine(points[1], points[2]);
+                    targetItems.addChild(projectionPointsDrawer.drawPointText(proj));
                 }
-                if(projections[0].proj=='y' && projections[1].proj=='z')
-                {
-                    if(projections[0].point.y != projections[1].point.x) return;
-                    points.push(point);
-                    points.push(new Point(projections[0].point.x,projections[1].point.y));
-                    var icon = new Path.Circle(points[2], 5);
-                    targetItems.addChild(icon);
-                    linkLinesDrawer.drawLinkLine(points[0], point);
-                    linkLinesDrawer.drawLinkLine(points[0], points[2]);
-                    linkLinesDrawer.drawLinkLine(points[1], points[2]);
-                }
-                stage = 0;
-            }
-            var icon = new Path.Circle(point, 5);
-            targetItems.addChild(icon);
-
-            stylesManager.applyStyle(targetItems, 'drawing');
+            })
         }.bind(this);
 
         tool.onMouseDrag = function (event) {
@@ -101,7 +71,6 @@ function Tools3D(mediator, binding, drawer, selection, stylesManager, linkLinesD
 
         tool.onMouseUp = function (event) {
             if (cancelled) return;
-            stylesManager.applyStyle(targetItems, 'drawing');
             drawer.save(targetItems.children);
             targetItems.remove();
         }.bind(this);
@@ -117,15 +86,14 @@ function Tools3D(mediator, binding, drawer, selection, stylesManager, linkLinesD
             if (this.onKeyDown) this.onKeyDown(event);
         }.bind(this);
 
-        this.cancel = function()
-        {
+        this.cancel = function () {
             cancelled = true;
             binding.clear();
             selection.deleteCopy();
             drawer.cancel();
         }
 
-        this.activate = function(){
+        this.activate = function () {
             tool.activate();
             binding.clear();
         };
