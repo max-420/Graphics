@@ -10,7 +10,9 @@ function ProjectionManager(mediator, projectionPointsDrawer, stylesManager, proj
             var pointProjections = shape.getProjections();
 
             pointProjections.forEach(function (proj) {
-                shapeGroup.addChild(projectionPointsDrawer.drawLinkLines(proj));
+                if(projectionParams.showLinkLines) {
+                    shapeGroup.addChild(projectionPointsDrawer.drawLinkLines(proj));
+                }
                 shapeGroup.addChild(projectionPointsDrawer.drawProjectedPoint(proj));
 
             });
@@ -47,8 +49,8 @@ function ProjectionManager(mediator, projectionPointsDrawer, stylesManager, proj
             {
                 shapeGroup.addChild(shapeXZ);
             }
-            graphics[index] = shapeGroup;
-        });
+            this.graphics[index] = shapeGroup;
+        }.bind(this));
         return this.graphics;
     };
 

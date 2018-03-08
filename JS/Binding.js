@@ -40,7 +40,7 @@ function Binding(mediator, bindingSettings, drawingLayers) {
 
     function bindToLineEnds(point) {
         var hitOptions = {
-            segments: true,
+            ends: true,
             tolerance: bindingTolerance,
         };
         var hitResults = drawingLayers.hitTestAll(point, hitOptions);

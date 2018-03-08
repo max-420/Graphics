@@ -33,10 +33,8 @@ function Settings() {
         },
         linkLine: {
             strokeColor: 'grey',
-            strokeWidth: 2,
+            strokeWidth: 1,
             strokeScaling: false,
-            lineType: 'dashed',
-            lineScaling: 10,
         },
         projectionPoint: {
             strokeColor: 'red',
@@ -119,6 +117,7 @@ function Settings() {
     this.projectionParams =
     {
         showPointText: true,
+        showLinkLines: true,
     };
 }
 

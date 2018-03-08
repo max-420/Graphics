@@ -51,6 +51,7 @@
             <li><button class="btn btn-danger navbar-btn bouton-image monBouton " id="mainSettings"> Main</button></li>
             <li><button class="btn btn-danger navbar-btn bouton-image monBouton " id="bindingSettings"> Binding</button></li>
             <li><button class="btn btn-danger navbar-btn bouton-image monBouton " id="gridSettings"> Grid</button></li>
+            <li><button class="btn btn-danger navbar-btn bouton-image monBouton " id="projectionSettings"> Grid</button></li>
             <!--
             <li><button class="btn btn-danger navbar-btn bouton-image monBouton " id="showElementPanel"> Toggle element panel</button></li>
             -->
@@ -245,6 +246,29 @@
         </div>
     </div>
 </div>
+<div class="container-fluid heightPanel" hidden="true" id="projectionsPanelSettings">
+    <div class="row heightPanel">
+        <div class="col-sm-4 col-lg-4">
+            <div class="panel panel-default" style="margin-top:10px; padding-left:10px;">
+                <div class="checkbox">
+                    <label><input type="checkbox" id="showPointText" value="">Show point captions</label>
+                </div>
+                <div class="checkbox">
+                    <label><input type="checkbox" id="showLinkLines" value="">Show projection lines</label>
+                </div>
+
+            </div>
+        </div>
+        <div class="col-sm-4 col-lg-4 heightPanel">
+            <div class="panel panel-default" style="margin-top:10px; margin-left:10px; padding-bottom: 109px;">
+                <div class="input-group" style="padding-left:20px; padding-top:10px;">
+                    <span class="input-group-addon" for="step">Step grid:</span>
+                    <input type="number" value="Enter step grid" class="form-control" id="step" style="width: 80%;">
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
 
 <ul class="dropdown-menu" role="menu" aria-labelledby="dropdownMenu" style="display: block; position: absolute; left: 40px; top: 100px; min-width:20px;" id="leftmenu">
     <li><a href="#" onclick="toolbox.line.activate();"><span class="your-icon icon-simple-line normal"></span></a></li>
@@ -401,7 +425,7 @@
         var projectionPointsDrawer = new ProjectionPointsDrawer(mediator, stylesManager);
         toolbox = new Tools(mediator, settingsManager.settings.tools, binding, drawer, selection, stylesManager);
         var projectionManager = new ProjectionManager(mediator, projectionPointsDrawer, stylesManager, settingsManager.settings.projectionParams);
-        toolbox3D = new Tools3D(mediator, binding, drawer, selection, projectionPointsDrawer, projectionManager);
+        toolbox3D = new Tools3D(mediator, binding, drawer, selection, projectionPointsDrawer, projectionManager, settingsManager.settings.projectionParams);
         undoRedo = new UndoRedo(mediator, layerManager.userLayers);
     }
 

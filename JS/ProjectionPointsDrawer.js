@@ -108,13 +108,19 @@ function ProjectionPointsDrawer(mediator, stylesManager) {
     this.drawLinkLines = function (projectedPoint) {
         var linesGroup = new Group();
         if (projectedPoint.xy != null && projectedPoint.yz != null) {
-            linesGroup.addChild(drawLinkLine(projectedPoint.xy, projectedPoint.yz));
+            var linkLine = drawLinkLine(projectedPoint.xy, projectedPoint.yz);
+            linkLine.strokeColor = 'blue';
+            linesGroup.addChild(linkLine);
         }
         if (projectedPoint.xy != null && projectedPoint.xz != null) {
-            linesGroup.addChild(drawLinkLine(projectedPoint.xy, projectedPoint.xz));
+            var linkLine = drawLinkLine(projectedPoint.xy, projectedPoint.xz);
+            linkLine.strokeColor = 'red';
+            linesGroup.addChild(linkLine);
         }
         if (projectedPoint.xz != null && projectedPoint.yz != null) {
-            linesGroup.addChild(drawLinkLine(projectedPoint.xz, projectedPoint.yz));
+            var linkLine = drawLinkLine(projectedPoint.xz, projectedPoint.yz);
+            linkLine.strokeColor = 'green';
+            linesGroup.addChild(linkLine);
         }
         return linesGroup;
     }

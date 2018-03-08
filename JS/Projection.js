@@ -17,21 +17,21 @@ function Projection() {
     this.mergePoints = function(from, to)
     {
         var result = {};
-        if (from.x == 0) {
-            result.x = to.x;
-            result.y = from.y;
-            result.z = from.z;
-        }
-        if (from.y == 0) {
+        if (to.x == 0) {
             result.x = from.x;
             result.y = to.y;
-            result.z = from.z;
-
+            result.z = to.z;
         }
-        if (from.z == 0) {
-            result.x = from.x;
+        if (to.y == 0) {
+            result.x = to.x;
             result.y = from.y;
             result.z = to.z;
+
+        }
+        if (to.z == 0) {
+            result.x = to.x;
+            result.y = to.y;
+            result.z = from.z;
         }
         return result;
     }
@@ -118,9 +118,9 @@ function Projection() {
         return null;
     };
     this.validate = function (pointsCount) {
-        return this.points3D.count == pointsCount &&
+        return this.points3D.length == pointsCount &&
             this.points3D.every(function (p) {
-                return p.x != 0 && p.y != 0;
+                return p.x != 0 && p.y != 0 && p.z != 0;
             });
     };
 }
