@@ -35,34 +35,73 @@ function ProjectionPointsDrawer(mediator, stylesManager) {
         }
         return pointsGroup;
     }
-    this.drawPointText = function(projectedPoint)
-    {
+    this.drawPointText = function (projectedPoints) {
         var offset = new Point(10, -10);
+        var titlesXY = [];
+        var titlesYZ = [];
+        var titlesXZ = [];
         var textGroup = new Group();
-        if (projectedPoint.xy != null) {
-            var text = new PointText(projectedPoint.xy.add(offset));
-            text.content = String.fromCharCode(this.pointChar) + "'";
-            stylesManager.applyTextStyle(text, 'pointText');
-            textGroup.addChild(text);
+
+        for (var i = 0; i < projectedPoints.length; i++) {
+            if (projectedPoints[i].xy != null) {
+                var samePointFound = false;
+                for (var j = 0; j < i; j++) {
+                    if (projectedPoints[j].xy != null && projectedPoints[j].xy.equals(projectedPoints[i].xy)) {
+                        samePointFound = true;
+                        titlesXY[j].content += '=' + String.fromCharCode(this.pointChar) + "'";
+                        break;
+                    }
+                }
+                if (!samePointFound) {
+                    var text = new PointText(projectedPoints[i].xy.add(offset));
+                    text.content = String.fromCharCode(this.pointChar) + "'";
+                    stylesManager.applyTextStyle(text, 'pointText');
+                    textGroup.addChild(text);
+                    titlesXY[i] = text;
+                }
+            }
+            if (projectedPoints[i].xz != null) {
+                var samePointFound = false;
+                for (var j = 0; j < i; j++) {
+                    if (projectedPoints[j].xz != null && projectedPoints[j].xz.equals(projectedPoints[i].xz)) {
+                        samePointFound = true;
+                        titlesXZ[j].content += '=' + String.fromCharCode(this.pointChar) + "''";
+                        break;
+                    }
+                }
+                if (!samePointFound) {
+                    var text = new PointText(projectedPoints[i].xz.add(offset));
+                    text.content = String.fromCharCode(this.pointChar) + "''";
+                    stylesManager.applyTextStyle(text, 'pointText');
+                    textGroup.addChild(text);
+                    titlesXZ[i] = text;
+                }
+            }
+            if (projectedPoints[i].yz != null) {
+                var samePointFound = false;
+                for (var j = 0; j < i; j++) {
+                    if (projectedPoints[j].yz != null && projectedPoints[j].yz.equals(projectedPoints[i].yz)) {
+                        samePointFound = true;
+                        titlesYZ[j].content += '=' + String.fromCharCode(this.pointChar) + "'''";
+                        break;
+                    }
+                }
+                if (!samePointFound) {
+                    var text = new PointText(projectedPoints[i].yz.add(offset));
+                    text.content = String.fromCharCode(this.pointChar) + "'''";
+                    stylesManager.applyTextStyle(text, 'pointText');
+                    textGroup.addChild(text);
+                    titlesYZ[i] = text;
+                }
+            }
+            this.pointChar++;
         }
-        if (projectedPoint.xz != null) {
-            var text = new PointText(projectedPoint.xz.add(offset));
-            text.content = String.fromCharCode(this.pointChar) + "''";
-            stylesManager.applyTextStyle(text, 'pointText');
-            textGroup.addChild(text);
-        }
-        if (projectedPoint.yz != null) {
-            var text = new PointText(projectedPoint.yz.add(offset));
-            text.content = String.fromCharCode(this.pointChar) + "'''";
-            stylesManager.applyTextStyle(text, 'pointText');
-            textGroup.addChild(text);
-        }
-        this.pointChar++;
+
+
         return textGroup;
     };
 
-    this.resetPointText = function()
-    {
+    this.resetPointText = function () {
         this.pointChar = 'A'.charCodeAt();
     };
 

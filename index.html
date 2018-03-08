@@ -6,7 +6,7 @@
     <!--JS-->
     <script src="assets\js\mediator.min.js"></script>
     <script src="assets\js\jquery-3.2.1.min.js"></script>
-<!--	<script src="assets\js\jquery-ui.min.js"></script>-->
+    <!--	<script src="assets\js\jquery-ui.min.js"></script>-->
     <script type="text/javascript" src="assets\js\paper.js"></script>
     <script type="text/javascript" src="assets\js\jquery-ui.js"></script>
     <script type="text/javascript" src="JS\SettingsManager.js"></script>
@@ -27,6 +27,7 @@
     <script type="text/javascript" src="JS\ProjectionPointsDrawer.js"></script>
     <script type="text/javascript" src="JS\Tools3D.js"></script>
     <script type="text/javascript" src="JS\Projection.js"></script>
+    <script type="text/javascript" src="JS\ProjectionManager.js"></script>
     <!---CSS-->
     <link rel="stylesheet" type="text/css" href="CSS\bootstrap.css">
     <link rel="stylesheet" type="text/css" href="CSS\bootstrap.min.css">
@@ -36,373 +37,374 @@
 </head>
 <body>
 
-    <nav class="navbar navbar-default">
-        <div class="collapse navbar-collapse" id="myNavbar">
-            <div class="navbar-header">
-                <a class="navbar-brand" href="#"><img src="CSS\icon\logo_bird.png" style="padding:none"></a>
-            </div>
-            <ul class="nav navbar-nav navbar-left">
-                <li>
-                    <button class="btn btn-danger navbar-btn" id="ClosePanel">
-                        <span class="glyphicon glyphicon-remove-circle" aria-hidden="true"></span> Close
-                    </button>
-                </li>
-                <li><button class="btn btn-danger navbar-btn bouton-image monBouton " id="mainSettings"> Main</button></li>
-                <li><button class="btn btn-danger navbar-btn bouton-image monBouton " id="bindingSettings"> Binding</button></li>
-                <li><button class="btn btn-danger navbar-btn bouton-image monBouton " id="gridSettings"> Grid</button></li>
-                <!--
-                <li><button class="btn btn-danger navbar-btn bouton-image monBouton " id="showElementPanel"> Toggle element panel</button></li>
-                -->
-                <li><button class="btn btn-danger navbar-btn bouton-image monBouton " id="toggleLayoutPanel"> Toggle layout panel</button></li>
+<nav class="navbar navbar-default">
+    <div class="collapse navbar-collapse" id="myNavbar">
+        <div class="navbar-header">
+            <a class="navbar-brand" href="#"><img src="CSS\icon\logo_bird.png" style="padding:none"></a>
+        </div>
+        <ul class="nav navbar-nav navbar-left">
+            <li>
+                <button class="btn btn-danger navbar-btn" id="ClosePanel">
+                    <span class="glyphicon glyphicon-remove-circle" aria-hidden="true"></span> Close
+                </button>
+            </li>
+            <li><button class="btn btn-danger navbar-btn bouton-image monBouton " id="mainSettings"> Main</button></li>
+            <li><button class="btn btn-danger navbar-btn bouton-image monBouton " id="bindingSettings"> Binding</button></li>
+            <li><button class="btn btn-danger navbar-btn bouton-image monBouton " id="gridSettings"> Grid</button></li>
+            <!--
+            <li><button class="btn btn-danger navbar-btn bouton-image monBouton " id="showElementPanel"> Toggle element panel</button></li>
+            -->
+            <li><button class="btn btn-danger navbar-btn bouton-image monBouton " id="toggleLayoutPanel"> Toggle layout panel</button></li>
 
-            </ul>
-            <ul class="nav navbar-nav navbar-right">
-                <li><a href="#"><span class="glyphicon glyphicon-thumbs-up"></span> Press F11</a></li>
-            </ul>
-        </div>
-    </nav>
-    <div class="container-fluid heightPanel" hidden="true" id="bindingPanelSettings">
-        <div class="row">
-            <!--Binding-->
-            <div class="col-lg-4">
-                <div class="panel panel-default" style="margin-top:20px; padding-left:20px; padding-bottom:20px;">
-                    <form>
-                        <div class="checkbox">
-                            <label><input type="checkbox" id="BindingGrid" value="">Binding to grid</label>
-                        </div>
-                        <div class="checkbox">
-                            <label>
-                                <input type="checkbox" id="bindToLineEnds" value="">Binding to line ends
-                            </label>
-                        </div>
-                        <div class="checkbox">
-                            <label>
-                                <input type="checkbox" id="bindToIntersections" value="">Binding to intersections
-                            </label>
-                        </div>
-                        <div class="checkbox">
-                            <label><input type="checkbox" id="bindToCenters" value="">Binding to centers</label>
-                        </div>
-                        <div class="checkbox">
-                            <label><input type="checkbox" id="bindingTolerance" value="">Binding tolerance</label>
-                        </div>
-                        <label for="stepBindingGrid">Binding grid step</label>
-                        <input class="form-control" id="stepBindingGrid" type="number" value="Enter step binding" style="width:50%" disabled>
-                    </form>
-                </div>
-            </div>
-        </div>
+        </ul>
+        <ul class="nav navbar-nav navbar-right">
+            <li><a href="#"><span class="glyphicon glyphicon-thumbs-up"></span> Press F11</a></li>
+        </ul>
     </div>
-    </div>
-    <div class="container-fluid heightPanel" hidden="true" id="mainPanelSettings">
-        <div class="row">
-            <div class="col-sm-1 col-lg-1 heightPanel">
-                <div class="panel panel-default" style="margin-top:10px; padding-top:20px; padding-bottom:107px;">
-                    <div class="btn-group">
-                        <button type="button" onclick="undoRedo.undo();" class="btn btn-primary"><span
-                                class="glyphicon glyphicon-menu-left"></span></button>
-                        <button type="button" onclick="undoRedo.redo();" class="btn btn-primary"><span
-                                class="glyphicon glyphicon-menu-right"></span></button>
+</nav>
+<div class="container-fluid heightPanel" hidden="true" id="bindingPanelSettings">
+    <div class="row">
+        <!--Binding-->
+        <div class="col-lg-4">
+            <div class="panel panel-default" style="margin-top:20px; padding-left:20px; padding-bottom:20px;">
+                <form>
+                    <div class="checkbox">
+                        <label><input type="checkbox" id="BindingGrid" value="">Binding to grid</label>
                     </div>
+                    <div class="checkbox">
+                        <label>
+                            <input type="checkbox" id="bindToLineEnds" value="">Binding to line ends
+                        </label>
+                    </div>
+                    <div class="checkbox">
+                        <label>
+                            <input type="checkbox" id="bindToIntersections" value="">Binding to intersections
+                        </label>
+                    </div>
+                    <div class="checkbox">
+                        <label><input type="checkbox" id="bindToCenters" value="">Binding to centers</label>
+                    </div>
+                    <div class="checkbox">
+                        <label><input type="checkbox" id="bindingTolerance" value="">Binding tolerance</label>
+                    </div>
+                    <label for="stepBindingGrid">Binding grid step</label>
+                    <input class="form-control" id="stepBindingGrid" type="number" value="Enter step binding" style="width:50%" disabled>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+</div>
+<div class="container-fluid heightPanel" hidden="true" id="mainPanelSettings">
+    <div class="row">
+        <div class="col-sm-1 col-lg-1 heightPanel">
+            <div class="panel panel-default" style="margin-top:10px; padding-top:20px; padding-bottom:107px;">
+                <div class="btn-group">
+                    <button type="button" onclick="undoRedo.undo();" class="btn btn-primary"><span
+                            class="glyphicon glyphicon-menu-left"></span></button>
+                    <button type="button" onclick="undoRedo.redo();" class="btn btn-primary"><span
+                            class="glyphicon glyphicon-menu-right"></span></button>
                 </div>
             </div>
-            <div class="col-sm-4 col-lg-4 heightPanel">
-                <div class="panel panel-default" style="margin-top:10px; padding-left:10px;">
-                    <form style="padding-top:15px">
-                        <div class="form-group row">
-                            <div class="col-sm-12">
-                                <div class="input-group">
+        </div>
+        <div class="col-sm-4 col-lg-4 heightPanel">
+            <div class="panel panel-default" style="margin-top:10px; padding-left:10px;">
+                <form style="padding-top:15px">
+                    <div class="form-group row">
+                        <div class="col-sm-12">
+                            <div class="input-group">
                                     <span class="input-group-btn">
                                          <button class="btn btn-secondary" type="button">Stroke color</button>
                                      </span>
-                                    <div id="gridColorStroke" data-format="alias"
-                                         class="input-group colorpicker-component" style="width: 87%">
-                                        <input type="text" value="primary" class="form-control"/>
-                                        <span class="input-group-addon"><i></i></span>
-                                    </div>
+                                <div id="gridColorStroke" data-format="alias"
+                                     class="input-group colorpicker-component" style="width: 87%">
+                                    <input type="text" value="primary" class="form-control"/>
+                                    <span class="input-group-addon"><i></i></span>
                                 </div>
                             </div>
                         </div>
-                        <div class="form-group row">
-                            <div class="col-sm-12">
-                                <div class="btn-group">
-                                    <button class="btn btn-secondary" type="button">Stroke width</button>
-                                    <div class="btn btn-default">
-                                        <input id="bootstrap-slider" type="text" data-slider-min="1"
-                                               data-slider-max="100" data-slider-step="1" data-slider-value="10"/>
-                                        <div class="valueLabel"><span id="sliderValue">25</span></div>
-                                    </div>
+                    </div>
+                    <div class="form-group row">
+                        <div class="col-sm-12">
+                            <div class="btn-group">
+                                <button class="btn btn-secondary" type="button">Stroke width</button>
+                                <div class="btn btn-default">
+                                    <input id="bootstrap-slider" type="text" data-slider-min="1"
+                                           data-slider-max="100" data-slider-step="1" data-slider-value="10"/>
+                                    <div class="valueLabel"><span id="sliderValue">25</span></div>
                                 </div>
                             </div>
                         </div>
-                        <div class="form-group row">
-                            <div class="col-sm-12">
-                                <div class="btn-group">
-                                    <button class="btn btn-secondary" type="button"
-                                            style="padding-left: 20px; padding-right: 32px;">Opacity
-                                    </button>
-                                    <div class="btn btn-default">
-                                        <input id="OpacitySetting" width="200" type="text" data-slider-min="1"
-                                               data-slider-max="2" data-slider-step="1" data-slider-value="0"/>
-                                        <div class="valueLabel"><span id="OpacityValue">0</span></div>
-                                    </div>
+                    </div>
+                    <div class="form-group row">
+                        <div class="col-sm-12">
+                            <div class="btn-group">
+                                <button class="btn btn-secondary" type="button"
+                                        style="padding-left: 20px; padding-right: 32px;">Opacity
+                                </button>
+                                <div class="btn btn-default">
+                                    <input id="OpacitySetting" width="200" type="text" data-slider-min="1"
+                                           data-slider-max="2" data-slider-step="1" data-slider-value="0"/>
+                                    <div class="valueLabel"><span id="OpacityValue">0</span></div>
                                 </div>
                             </div>
                         </div>
-                    </form>
-                </div>
+                    </div>
+                </form>
             </div>
-            <div class="col-sm-4 col-lg-4 heighPanel">
-                <div class="panel panel-default" style="margin-top:10px; padding-left:10px;">
-                    <form style="padding-top:15px">
-                        <div class="form-group row">
-                            <div class="col-sm-12">
-                                <div class="input-group">
+        </div>
+        <div class="col-sm-4 col-lg-4 heighPanel">
+            <div class="panel panel-default" style="margin-top:10px; padding-left:10px;">
+                <form style="padding-top:15px">
+                    <div class="form-group row">
+                        <div class="col-sm-12">
+                            <div class="input-group">
                                     <span class="input-group-btn">
                                          <button class="btn btn-secondary" type="button">Fill color</button>
                                      </span>
-                                    <div id="gridColorFillColor" data-format="alias" id="basic-addon1"
-                                         class="input-group colorpicker-component" style="width: 87%">
-                                        <input type="text" value="primary" class="form-control"/>
-                                        <span class="input-group-addon"><i></i></span>
-                                    </div>
+                                <div id="gridColorFillColor" data-format="alias" id="basic-addon1"
+                                     class="input-group colorpicker-component" style="width: 87%">
+                                    <input type="text" value="primary" class="form-control"/>
+                                    <span class="input-group-addon"><i></i></span>
                                 </div>
                             </div>
                         </div>
-                        <div class="form-group row">
-                            <div class="col-sm-12">
-                                <div class="input-group">
-                                    <span class="input-group-addon" for="selectTyleLine">Line type</span>
-                                    <select class="form-control" id="selectTyleLine">
-                                        <option>Solid</option>
-                                        <option>Dotted</option>
-                                        <option>Dashed</option>
-                                        <option>DotDash</option>
-                                        <option>TwoDotsOneDash</option>
-                                    </select>
+                    </div>
+                    <div class="form-group row">
+                        <div class="col-sm-12">
+                            <div class="input-group">
+                                <span class="input-group-addon" for="selectTyleLine">Line type</span>
+                                <select class="form-control" id="selectTyleLine">
+                                    <option>Solid</option>
+                                    <option>Dotted</option>
+                                    <option>Dashed</option>
+                                    <option>DotDash</option>
+                                    <option>TwoDotsOneDash</option>
+                                </select>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="form-group row">
+                        <div class="col-sm-12">
+                            <div class="btn-group">
+                                <button class="btn btn-secondary" type="button">Line scaling</button>
+                                <div class="btn btn-default">
+                                    <input id="LineScalingSetting" type="text" data-slider-min="2"
+                                           data-slider-max="101" data-slider-step="1" data-slider-value="1"/>
+                                    <div class="valueLabel"><span id="LineScalingValue">1</span></div>
                                 </div>
                             </div>
                         </div>
-                        <div class="form-group row">
-                            <div class="col-sm-12">
-                                <div class="btn-group">
-                                    <button class="btn btn-secondary" type="button">Line scaling</button>
-                                    <div class="btn btn-default">
-                                        <input id="LineScalingSetting" type="text" data-slider-min="2"
-                                               data-slider-max="101" data-slider-step="1" data-slider-value="1"/>
-                                        <div class="valueLabel"><span id="LineScalingValue">1</span></div>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                    </form>
-                </div>
+                    </div>
+                </form>
             </div>
         </div>
     </div>
-    </div>
-    <div class="container-fluid heightPanel" hidden="true" id="gridPanelSettings">
-        <div class="row heightPanel">
-            <div class="col-sm-4 col-lg-4">
-                <div class="panel panel-default" style="margin-top:10px; padding-left:10px;">
-                    <div class="input-group" style="padding-top:10px;">
+</div>
+</div>
+<div class="container-fluid heightPanel" hidden="true" id="gridPanelSettings">
+    <div class="row heightPanel">
+        <div class="col-sm-4 col-lg-4">
+            <div class="panel panel-default" style="margin-top:10px; padding-left:10px;">
+                <div class="input-group" style="padding-top:10px;">
                             <span class="input-group-btn">
                                 <button class="btn btn-secondary" type="button">Grid color</button>
                             </span>
-                        <div id="gridColorPicker" data-format="alias"
-                             class="input-group colorpicker-component" style="width: 90%">
-                            <input type="text" value="primary" class="form-control"/>
-                            <span class="input-group-addon"><i></i></span>
-                        </div>
-                    </div>
-                    <div class="input-group" style="margin-top:10px; margin-bottom: 10px;">
-                            <span class="input-group-btn">
-                                <button class="btn btn-secondary" type="button">Axies color</button>
-                            </span>
-                        <div id="gridColorAxis" data-format="alias"
-                             class="input-group colorpicker-component" style="width: 90%">
-                            <input type="text" value="primary" class="form-control"/>
-                            <span class="input-group-addon"><i></i></span>
-                        </div>
-                    </div>
-                    <div class="checkbox">
-                        <label><input type="checkbox" id="showGrid" value="">Draw grid</label>
-                    </div>
-                    <div class="checkbox">
-                        <label><input type="checkbox" id="showAxis" value="">Draw axis</label>
-                    </div>
-
-                </div>
-            </div>
-            <div class="col-sm-4 col-lg-4 heightPanel">
-                <div class="panel panel-default" style="margin-top:10px; margin-left:10px; padding-bottom: 109px;">
-                    <div class="input-group" style="padding-left:20px; padding-top:10px;">
-                        <span class="input-group-addon" for="step">Step grid:</span>
-                        <input type="number" value="Enter step grid" class="form-control" id="step" style="width: 80%;">
-                    </div>
-                </div>
-            </div>
-        </div>
-    </div>
-
-    <ul class="dropdown-menu" role="menu" aria-labelledby="dropdownMenu" style="display: block; position: absolute; left: 40px; top: 100px; min-width:20px;" id="leftmenu">
-        <li><a href="#" onclick="toolbox.line.activate();"><span class="your-icon icon-simple-line normal"></span></a></li>
-        <li><a href="#" onclick="toolbox.pathLine.activate()"><span class="your-icon icon-line normal"></span></a></li>
-        <li><a href="#" onclick="toolbox.circle.activate()"><span class="your-icon icon-circle normal"></span></a></li>
-        <li>
-            <a href="#" onclick="toolbox.ellipse.activate()"><span class="your-icon icon-ellipse normal"></span></a>
-        </li>
-        <li>
-            <a href="#" onclick="toolbox.rectangle.activate()"><span class="your-icon icon-rectangle normal"></span></a>
-        </li>
-        <li>
-            <a href="#" onclick="toolbox.polygon.activate()"><span class="your-icon icon-polygon normal"></span></a>
-        <li>
-            <a href="#" onclick="toolbox.star.activate()"><span class="your-icon icon-star normal"></span></a>
-        </li>
-        <li>
-            <a href="#" onclick="toolbox.move.activate()"><span class="your-icon icon-move normal"></span></span></a>
-        </li>
-        <li><a href="#" onclick="toolbox.rotate.activate()"><span class="your-icon icon-rotate normal"></span> </a></li>
-        <li><a href="#" onclick="toolbox.scale.activate()"><span class="your-icon icon-scale normal"></span></a></li>
-
-        <li><a href="#" onclick="toolbox.select.activate()"><span class="your-icon icon-Select normal"></span></a></li>
-        <li><a href="#" onclick="toolbox.hand.activate()"><span class="your-icon icon-hand normal"></span></a></li>
-        <li><a href="#" onclick="toolbox.freeTransform.activate()"><span class="your-icon icon-hand normal"></span></a></li>
-        <li><a href="#" onclick="toolbox.curveTransform.activate()"><span class="your-icon icon-hand normal"></span></a></li>
-        <li><a href="#" onclick="toolbox.text.activate()"><span class="your-icon icon-text normal"></span></a></li>
-        <li><a href="#" onclick="toolbox.circle3Points.activate()"><span class="your-icon icon-text normal"></span></a></li>
-        <li><a href="#" onclick="toolbox3D.point.activate()"><span class="your-icon icon-text normal"></span></a></li>
-        <!--
-            <li class="divider"></li>
-            <li class="dropdown-submenu">
-            <a tabindex="-1" href="#"><span class="glyphicon glyphicon-eye-open" aria-hidden="true"></span> Path</a>
-            <ul class="dropdown-menu">
-                <li><a tabindex="-1" href="#">Second level</a></li>
-                <li class="dropdown-submenu">
-                    <a href="#">More..</a>
-                    <ul class="dropdown-menu">
-                        <li><a href="#">3rd level</a></li>
-                        <li><a href="#">3rd level</a></li>
-                    </ul>
-                </li>
-                <li><a href="#">Second level</a></li>
-                <li><a href="#">Second level</a></li>
-            </ul>
-            </li>
-        -->
-    </ul>
-    <div class="row" id="layoutPanel" style="position: absolute; width: 200px; bottom: 5%; right: 5%">
-            <div class="panel panel-default">
-                <!-- Default panel contents -->
-                <div class="panel-heading">Layers
-                    <span id="addLayout" style="float: right; color:green;" class="glyphicon glyphicon-plus"></span>
-                </div>
-                <!-- List group -->
-                <ul class="list-group" id="AllLayoutPanel">
-                </ul>
-            </div>
-    </div>
-    <nav class="navbar navbar-default navbar-fixed-bottom" id="propertyPanel" style="display:none;">
-        <div class="form-row">
-            <div class="form-group col-md-2">
-                <div class="input-group" >
-                    <span class="input-group-addon" for="fontsize">Font Size</span>
-                    <input type="number" class="form-control form-control-sm" id="fontsize" placeholder="fontsize">
-                </div>
-            </div>
-
-            <div class="form-group col-md-2">
-                <div class="input-group">
-                    <span class="input-group-addon" for="selectTypeLineText">Line type</span>
-                    <select class="form-control" id="selectTypeLineText">
-                        <option>Solid</option>
-                        <option>Dotted</option>
-                        <option>Dashed</option>
-                        <option>DotDash</option>
-                        <option>TwoDotsOneDash</option>
-                    </select>
-                </div>
-            </div>
-            <!--<div class="form-group col-md-3">-->
-                <!--<div class="input-group">-->
-                    <!--<span class="input-group-addon" for="selectTypeLineText">Font Weight</span>-->
-                    <!--<select class="form-control" id="selectFontWeight">-->
-                        <!--<option>Bold</option>-->
-                        <!--<option>Bolder</option>-->
-                        <!--<option>Lighter</option>-->
-                        <!--<option>Normal</option>-->
-                    <!--</select>-->
-                <!--</div>-->
-            <!--</div>-->
-            <div class="form-group col-md-2">
-                <div class="input-group">
-                    <span class="input-group-addon" for="FontForText">Font</span>
-                    <select class="form-control" id="FontForText">
-                        <option>sans-serif</option>
-                        <option>Arial Black</option>
-                        <option>Comic Sans MS</option>
-                        <option>MS Serif</option>
-                    </select>
-                </div>
-            </div>
-            <div class="form-group col-md-2">
-                <div class="input-group">
-                    <span class="input-group-addon" for="fontColorPicker">Fill color</span>
-                    <div id="fontColorPicker" data-format="alias" data-align="right"
+                    <div id="gridColorPicker" data-format="alias"
                          class="input-group colorpicker-component" style="width: 90%">
                         <input type="text" value="primary" class="form-control"/>
                         <span class="input-group-addon"><i></i></span>
                     </div>
                 </div>
-            </div>
-            <div class="form-group col-md-2">
-                <div class="input-group">
-                    <span class="input-group-addon" for="fontStrokeColor">Stroke color</span>
-                    <div id="fontStrokeColor" data-format="alias" data-align="right"
-                         class="input-group colorpicker-component" position="right" style="width: 90%">
+                <div class="input-group" style="margin-top:10px; margin-bottom: 10px;">
+                            <span class="input-group-btn">
+                                <button class="btn btn-secondary" type="button">Axies color</button>
+                            </span>
+                    <div id="gridColorAxis" data-format="alias"
+                         class="input-group colorpicker-component" style="width: 90%">
                         <input type="text" value="primary" class="form-control"/>
                         <span class="input-group-addon"><i></i></span>
                     </div>
                 </div>
+                <div class="checkbox">
+                    <label><input type="checkbox" id="showGrid" value="">Draw grid</label>
+                </div>
+                <div class="checkbox">
+                    <label><input type="checkbox" id="showAxis" value="">Draw axis</label>
+                </div>
+
             </div>
         </div>
-    </nav>
-    <canvas id="myCanvas" resize></canvas>
+        <div class="col-sm-4 col-lg-4 heightPanel">
+            <div class="panel panel-default" style="margin-top:10px; margin-left:10px; padding-bottom: 109px;">
+                <div class="input-group" style="padding-left:20px; padding-top:10px;">
+                    <span class="input-group-addon" for="step">Step grid:</span>
+                    <input type="number" value="Enter step grid" class="form-control" id="step" style="width: 80%;">
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<ul class="dropdown-menu" role="menu" aria-labelledby="dropdownMenu" style="display: block; position: absolute; left: 40px; top: 100px; min-width:20px;" id="leftmenu">
+    <li><a href="#" onclick="toolbox.line.activate();"><span class="your-icon icon-simple-line normal"></span></a></li>
+    <li><a href="#" onclick="toolbox.pathLine.activate()"><span class="your-icon icon-line normal"></span></a></li>
+    <li><a href="#" onclick="toolbox.circle.activate()"><span class="your-icon icon-circle normal"></span></a></li>
+    <li>
+        <a href="#" onclick="toolbox.ellipse.activate()"><span class="your-icon icon-ellipse normal"></span></a>
+    </li>
+    <li>
+        <a href="#" onclick="toolbox.rectangle.activate()"><span class="your-icon icon-rectangle normal"></span></a>
+    </li>
+    <li>
+        <a href="#" onclick="toolbox.polygon.activate()"><span class="your-icon icon-polygon normal"></span></a>
+    <li>
+        <a href="#" onclick="toolbox.star.activate()"><span class="your-icon icon-star normal"></span></a>
+    </li>
+    <li>
+        <a href="#" onclick="toolbox.move.activate()"><span class="your-icon icon-move normal"></span></span></a>
+    </li>
+    <li><a href="#" onclick="toolbox.rotate.activate()"><span class="your-icon icon-rotate normal"></span> </a></li>
+    <li><a href="#" onclick="toolbox.scale.activate()"><span class="your-icon icon-scale normal"></span></a></li>
+
+    <li><a href="#" onclick="toolbox.select.activate()"><span class="your-icon icon-Select normal"></span></a></li>
+    <li><a href="#" onclick="toolbox.hand.activate()"><span class="your-icon icon-hand normal"></span></a></li>
+    <li><a href="#" onclick="toolbox.freeTransform.activate()"><span class="your-icon icon-hand normal"></span></a></li>
+    <li><a href="#" onclick="toolbox.curveTransform.activate()"><span class="your-icon icon-hand normal"></span></a></li>
+    <li><a href="#" onclick="toolbox.text.activate()"><span class="your-icon icon-text normal"></span></a></li>
+    <li><a href="#" onclick="toolbox.circle3Points.activate()"><span class="your-icon icon-text normal"></span></a></li>
+    <li><a href="#" onclick="toolbox3D.point.activate()"><span class="your-icon icon-text normal"></span></a></li>
+    <!--
+        <li class="divider"></li>
+        <li class="dropdown-submenu">
+        <a tabindex="-1" href="#"><span class="glyphicon glyphicon-eye-open" aria-hidden="true"></span> Path</a>
+        <ul class="dropdown-menu">
+            <li><a tabindex="-1" href="#">Second level</a></li>
+            <li class="dropdown-submenu">
+                <a href="#">More..</a>
+                <ul class="dropdown-menu">
+                    <li><a href="#">3rd level</a></li>
+                    <li><a href="#">3rd level</a></li>
+                </ul>
+            </li>
+            <li><a href="#">Second level</a></li>
+            <li><a href="#">Second level</a></li>
+        </ul>
+        </li>
+    -->
+</ul>
+<div class="row" id="layoutPanel" style="position: absolute; width: 200px; bottom: 5%; right: 5%">
+    <div class="panel panel-default">
+        <!-- Default panel contents -->
+        <div class="panel-heading">Layers
+            <span id="addLayout" style="float: right; color:green;" class="glyphicon glyphicon-plus"></span>
+        </div>
+        <!-- List group -->
+        <ul class="list-group" id="AllLayoutPanel">
+        </ul>
+    </div>
+</div>
+<nav class="navbar navbar-default navbar-fixed-bottom" id="propertyPanel" style="display:none;">
+    <div class="form-row">
+        <div class="form-group col-md-2">
+            <div class="input-group" >
+                <span class="input-group-addon" for="fontsize">Font Size</span>
+                <input type="number" class="form-control form-control-sm" id="fontsize" placeholder="fontsize">
+            </div>
+        </div>
+
+        <div class="form-group col-md-2">
+            <div class="input-group">
+                <span class="input-group-addon" for="selectTypeLineText">Line type</span>
+                <select class="form-control" id="selectTypeLineText">
+                    <option>Solid</option>
+                    <option>Dotted</option>
+                    <option>Dashed</option>
+                    <option>DotDash</option>
+                    <option>TwoDotsOneDash</option>
+                </select>
+            </div>
+        </div>
+        <!--<div class="form-group col-md-3">-->
+        <!--<div class="input-group">-->
+        <!--<span class="input-group-addon" for="selectTypeLineText">Font Weight</span>-->
+        <!--<select class="form-control" id="selectFontWeight">-->
+        <!--<option>Bold</option>-->
+        <!--<option>Bolder</option>-->
+        <!--<option>Lighter</option>-->
+        <!--<option>Normal</option>-->
+        <!--</select>-->
+        <!--</div>-->
+        <!--</div>-->
+        <div class="form-group col-md-2">
+            <div class="input-group">
+                <span class="input-group-addon" for="FontForText">Font</span>
+                <select class="form-control" id="FontForText">
+                    <option>sans-serif</option>
+                    <option>Arial Black</option>
+                    <option>Comic Sans MS</option>
+                    <option>MS Serif</option>
+                </select>
+            </div>
+        </div>
+        <div class="form-group col-md-2">
+            <div class="input-group">
+                <span class="input-group-addon" for="fontColorPicker">Fill color</span>
+                <div id="fontColorPicker" data-format="alias" data-align="right"
+                     class="input-group colorpicker-component" style="width: 90%">
+                    <input type="text" value="primary" class="form-control"/>
+                    <span class="input-group-addon"><i></i></span>
+                </div>
+            </div>
+        </div>
+        <div class="form-group col-md-2">
+            <div class="input-group">
+                <span class="input-group-addon" for="fontStrokeColor">Stroke color</span>
+                <div id="fontStrokeColor" data-format="alias" data-align="right"
+                     class="input-group colorpicker-component" position="right" style="width: 90%">
+                    <input type="text" value="primary" class="form-control"/>
+                    <span class="input-group-addon"><i></i></span>
+                </div>
+            </div>
+        </div>
+    </div>
+</nav>
+<canvas id="myCanvas" resize></canvas>
 
 
-    <script type="text/javascript">
-        var mediator = new Mediator();
-        var settingsManager = new SettingsManager(mediator);
+<script type="text/javascript">
+    var mediator = new Mediator();
+    var settingsManager = new SettingsManager(mediator);
 
-        var canvas = document.getElementById('myCanvas');
-
-
-        paper.install(window);
-        var undoRedo;
-        var toolbox;
-        var toolbox3D;
-        var layerManager;
-        window.onload = function () {
-            paper.setup('myCanvas');
-            layerManager = new Layers(mediator);
-
-            var stylesManager = new StylesManager(mediator, settingsManager.settings.styles, settingsManager.settings.textStyles);
-            var background = new Background(mediator, settingsManager.settings.background,stylesManager);
-            var scaling = new Scaling(mediator, settingsManager.settings.scaling, canvas);
-
-            var binding = new Binding(mediator, settingsManager.settings.binding, layerManager.userLayers);
+    var canvas = document.getElementById('myCanvas');
 
 
+    paper.install(window);
+    var undoRedo;
+    var toolbox;
+    var toolbox3D;
+    var layerManager;
+    window.onload = function () {
+        paper.setup('myCanvas');
+        layerManager = new Layers(mediator);
 
-            var selection = new Selection(mediator, layerManager);
-            var drawer = new Drawer(mediator, layerManager);
-            var projectionPointsDrawer = new ProjectionPointsDrawer(mediator, stylesManager);
-            toolbox = new Tools(mediator, settingsManager.settings.tools, binding, drawer, selection, stylesManager);
-            toolbox3D = new Tools3D(mediator, binding, drawer, selection, stylesManager, projectionPointsDrawer, settingsManager.settings.projectionParams);
-            undoRedo = new UndoRedo(mediator, layerManager.userLayers);
-        }
+        var stylesManager = new StylesManager(mediator, settingsManager.settings.styles, settingsManager.settings.textStyles);
+        var background = new Background(mediator, settingsManager.settings.background, stylesManager);
+        var scaling = new Scaling(mediator, settingsManager.settings.scaling, canvas);
 
-    </script>
+        var binding = new Binding(mediator, settingsManager.settings.binding, layerManager.userLayers);
+
+
+
+        var selection = new Selection(mediator, layerManager);
+        var drawer = new Drawer(mediator, layerManager);
+        var projectionPointsDrawer = new ProjectionPointsDrawer(mediator, stylesManager);
+        toolbox = new Tools(mediator, settingsManager.settings.tools, binding, drawer, selection, stylesManager);
+        var projectionManager = new ProjectionManager(mediator, projectionPointsDrawer, stylesManager, settingsManager.settings.projectionParams);
+        toolbox3D = new Tools3D(mediator, binding, drawer, selection, projectionPointsDrawer, projectionManager);
+        undoRedo = new UndoRedo(mediator, layerManager.userLayers);
+    }
+
+</script>
 </body>
 </html>

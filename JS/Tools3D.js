@@ -1,26 +1,40 @@
-function Tools3D(mediator, binding, drawer, selection, stylesManager, projectionPointsDrawer, projectionParams) {
-    this.point = new Point3D();
+function Tools3D(mediator, binding, drawer, selection, projectionPointsDrawer, projectionManager) {
+    this.point = new Polyline3D();
+    function Polyline3D() {
+        var tool = new Point3D();
+        tool.shapeDrawer = function (points) {
+            if (points.length < 2) return;
+            var lines = new Group();
+            for (var i = 1; i<points.length; i++)
+            {
+                lines.addChild(new Path.Line(points[i-1],points[i]));
+            }
+            if(points.length > 2)
+            {
+                lines.addChild(new Path.Line(points[0],points[points.length - 1]));
+            }
+            return lines;
+        }
+        this.activate = function () {
+            tool.activate();
+        };
+    }
+
     function Point3D() {
         var points = [];
         var tool = new Tool();
         var cancelled = false;
-        var targetItems;
-        var projection = new Projection();
+        var targetItems = new Group();
+        var projection;
+        this.shapeDrawer = function () {
+        };
         projection.bindingTolerance = 10;
         tool.onMouseMove = function (event) {
-            var bindedPoint = binding.drawPoint(event.point, function (p, tolerance) {
-                var projections = projection.bind(p);
-                if(projections) {
-                    if (p.xy && p.xy.getDistance(event.point) < tolerance) return [p.xy];
-                    if (p.xz && p.xz.getDistance(event.point) < tolerance) return [p.xz];
-                    if (p.yz && p.yz.getDistance(event.point) < tolerance) return [p.yz];
-                }
-                return [];
-            });
+            var bindedPoint = binding.drawPoint(event.point);
             var tolerance = projection.bindingTolerance;
-            var projections = projection.bind(event.point);
+            var projections = projection.bind(bindedPoint);
             //projections = this.mergePoints(nearest, point3D);
-            if(projections) {
+            if (projections) {
 
                 if (projections.xy != null) {
                     mediator.publish("bindingDrawingStarted");
@@ -43,26 +57,18 @@ function Tools3D(mediator, binding, drawer, selection, stylesManager, projection
 
         tool.onMouseDown = function (event) {
             cancelled = false;
-            var point = binding.getPoint(event.point, function (p, tolerance) {
-                var projections = projection.bind(p);
-                if(projections) {
-                    if (p.xy && p.xy.getDistance(event.point) < tolerance) return [p.xy];
-                    if (p.xz && p.xz.getDistance(event.point) < tolerance) return [p.xz];
-                    if (p.yz && p.yz.getDistance(event.point) < tolerance) return [p.yz];
-                }
-                return [];
-            });
+            if(!projection || projection.validate(3))
+            {
+                projection = new Projection();
+                projectionManager.projections.push(projection);
+            }
+            var point = binding.getPoint(event.point);
             projection.addPoint(point);
+
+            targetItems.remove();
             targetItems = new Group();
-            projectionPointsDrawer.resetPointText();
-            projection.getProjections().forEach(function (proj) {
-                targetItems.addChild(projectionPointsDrawer.drawLinkLines(proj));
-                targetItems.addChild(projectionPointsDrawer.drawProjectedPoint(proj));
-                if(projectionParams.showPointText)
-                {
-                    targetItems.addChild(projectionPointsDrawer.drawPointText(proj));
-                }
-            })
+            targetItems.addChildren(projectionManager.redraw());
+
         }.bind(this);
 
         tool.onMouseDrag = function (event) {
@@ -71,8 +77,8 @@ function Tools3D(mediator, binding, drawer, selection, stylesManager, projection
 
         tool.onMouseUp = function (event) {
             if (cancelled) return;
-            drawer.save(targetItems.children);
-            targetItems.remove();
+            drawer.save([targetItems]);
+
         }.bind(this);
 
         tool.onKeyDown = function (event) {
