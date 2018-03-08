@@ -14,6 +14,7 @@ $(document).ready(function () {
     var gridColorPickerHTML = $('#gridColorPicker');
     var activeColorPickerHTML = $('#ActiveColorPicker');
     var leftElementPanelHTML = $("#leftmenu");
+    var rightElementPanelHTML = $("#rightmenu")
     var constColor = {
         'black': '#000000',
         'white': '#ffffff',
@@ -50,6 +51,7 @@ $(document).ready(function () {
     var removeLayout = $("#removeLayout");
     leftElementPanelHTML.draggable({containment: "parent"});
     $('#layoutPanel').draggable({containment: "parent"});
+
     //PROPERTIES
     function ShowOrHidePropertyPanel() {
         propertyPanel.toggle();

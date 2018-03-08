@@ -213,42 +213,42 @@ li.dropdown {
         background-size: cover;
     }
 
-.your-icon.icon-scale {
-    background: url("icon/scale.png");
-    background-size: cover;
-}
+    .your-icon.icon-scale {
+        background: url("icon/scale.png");
+        background-size: cover;
+    }
 
-.your-icon.icon-ellipse {
-    background: url("icon/ellipse.png");
-    background-size: cover;
-}
+    .your-icon.icon-ellipse {
+        background: url("icon/ellipse.png");
+        background-size: cover;
+    }
 
-.your-icon.icon-rectangle {
-    background: url("icon/rectangle.png");
-    background-size: cover;
-}
+    .your-icon.icon-rectangle {
+        background: url("icon/rectangle.png");
+        background-size: cover;
+    }
 
-.your-icon.icon-polygon {
-    background: url("icon/polygon.png");
-    background-size: cover;
-}
-.your-icon.icon-star {
-    background: url("icon/star.png");
-    background-size: cover;
-}
-.your-icon.icon-simple-line {
-    background: url("icon/simple_line.png");
-    background-size: cover;
-}
+    .your-icon.icon-polygon {
+        background: url("icon/polygon.png");
+        background-size: cover;
+    }
+    .your-icon.icon-star {
+        background: url("icon/star.png");
+        background-size: cover;
+    }
+    .your-icon.icon-simple-line {
+        background: url("icon/simple_line.png");
+        background-size: cover;
+    }
 
-.your-icon.icon-text {
-    background: url("icon/text.png");
-    background-size: cover;
-}
-
-
-
-
+    .your-icon.icon-text {
+        background: url("icon/text.png");
+        background-size: cover;
+    }
+        .your-icon.icon-dot{
+        background: url("icon/dot-and-circle.png");
+        background-size: cover;
+    }
     .your-icon.normal {
         width: 32px;
         height: 32px;
@@ -496,4 +496,23 @@ li.dropdown {
     background: inherit;
     left: 20px;
 }
-
+#rightmenu{
+    display: block;
+    position: absolute;
+    top: 10%;
+    left:93%;
+    min-width:20px;
+}
+#layoutPanel{
+    position: absolute;
+    width: 200px;
+    bottom: 5%;
+    right: 5%
+}
+#leftmenu{
+    display: block;
+    position: absolute;
+    left: 40px;
+    top: 100px;
+    min-width:20px;
+}
