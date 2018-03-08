@@ -1,20 +1,38 @@
 function Tools3D(mediator, binding, drawer, selection, projectionPointsDrawer, projectionManager, projectionParams) {
-    this.point = new Polyline3D();
-    function Polyline3D() {
-        var tool = new Point3D();
-        this.activate = function () {
-            tool.activate();
-        };
-    }
+    this.point = new Point3D(1);
+    this.line = new Point3D(2);
+    this.triangle = new Point3D(3);
+    this.polygon = new Point3D();
 
-    function Point3D() {
+    function Point3D(pointsCount) {
         var points = [];
         var tool = new Tool();
         var cancelled = false;
         var targetItems = new Group();
         var projection;
+        var filter;
+        function filterPoint(point) {
+            if(filter === "xz")
+            {
+                return point.x<0 && point.y<0
+            }
+            if(filter === "xy")
+            {
+                return point.x<0 && point.y>0
+            }
+            if(filter === "yz")
+            {
+                return point.x>0 && point.y<0
+            }
+            return point.x<0 || point.y<0;
+        }
         tool.onMouseMove = function (event) {
+            if(!filterPoint(event.point))
+            {
+                return;
+            }
             var bindedPoint = binding.drawPoint(event.point);
+            if(!projection) return;
             if(projectionParams.showLinkLines) {
                 var projections = projection.bind(bindedPoint);
                 if (projections) {
@@ -40,8 +58,12 @@ function Tools3D(mediator, binding, drawer, selection, projectionPointsDrawer, p
         }.bind(this);
 
         tool.onMouseDown = function (event) {
+            if(!filterPoint(event.point))
+            {
+                return;
+            }
             cancelled = false;
-            if(!projection || projection.validate(3))
+            if(!projection || function(){return pointsCount ? projection.validate(pointsCount):false}())
             {
                 projection = new Projection();
                 projectionManager.projections.push(projection);
@@ -82,7 +104,8 @@ function Tools3D(mediator, binding, drawer, selection, projectionPointsDrawer, p
             drawer.cancel();
         }
 
-        this.activate = function () {
+        this.activate = function (pointFilter) {
+            filter = pointFilter;
             tool.activate();
             binding.clear();
         };
