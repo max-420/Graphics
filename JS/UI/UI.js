@@ -49,7 +49,10 @@ $(document).ready(function () {
 
     var propertyPanel = $("#propertyPanel");
     var removeLayout = $("#removeLayout");
+
+    var rightmenu = $("#rightmenu");
     leftElementPanelHTML.draggable({containment: "parent"});
+    rightmenu.draggable({containment: "parent"});;
     $('#layoutPanel').draggable({containment: "parent"});
 
     //PROPERTIES

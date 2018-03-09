@@ -516,3 +516,10 @@ li.dropdown {
     top: 100px;
     min-width:20px;
 }
+
+#rightMenuInstruments{
+    position: absolute;
+    min-width: 20px;
+    top: 10%;
+    right: 5%
+}

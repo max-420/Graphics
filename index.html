@@ -28,12 +28,32 @@
     <script type="text/javascript" src="JS\Tools3D.js"></script>
     <script type="text/javascript" src="JS\Projection.js"></script>
     <script type="text/javascript" src="JS\ProjectionManager.js"></script>
+    <link rel="stylesheet" href="https://code.jquery.com/ui/1.12.1/themes/base/jquery-ui.css">
+    <script src="https://code.jquery.com/ui/1.12.1/jquery-ui.js"></script>
     <!---CSS-->
     <link rel="stylesheet" type="text/css" href="CSS\bootstrap.css">
     <link rel="stylesheet" type="text/css" href="CSS\bootstrap.min.css">
     <link rel="stylesheet" type="text/css" href="CSS\style.css" />
     <link rel="stylesheet" type="text/css" href="CSS\bootstrap-colorpicker.min.css" />
+    <script>
+        $( function() {
+            $( "#menu" ).menu();
+        } );
+    </script>
+    <style>
+        .ui-menu { width: 150px; }
+        body {
+            font-family: Arial, Helvetica, sans-serif;
+        }
 
+        table {
+            font-size: 1em;
+        }
+
+        .ui-draggable, .ui-droppable {
+            background-position: top;
+        }
+    </style>
 </head>
 <body>
 
@@ -319,12 +339,11 @@
 </ul>
 
 <ul class="dropdown-menu" role="menu" aria-labelledby="dropdownMenu"  id="rightmenu">
-    <li><a href="#" onclick="toolbox.line.activate();"><span class="your-icon icon-dot normal"></span></a></li>
+    <li><a href="#" onclick="toolbox3D.point.activate();"><span class="your-icon icon-dot normal"></span></a></li>
+    <li><a href="#" onclick="toolbox3D.point.activate('xy');"><span class="your-icon icon-dot normal"></span></a></li>
+    <li><a href="#" onclick="toolbox3D.point.activate('xz');"><span class="your-icon icon-dot normal"></span></a></li>
+    <li><a href="#" onclick="toolbox3D.point.activate('yz');"><span class="your-icon icon-dot normal"></span></a></li>
 </ul>
-
-
-
-
 <div class="row" id="layoutPanel">
     <div class="panel panel-default">
         <!-- Default panel contents -->
