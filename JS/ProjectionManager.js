@@ -24,7 +24,7 @@ function ProjectionManager(mediator, projectionPointsDrawer, stylesManager, proj
                 return p.xy
             }).filter(function (item) {
                 return item != null
-            }));
+            }), shape.shape);
             if(shapeXY)
             {
                 shapeGroup.addChild(shapeXY);
@@ -34,7 +34,7 @@ function ProjectionManager(mediator, projectionPointsDrawer, stylesManager, proj
                 return p.yz
             }).filter(function (item) {
                 return item != null
-            }));
+            }), shape.shape);
             if(shapeYZ)
             {
                 shapeGroup.addChild(shapeYZ);
@@ -44,7 +44,7 @@ function ProjectionManager(mediator, projectionPointsDrawer, stylesManager, proj
                 return p.xz
             }).filter(function (item) {
                 return item != null
-            }));
+            }), shape.shape);
             if(shapeXZ)
             {
                 shapeGroup.addChild(shapeXZ);
@@ -54,9 +54,25 @@ function ProjectionManager(mediator, projectionPointsDrawer, stylesManager, proj
         return this.graphics;
     };
 
-    this.drawShape = function(points)
+    this.drawShape = function(points, shape)
     {
         if (points.length < 2) return;
+        var shape;
+        if(shape == 'ellipse')
+        {
+            shape = this.drawEllipse(points);
+        }
+        if(shape == 'polygon')
+        {
+            shape = this.drawPolygon(points);
+        }
+        if(shape) {
+            stylesManager.applyStyle(shape, 'drawing');
+            return shape;
+        }
+    };
+    this.drawPolygon = function (points)
+    {
         var shape = new Group();
         for (var i = 1; i<points.length; i++)
         {
@@ -66,7 +82,38 @@ function ProjectionManager(mediator, projectionPointsDrawer, stylesManager, proj
         {
             shape.addChild(new Path.Line(points[0],points[points.length - 1]));
         }
-        stylesManager.applyStyle(shape, 'drawing');
         return shape;
     };
+    this.drawEllipse = function (points) {
+        if(points.length != 3) return;
+        var shape = new Group();
+        var point1 = points[0].multiply(2).subtract(points[1]);
+        var point2 = points[0].multiply(2).subtract(points[2]);
+
+        var diff1 = points[1].subtract(points[0]);
+        var diff2 = points[2].subtract(points[0]);
+
+        var angle = new Point(1,0).getDirectedAngle(diff1);
+        var r1 = points[0].getDistance(points[1]);
+        var r2 = diff2.project(diff1).getDistance(diff2);
+
+        var rect = new Rectangle(points[0].subtract([r1,r2]), points[0].add([r1,r2]));
+
+        var radAngle = diff1.getDirectedAngle(diff2);
+        console.log(radAngle);
+        var skewAngle = Math.abs(radAngle) >= 90 ? -radAngle%90 : 90-radAngle%90;
+        var skewPoint = [skewAngle, 0];
+
+        var ellipse = new Path.Ellipse(rect);
+        ellipse.skew(skewPoint);
+        ellipse.rotate(angle);
+        shape.addChild(ellipse);
+
+        var ellipse1 = new Path.Rectangle(rect);
+        ellipse1.skew(skewPoint);
+        ellipse1.rotate(angle);
+        shape.addChild(ellipse1);
+
+        return shape;
+    }
 }

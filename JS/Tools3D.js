@@ -1,10 +1,10 @@
 function Tools3D(mediator, binding, drawer, selection, projectionPointsDrawer, projectionManager, projectionParams) {
-    this.point = new Point3D(1);
-    this.line = new Point3D(2);
-    this.triangle = new Point3D(3);
-    this.polygon = new Point3D();
+    this.point = new Point3D('polygon', 1);
+    this.line = new Point3D('polygon', 2);
+    this.ellipse = new Point3D('ellipse', 3);
+    this.polygon = new Point3D('polygon');
 
-    function Point3D(pointsCount) {
+    function Point3D(shape, pointsCount) {
         var points = [];
         var tool = new Tool();
         var cancelled = false;
@@ -65,7 +65,7 @@ function Tools3D(mediator, binding, drawer, selection, projectionPointsDrawer, p
             cancelled = false;
             if(!projection || function(){return pointsCount ? projection.validate(pointsCount):false}())
             {
-                projection = new Projection();
+                projection = new Projection(shape);
                 projectionManager.projections.push(projection);
             }
             var point = binding.getPoint(event.point);

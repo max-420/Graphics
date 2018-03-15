@@ -1,4 +1,5 @@
-function Projection() {
+function Projection(shape) {
+    this.shape = shape;
     this.points3D = [];
     this.projectionXY = [];
     this.projectionXZ = [];
