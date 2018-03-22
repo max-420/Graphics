@@ -97,7 +97,6 @@ function ProjectionPointsDrawer(mediator, stylesManager) {
             this.pointChar++;
         }
 
-
         return textGroup;
     };
 

@@ -14,7 +14,6 @@ function ProjectionManager(mediator, projectionPointsDrawer, stylesManager, proj
                     shapeGroup.addChild(projectionPointsDrawer.drawLinkLines(proj));
                 }
                 shapeGroup.addChild(projectionPointsDrawer.drawProjectedPoint(proj));
-
             });
             if (projectionParams.showPointText) {
                 shapeGroup.addChild(projectionPointsDrawer.drawPointText(pointProjections));
@@ -27,6 +26,7 @@ function ProjectionManager(mediator, projectionPointsDrawer, stylesManager, proj
             }), shape.shape);
             if(shapeXY)
             {
+                shapeXY.data.projection = shape;
                 shapeGroup.addChild(shapeXY);
             }
 
@@ -37,6 +37,7 @@ function ProjectionManager(mediator, projectionPointsDrawer, stylesManager, proj
             }), shape.shape);
             if(shapeYZ)
             {
+                shapeYZ.data.projection = shape;
                 shapeGroup.addChild(shapeYZ);
             }
 
@@ -47,6 +48,7 @@ function ProjectionManager(mediator, projectionPointsDrawer, stylesManager, proj
             }), shape.shape);
             if(shapeXZ)
             {
+                shapeXZ.data.projection = shape;
                 shapeGroup.addChild(shapeXZ);
             }
             this.graphics[index] = shapeGroup;

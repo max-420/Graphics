@@ -4,20 +4,18 @@ function Selection(mediator, layerManager) {
     var selectedItemsCopy;
     var selectedCurveIndex = null;
     Object.defineProperty(this, "selectedItems", {
-        get: function() {
-            if(!this.anythingSelected()) return null;
-            if(!selectedItemsCopy)
-            {
+        get: function () {
+            if (!this.anythingSelected()) return null;
+            if (!selectedItemsCopy) {
                 this.copySelection();
             }
             return selectedItemsCopy;
         }
     });
     Object.defineProperty(this, "selectedCurve", {
-        get: function() {
-            if(!this.anythingSelected() || selectedCurveIndex == null) return null;
-            if(!selectedItems)
-            {
+        get: function () {
+            if (!this.anythingSelected() || selectedCurveIndex == null) return null;
+            if (!selectedItems) {
                 this.copySelection();
             }
             return selectedItemsCopy.firstChild.curves[selectedCurveIndex];
@@ -38,11 +36,11 @@ function Selection(mediator, layerManager) {
         selectedItemsCopy = null;
         selectedItems = null;
 
-        layerManager.appLayers.children['preview'].removeChildren();
+        layerManager.appTopLayers.children['preview'].removeChildren();
         mediator.publish("drawingChanged");
     }
-    this.deleteCopy = function() {
-        if(selectedItemsCopy) selectedItemsCopy.remove();
+    this.deleteCopy = function () {
+        if (selectedItemsCopy) selectedItemsCopy.remove();
         selectedItemsCopy = null;
         selectedItems = null;
     }
@@ -54,8 +52,7 @@ function Selection(mediator, layerManager) {
         hitTestObj.selected = false;
         mediator.publish("selectionChanged");
     }
-    this.anythingSelected = function()
-    {
+    this.anythingSelected = function () {
         return project.selectedItems.length > 0;
     }
     this.selectPoint = function (point) {
@@ -75,25 +72,23 @@ function Selection(mediator, layerManager) {
         //this.deselectAll();
         var items = hitTestObj.getItems({
             inside: rectangle,
-            match: function(item)
-            {
-                return item.className != 'Layer';
+            match: function (item) {
+                return item.className != 'Layer' && ((item.parent.className != 'Group' && item.className != 'Group') || item.data.projection);
             },
         });
         items.forEach(function (item) {
             item.selected = true;
         });
     }
-    this.selectCurve = function(point)
-    {
+    this.selectCurve = function (point) {
         this.selectPoint(point);
         var hitOptions = {
             curves: true,
             tolerance: 10,
         };
-        if(!this.anythingSelected()) return null;
-        var hitResult =  this.selectedItems.hitTest(point, hitOptions);
-        if(!hitResult) return null;
+        if (!this.anythingSelected()) return null;
+        var hitResult = this.selectedItems.hitTest(point, hitOptions);
+        if (!hitResult) return null;
         selectedCurveIndex = hitResult.location.index;
         hitResult.location.curve.selected = true;
         return true;

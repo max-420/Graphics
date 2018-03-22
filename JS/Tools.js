@@ -474,7 +474,7 @@ function Tools(mediator, toolsSettings, binding, drawer, selection, stylesManage
                 select.activateWithCallback(function()
                 {
                     this.activate();
-                }.bind(this), event)
+                }.bind(this), event);
             if(!selection.anythingSelected()) tool.cancel();
             targetItems = selection.selectedItems;
             if (this.init) this.init(event, targetItems);

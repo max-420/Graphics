@@ -6,7 +6,7 @@ function Drawer(mediator, layerManager) {
         selectedItems = new Group(project.selectedItems);
         selectedItemsCopy = selectedItems.clone();
         layerManager.activeUserLayer.addChild(selectedItems);
-        //layerManager.appLayers.children['preview'].addChild(selectedItemsCopy);
+        //layerManager.appTopLayers.children['preview'].addChild(selectedItemsCopy);
         selectedItemsCopy.selected = false;
         return selectedItemsCopy;
     }
@@ -17,7 +17,7 @@ function Drawer(mediator, layerManager) {
         selectedItems.remove();
         selectedItemsCopy = null;
         selectedItems = null;
-        layerManager.appLayers.children['preview'].removeChildren();
+        layerManager.appTopLayers.children['preview'].removeChildren();
         mediator.publish("drawingChanged");
     }
     this.save = function (newItems) {
@@ -32,6 +32,6 @@ function Drawer(mediator, layerManager) {
         mediator.publish("drawingChanged");
     }
     this.cancel = function () {
-        layerManager.appLayers.children['preview'].removeChildren();
+        layerManager.appTopLayers.children['preview'].removeChildren();
     }
 }
