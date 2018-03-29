@@ -1,37 +1,90 @@
-function Projection(shape) {
+function Projection(shape, points3D) {
     this.shape = shape;
-    this.points3D = [];
-    this.projectionXY = [];
-    this.projectionXZ = [];
-    this.projectionYZ = [];
+    this.points3D = points3D ? points3D : [];
     this.bindingTolerance = 10;
+    this.autoMerge = false;
+    this.isNear = function(a, b)
+    {
+        return b >= a - this.bindingTolerance && b <= a + this.bindingTolerance;
+    };
     this.addPoint = function (point) {
         var projectionPoint = this.get3DPoint(point);
         var nearestPoint = this.getNearestPoint(projectionPoint);
-        if (nearestPoint == null) {
+        if (nearestPoint == null || !this.autoMerge) {
             this.points3D.push(projectionPoint);
             return;
         }
         var mergedPoint = this.mergePoints(projectionPoint, nearestPoint);
         this.points3D.splice(this.points3D.indexOf(nearestPoint), 1, mergedPoint);
     }
+
+    this.validateTask = function(task)
+    {
+        task.points3D.forEach(function(taskPoint)
+        {
+            var yz = this.points3D.find(function (point) {
+                return point.x == 0 && this.isNear(point.y, taskPoint.y) && this.isNear(point.z, taskPoint.z);
+            }.bind(this));
+            var xz = this.points3D.find(function (point) {
+                return point.y == 0 && this.isNear(point.x, taskPoint.x) && this.isNear(point.z, taskPoint.z);
+            }.bind(this));
+            var xy = this.points3D.find(function (point) {
+                return point.z == 0 && this.isNear(point.x, taskPoint.x) && this.isNear(point.y, taskPoint.y);
+            }.bind(this));
+            if(xy && xz && yz)
+            {
+                this.points3D.splice(this.points3D.indexOf(xy), 1);
+                this.points3D.splice(this.points3D.indexOf(xz), 1);
+                this.points3D.splice(this.points3D.indexOf(yz), 1);
+                this.points3D.push(taskPoint);
+            }
+            else
+            {
+                return false;
+            }
+        }.bind(this));
+        return this.validate(task.points3D.length);
+    }
+
+    // this.remerge = function()
+    // {
+    //     var i = 0;
+    //     while(true) {
+    //         var point = this.points3D[i];
+    //         if(!point) break;
+    //         while(true)
+    //         {
+    //             var nearestPoint = this.getNearestPoint(point);
+    //             if(!nearestPoint) break;
+    //             if(nearestPoint.x != 0 && (nearestPoint.x == point.x || point.x == 0) &&
+    //                 nearestPoint.y != 0 && (nearestPoint.y == point.y || point.y == 0) &&
+    //                 nearestPoint.z != 0 && (nearestPoint.z == point.z || point.z == 0))
+    //             {
+    //                 this.points3D.splice(this.points3D.indexOf(point), 1);
+    //                 i--;
+    //                 break;
+    //             }
+    //             var mergedPoint = this.mergePoints(point, nearestPoint);
+    //             this.points3D.splice(this.points3D.indexOf(point), 1, mergedPoint);
+    //             this.points3D.splice(this.points3D.indexOf(nearestPoint), 1);
+    //         }
+    //         i++;
+    //     }
+    // }
+
     this.mergePoints = function(from, to)
     {
         var result = {};
+        result.x = to.x;
+        result.y = to.y;
+        result.z = to.z;
         if (to.x == 0) {
             result.x = from.x;
-            result.y = to.y;
-            result.z = to.z;
         }
         if (to.y == 0) {
-            result.x = to.x;
             result.y = from.y;
-            result.z = to.z;
-
         }
         if (to.z == 0) {
-            result.x = to.x;
-            result.y = to.y;
             result.z = from.z;
         }
         return result;
@@ -119,9 +172,10 @@ function Projection(shape) {
         return null;
     };
     this.validate = function (pointsCount) {
-        return this.points3D.length == pointsCount &&
+        var e = this.points3D.length == pointsCount &&
             this.points3D.every(function (p) {
                 return p.x != 0 && p.y != 0 && p.z != 0;
             });
+        return e;
     };
 }

@@ -2,6 +2,17 @@ function ProjectionManager(mediator, projectionPointsDrawer, stylesManager, proj
     this.projections = [];
     this.graphics = [];
     this.text = null;
+    this.validateTask = function(task)
+    {
+        var res = this.projections.every(function (p) {
+            return p.validateTask(task);
+        });
+        this.graphics.forEach(function (g) {
+            g.remove;
+        });
+        this.redraw();
+        return res;
+    }
     this.redraw = function()
     {
         projectionPointsDrawer.resetPointText();

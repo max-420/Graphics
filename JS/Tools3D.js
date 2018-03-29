@@ -82,16 +82,11 @@ function Tools3D(mediator, binding, drawer, selection, projectionPointsDrawer, p
             targetItems.remove();
             targetItems = new Group();
             targetItems.addChildren(projectionManager.redraw());
+            drawer.save([targetItems]);
         }.bind(this);
 
         tool.onMouseDrag = function (event) {
             if (cancelled) return;
-        }.bind(this);
-
-        tool.onMouseUp = function (event) {
-            if (cancelled) return;
-            drawer.save([targetItems]);
-
         }.bind(this);
 
         tool.onKeyDown = function (event) {

@@ -317,7 +317,6 @@
     <li><a href="#" onclick="toolbox.curveTransform.activate()"><span class="your-icon icon-hand normal"></span></a></li>
     <li><a href="#" onclick="toolbox.text.activate()"><span class="your-icon icon-text normal"></span></a></li>
     <li><a href="#" onclick="toolbox.circle3Points.activate()"><span class="your-icon icon-text normal"></span></a></li>
-    <li><a href="#" onclick="toolbox3D.point.activate('xy')"><span class="your-icon icon-text normal"></span></a></li>
     <!--
         <li class="divider"></li>
         <li class="dropdown-submenu">
@@ -340,9 +339,16 @@
 
 <ul class="dropdown-menu" role="menu" aria-labelledby="dropdownMenu"  id="rightmenu">
     <li><a href="#" onclick="toolbox3D.point.activate();"><span class="your-icon icon-dot normal"></span></a></li>
-    <li><a href="#" onclick="toolbox3D.line.activate();"><span class="your-icon icon-dot normal"></span></a></li>
-    <li><a href="#" onclick="toolbox3D.polygon.activate();"><span class="your-icon icon-dot normal"></span></a></li>
-    <li><a href="#" onclick="toolbox3D.ellipse.activate();"><span class="your-icon icon-dot normal"></span></a></li>
+    <li><a href="#" onclick="toolbox3D.line.activate();"><span class="your-icon icon-line normal"></span></a></li>
+    <li><a href="#" onclick="toolbox3D.polygon.activate();"><span class="your-icon icon-polygon normal"></span></a></li>
+    <li><a href="#" onclick="toolbox3D.ellipse.activate();"><span class="your-icon icon-ellipse normal"></span></a></li>
+    <li><a href="#" onclick="alert(projectionManager.validateTask(new Projection('point', [{x:90,y:90,z:90}])));"><span class="your-icon icon-dot normal"></span></a></li>
+    <li><a href="#" onclick="alert(projectionManager.validateTask(new Projection('line', [{x:90,y:90,z:90}, {x:120,y:120,z:120}])));"><span class="your-icon icon-dot normal"></span></a></li>
+    <li><a href="#" onclick="alert(projectionManager.validateTask(new Projection('polygon', [{x:90,y:90,z:90}, {x:120,y:120,z:120}, {x:60,y:30,z:30}])));"><span class="your-icon icon-dot normal"></span></a></li>
+    <li><a href="#" onclick="projectionManager.remerge()"><span class="your-icon icon-dot normal"></span></a></li>
+    <li><a href="#" onclick="projectionManager.remerge()"><span class="your-icon icon-dot normal"></span></a></li>
+    <li><a href="#" onclick="projectionManager.remerge()"><span class="your-icon icon-dot normal"></span></a></li>
+
 </ul>
 <div class="row" id="layoutPanel">
     <div class="panel panel-default">
@@ -435,6 +441,7 @@
     var toolbox;
     var toolbox3D;
     var layerManager;
+    var projectionManager;
     window.onload = function () {
         paper.setup('myCanvas');
         layerManager = new Layers(mediator);
@@ -451,7 +458,7 @@
         var drawer = new Drawer(mediator, layerManager);
         var projectionPointsDrawer = new ProjectionPointsDrawer(mediator, stylesManager);
         toolbox = new Tools(mediator, settingsManager.settings.tools, binding, drawer, selection, stylesManager);
-        var projectionManager = new ProjectionManager(mediator, projectionPointsDrawer, stylesManager, settingsManager.settings.projectionParams);
+        projectionManager = new ProjectionManager(mediator, projectionPointsDrawer, stylesManager, settingsManager.settings.projectionParams);
         toolbox3D = new Tools3D(mediator, binding, drawer, selection, projectionPointsDrawer, projectionManager, settingsManager.settings.projectionParams);
         undoRedo = new UndoRedo(mediator, layerManager.userLayers);
     }
