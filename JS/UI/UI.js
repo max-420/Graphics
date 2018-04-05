@@ -70,7 +70,14 @@ $(document).ready(function () {
     $('.taskValidate').click(function () {
         var index = parseInt($('.tasksList li.active').first().val());
         var res = projectionManager.validateTask(index);
-        alert(res.join());
+        res.forEach(function (str) {
+            var list = $('.taskErrors');
+            var template = list.children().first();
+            var listItem = template.clone();
+            listItem.text(str);
+            listItem.show();
+            listItem.appendTo(list);
+        });
     });
     $('.taskCancel').click(function () {
         $('.tasksList li.active').removeClass('active');

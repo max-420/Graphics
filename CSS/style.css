@@ -429,6 +429,11 @@ li.dropdown {
     float: right;
     width:45%;
 }
+.taskErrors
+{
+    overflow-y:scroll;
+    height: 80px;
+}
 .taskValidate
 {
 }
