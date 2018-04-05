@@ -12,6 +12,19 @@ function Tools3D(mediator, binding, drawer, selection, projectionPointsDrawer, p
         targetItems.removeChildren();
         targetItems.addChildren(projectionManager.redraw());
     });
+    mediator.subscribe("settingsChanged", function () {
+        targetItems.children.forEach(function (item) {
+            item.remove();
+            item.visible = false;
+        });
+        targetItems.removeChildren();
+        targetItems.addChildren(projectionManager.redraw());
+    },
+        {
+            predicate: function (path, value) {
+                return path.startsWith("projections");
+            },
+        });
     function Point3D(shape, pointsCount) {
         var points = [];
         var tool = new Tool();
@@ -76,6 +89,7 @@ function Tools3D(mediator, binding, drawer, selection, projectionPointsDrawer, p
                 projection = new Projection(shape);
                 projectionManager.projections.push(projection);
             }
+            projection.autoMerge = !projectionManager.testMode;
             var point = binding.getPoint(event.point);
             projection.addPoint(point);
 

@@ -16,6 +16,7 @@ function Tools(mediator, toolsSettings, binding, drawer, selection, stylesManage
     this.curveTransform = new CurveTransform();
     this.circle3Points = new Circle3Points();
     var select = this.select;
+
     function PathLine() {
         var path;
         var line = new DrawingTool();
@@ -29,7 +30,9 @@ function Tools(mediator, toolsSettings, binding, drawer, selection, stylesManage
             var point = binding.getPoint(event.point);
             path.add(point);
         }
-        this.activate = function(){line.activate()};
+        this.activate = function () {
+            line.activate()
+        };
     }
 
     function Line() {
@@ -48,7 +51,9 @@ function Tools(mediator, toolsSettings, binding, drawer, selection, stylesManage
             path = new Path(startPoint, point);
             targetItems.addChild(path);
         }
-        this.activate = function(){line.activate()};
+        this.activate = function () {
+            line.activate()
+        };
     }
 
     function Rect() {
@@ -66,7 +71,9 @@ function Tools(mediator, toolsSettings, binding, drawer, selection, stylesManage
             path = new Path.Rectangle(startPoint, point);
             targetItems.addChild(path);
         }
-        this.activate = function(){rectangle.activate()};
+        this.activate = function () {
+            rectangle.activate()
+        };
     }
 
     function Polygon() {
@@ -81,10 +88,12 @@ function Tools(mediator, toolsSettings, binding, drawer, selection, stylesManage
         tool.draw = function (event, targetItems) {
             var point = binding.getPoint(event.point);
             path.remove();
-            path = new Path.RegularPolygon(center,toolsSettings.polygon.sides, point.getDistance(center));
+            path = new Path.RegularPolygon(center, toolsSettings.polygon.sides, point.getDistance(center));
             targetItems.addChild(path);
         }
-        this.activate = function(){tool.activate()};
+        this.activate = function () {
+            tool.activate()
+        };
     }
 
     function Star() {
@@ -93,16 +102,18 @@ function Tools(mediator, toolsSettings, binding, drawer, selection, stylesManage
         var center;
         tool.init = function (event, targetItems) {
             center = binding.getPoint(event.point);
-            path = new Path.Star(center, toolsSettings.star.points, 0,0);
+            path = new Path.Star(center, toolsSettings.star.points, 0, 0);
             targetItems.addChild(path);
         }
         tool.draw = function (event, targetItems) {
             var point = binding.getPoint(event.point);
             path.remove();
-            path = new Path.Star(center,toolsSettings.star.points,point.getDistance(center)/2, point.getDistance(center));
+            path = new Path.Star(center, toolsSettings.star.points, point.getDistance(center) / 2, point.getDistance(center));
             targetItems.addChild(path);
         }
-        this.activate = function(){tool.activate()};
+        this.activate = function () {
+            tool.activate()
+        };
     }
 
     function Circle() {
@@ -120,7 +131,9 @@ function Tools(mediator, toolsSettings, binding, drawer, selection, stylesManage
             path = new Path.Circle(center, point.getDistance(center))
             targetItems.addChild(path);
         }
-        this.activate = function(){circle.activate()};
+        this.activate = function () {
+            circle.activate()
+        };
     }
 
     function Ellipse() {
@@ -137,7 +150,9 @@ function Tools(mediator, toolsSettings, binding, drawer, selection, stylesManage
             path = new Path.Ellipse(new Rectangle(center.multiply(2).subtract(point), point));
             targetItems.addChild(path);
         }
-        this.activate = function(){tool.activate()};
+        this.activate = function () {
+            tool.activate()
+        };
     }
 
     function Move() {
@@ -153,7 +168,9 @@ function Tools(mediator, toolsSettings, binding, drawer, selection, stylesManage
             lastPoint = point;
             targetItems.translate(delta);
         }
-        this.activate = function(){move.activate()};
+        this.activate = function () {
+            move.activate()
+        };
     }
 
     function Scale() {
@@ -169,7 +186,9 @@ function Tools(mediator, toolsSettings, binding, drawer, selection, stylesManage
             targetItems.scale(distance / lastDistance);
             lastDistance = distance;
         }
-        this.activate = function(){tool.activate()};
+        this.activate = function () {
+            tool.activate()
+        };
     }
 
     function Rotate() {
@@ -187,7 +206,9 @@ function Tools(mediator, toolsSettings, binding, drawer, selection, stylesManage
             targetItems.rotate(angle - lastAngle, pos);
             lastAngle = angle;
         }
-        this.activate = function(){tool.activate()};
+        this.activate = function () {
+            tool.activate()
+        };
     }
 
     function FreeTransform() {
@@ -198,12 +219,11 @@ function Tools(mediator, toolsSettings, binding, drawer, selection, stylesManage
             var point = binding.getPoint(event.point);
             var hitOptions = {
                 segments: true,
-                handles:true,
+                handles: true,
                 tolerance: 10
             };
             var hitResult = targetItems.hitTest(point, hitOptions);
-            if(!hitResult)
-            {
+            if (!hitResult) {
                 segment = null;
                 type = null;
                 return;
@@ -212,22 +232,21 @@ function Tools(mediator, toolsSettings, binding, drawer, selection, stylesManage
             type = hitResult.type;
         }
         tool.transform = function (event, targetItems) {
-            if(!segment) return;
+            if (!segment) return;
             var point = binding.getPoint(event.point);
-            if(type == 'segment')
-            {
+            if (type == 'segment') {
                 segment.point = point;
             }
-            if(type == 'handle-in')
-            {
+            if (type == 'handle-in') {
                 segment.handleIn = point.subtract(segment.point);
             }
-            if(type == 'handle-out')
-            {
+            if (type == 'handle-out') {
                 segment.handleOut = point.subtract(segment.point);
             }
         }
-        this.activate = function(){tool.activate()};
+        this.activate = function () {
+            tool.activate()
+        };
     }
 
     function CurveTransform() {
@@ -240,7 +259,7 @@ function Tools(mediator, toolsSettings, binding, drawer, selection, stylesManage
         tool.onMouseDown = function (event) {
             var point = binding.getPoint(event.point);
             var newCurve = selection.selectCurve(point);
-            if(newCurve) {
+            if (newCurve) {
                 curve = newCurve;
             }
             else {
@@ -248,14 +267,13 @@ function Tools(mediator, toolsSettings, binding, drawer, selection, stylesManage
                     handles: true,
                     tolerance: 10,
                 };
-                if(!selection.anythingSelected()) tool.cancel();
+                if (!selection.anythingSelected()) tool.cancel();
                 targetItems = selection.selectedItems;
                 var hitResult = targetItems.hitTest(point, hitOptions);
                 if (hitResult) {
                     type = hitResult.type;
                 }
-                else
-                {
+                else {
                     type = null;
                     targetItems = null;
                     tool.cancel();
@@ -265,26 +283,25 @@ function Tools(mediator, toolsSettings, binding, drawer, selection, stylesManage
         }.bind(this);
 
         tool.onMouseDrag = function (event) {
-            if(!curve) return;
+            if (!curve) return;
             var point = binding.getPoint(event.point);
-            if(type == 'handle-in')
-            {
+            if (type == 'handle-in') {
                 curve.segment2.handleIn = point.subtract(curve.point2);
             }
-            if(type == 'handle-out')
-            {
+            if (type == 'handle-out') {
                 curve.segment1.handleOut = point.subtract(curve.point1);
             }
         }.bind(this);
 
         tool.onMouseUp = function (event) {
-            if(targetItems)
-            {
+            if (targetItems) {
                 selection.saveSelection();
                 targetItems = null;
             }
         }.bind(this);
-        this.activate = function(){tool.activate()};
+        this.activate = function () {
+            tool.activate()
+        };
     }
 
     function Hand() {
@@ -293,7 +310,9 @@ function Tools(mediator, toolsSettings, binding, drawer, selection, stylesManage
             view.translate(event.point.subtract(event.downPoint));
             mediator.publish("fieldMoved");
         }
-        this.activate = function(){hand.activate()};
+        this.activate = function () {
+            hand.activate()
+        };
     }
 
     function Text() {
@@ -302,10 +321,9 @@ function Tools(mediator, toolsSettings, binding, drawer, selection, stylesManage
         var tool = new ToolWrapper();
         tool.showBindings = true;
         tool.onMouseDown = function (event) {
-            if(text)
-            {
+            if (text) {
                 this.showBindings = true;
-                if(text.content.length > 0) {
+                if (text.content.length > 0) {
                     drawer.save([text]);
                 }
                 text = null;
@@ -317,25 +335,26 @@ function Tools(mediator, toolsSettings, binding, drawer, selection, stylesManage
             binding.clear();
             var point = binding.getPoint(event.point);
             text = new PointText(point);
-            text.content='';
+            text.content = '';
             stylesManager.applyTextStyle(text, 'drawing');
-            textCursor = new Path.Line(text.bounds.topRight,text.bounds.bottomRight);
+            textCursor = new Path.Line(text.bounds.topRight, text.bounds.bottomRight);
             stylesManager.applyStyle(textCursor, 'textCursor');
 
             textCursor.on('frame', function (event) {
-                if(event.count%20 != 0) return;
+                if (event.count % 20 != 0) return;
                 this.visible = !this.visible;
             });
         }
         tool.onKeyDown = function (event) {
-            text.content+=event.character;
+            text.content += event.character;
             textCursor.position = new Point(text.bounds.right, textCursor.position.y);
         }
-        this.activate = function(){
+        this.activate = function () {
             tool.activate();
             tool.text = null;
         };
     }
+
     function Select() {
         var selectMany;
         var startPoint;
@@ -345,7 +364,7 @@ function Tools(mediator, toolsSettings, binding, drawer, selection, stylesManage
         tool.onMouseDown = function (event) {
             startPoint = event.point;
             selection.selectPoint(startPoint);
-            if(selectionCallback && selection.anythingSelected()) selectionCallback();
+            if (selectionCallback && selection.anythingSelected()) selectionCallback();
         }
         tool.onMouseDrag = function (event) {
             if (!selectMany) {
@@ -361,14 +380,15 @@ function Tools(mediator, toolsSettings, binding, drawer, selection, stylesManage
             selection.selectInsideRectangle(new Rectangle(startPoint, event.point));
             drawer.cancel();
             selectMany = false;
-            if(selectionCallback && selection.anythingSelected()) selectionCallback();
+            if (selectionCallback && selection.anythingSelected()) selectionCallback();
         }
-        this.activate = function(){tool.activate()};
-        this.activateWithCallback = function(callback, event)
-        {
+        this.activate = function () {
+            tool.activate()
+        };
+        this.activateWithCallback = function (callback, event) {
             this.activate();
             selectionCallback = callback;
-            if(event) tool.onMouseDown(event);
+            if (event) tool.onMouseDown(event);
         }
     }
 
@@ -395,11 +415,17 @@ function Tools(mediator, toolsSettings, binding, drawer, selection, stylesManage
         tool.onMouseUp = function (event) {
             if (this.draw) this.draw(event, targetItems);
             stylesManager.applyStyle(targetItems, 'drawing');
+            targetItems.children.forEach(function (item) {
+                stylesManager.applyStyle(item, 'drawing');
+            });
             drawer.save(targetItems.children);
-            targetItems.remove();
+            //targetItems.remove();
         }
-        this.activate = function(){tool.activate()};
+        this.activate = function () {
+            tool.activate()
+        };
     }
+
     function Circle3Points() {
         var targetItems;
         var path;
@@ -412,19 +438,16 @@ function Tools(mediator, toolsSettings, binding, drawer, selection, stylesManage
         tool.onMouseDown = function (event) {
             stage++;
             var point = binding.getPoint(event.point);
-            if (stage == 1)
-            {
+            if (stage == 1) {
                 points = [];
                 targetItems = new Group();
                 path = null;
                 points.push(point);
             }
-            if (stage == 2)
-            {
+            if (stage == 2) {
                 points.push(point);
             }
-            if(stage == 3)
-            {
+            if (stage == 3) {
                 stylesManager.applyStyle(targetItems, 'drawing');
                 drawer.save(targetItems.children);
                 targetItems.remove();
@@ -436,22 +459,18 @@ function Tools(mediator, toolsSettings, binding, drawer, selection, stylesManage
             if (stage == 2) {
                 var point = binding.getPoint(event.point);
 
-                // var ma = (points[1].y - points[0].y)/(points[1].x - points[0].x);
-                // var mb = (point.y - points[1].y)/(point.x - points[1].x);
-                // var x =(ma*mb*(points[0].y-point.y) + mb*(points[0].x + points[1].x)+ ma*(points[1].x + point.x))/(2*(mb-ma));
-                // var y = (-1/ma)*(x-(points[0].x+points[1].x)/2)+((points[0].y+points[1].y)/2);
-                var a = points[1].x-points[0].x;
-                var b = points[1].y-points[0].y;
-                var c = point.x-points[0].x;
-                var d = point.y-points[0].y;
-                var e = (a*(points[1].x+points[0].x))+(b*(points[1].y+points[0].y));
-                var f = (c*(point.x+points[0].x))+(d*(point.y+points[0].y));
-                var g = 2*((a*(point.y-points[1].y))-(b*(point.x-points[1].x)));
+                var a = points[1].x - points[0].x;
+                var b = points[1].y - points[0].y;
+                var c = point.x - points[0].x;
+                var d = point.y - points[0].y;
+                var e = (a * (points[1].x + points[0].x)) + (b * (points[1].y + points[0].y));
+                var f = (c * (point.x + points[0].x)) + (d * (point.y + points[0].y));
+                var g = 2 * ((a * (point.y - points[1].y)) - (b * (point.x - points[1].x)));
 
-                var x = ((d*e) - (b*f))/g;
-                var y = ((a*f) - (c*e))/g;
-                var center = new Point(x,y);
-                if(path) path.remove();
+                var x = ((d * e) - (b * f)) / g;
+                var y = ((a * f) - (c * e)) / g;
+                var center = new Point(x, y);
+                if (path) path.remove();
                 path = new Path.Circle(center, point.getDistance(center));
                 targetItems.addChild(path);
                 stylesManager.applyStyle(targetItems, 'drawing');
@@ -459,7 +478,9 @@ function Tools(mediator, toolsSettings, binding, drawer, selection, stylesManage
             }
         }.bind(this);
 
-        this.activate = function(){tool.activate()};
+        this.activate = function () {
+            tool.activate()
+        };
     }
 
     function TransformTool() {
@@ -470,12 +491,11 @@ function Tools(mediator, toolsSettings, binding, drawer, selection, stylesManage
         tool.showBindings = true;
 
         tool.onMouseDown = function (event) {
-            if(!selection.anythingSelected())
-                select.activateWithCallback(function()
-                {
+            if (!selection.anythingSelected())
+                select.activateWithCallback(function () {
                     this.activate();
                 }.bind(this), event);
-            if(!selection.anythingSelected()) tool.cancel();
+            if (!selection.anythingSelected()) tool.cancel();
             targetItems = selection.selectedItems;
             if (this.init) this.init(event, targetItems);
         }.bind(this);
@@ -487,9 +507,8 @@ function Tools(mediator, toolsSettings, binding, drawer, selection, stylesManage
         tool.onMouseUp = function (event) {
             selection.saveSelection();
         }.bind(this);
-        this.activate = function(){
-            if(!selection.anythingSelected()) select.activateWithCallback(function()
-                {
+        this.activate = function () {
+            if (!selection.anythingSelected()) select.activateWithCallback(function () {
                     this.activate();
                 }.bind(this)
             )
@@ -536,15 +555,14 @@ function Tools(mediator, toolsSettings, binding, drawer, selection, stylesManage
             if (this.onKeyDown) this.onKeyDown(event);
         }.bind(this);
 
-        this.cancel = function()
-        {
+        this.cancel = function () {
             cancelled = true;
             binding.clear();
             selection.deleteCopy();
             drawer.cancel();
         }
 
-        this.activate = function(){
+        this.activate = function () {
             tool.activate();
             binding.clear();
         };

@@ -2,7 +2,7 @@ function Projection(shape, points3D) {
     this.shape = shape;
     this.points3D = points3D ? points3D : [];
     this.bindingTolerance = 10;
-    this.autoMerge = false;
+    this.autoMerge = true;
     this.isNear = function(a, b)
     {
         return b >= a - this.bindingTolerance && b <= a + this.bindingTolerance;
@@ -17,9 +17,12 @@ function Projection(shape, points3D) {
         var mergedPoint = this.mergePoints(projectionPoint, nearestPoint);
         this.points3D.splice(this.points3D.indexOf(nearestPoint), 1, mergedPoint);
     }
-
+    function getPointText(point) {
+        return '(' + point.x + ';' + point.y + ';' + point.z + ')';
+    }
     this.validateTask = function(task)
     {
+        var errors = [];
         task.points3D.forEach(function(taskPoint)
         {
             var yz = this.points3D.find(function (point) {
@@ -31,6 +34,18 @@ function Projection(shape, points3D) {
             var xy = this.points3D.find(function (point) {
                 return point.z == 0 && this.isNear(point.x, taskPoint.x) && this.isNear(point.y, taskPoint.y);
             }.bind(this));
+            if(!xy)
+            {
+                errors.push("Не задана фронтальная проекция точки" + getPointText(taskPoint));
+            }
+            if(!xz)
+            {
+                errors.push("Не задана профильная проекция точки" + getPointText(taskPoint));
+            }
+            if(!yz)
+            {
+                errors.push("Не задана горизонтанльная проекция точки" + getPointText(taskPoint));
+            }
             if(xy && xz && yz)
             {
                 this.points3D.splice(this.points3D.indexOf(xy), 1);
@@ -38,12 +53,12 @@ function Projection(shape, points3D) {
                 this.points3D.splice(this.points3D.indexOf(yz), 1);
                 this.points3D.push(taskPoint);
             }
-            else
-            {
-                return false;
-            }
         }.bind(this));
-        return this.validate(task.points3D.length);
+        if(this.validate(task.points3D.length))
+        {
+            errors.push("Количество точек не соответствует заданному");
+        };
+        return errors;
     }
 
     // this.remerge = function()

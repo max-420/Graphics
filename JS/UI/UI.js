@@ -1,20 +1,6 @@
-class configuration {
-    constructor(checkBindingSettings, checkGridSetting, checkLeftPanelShow, checkMainSetting, showLeftPanel) {
-        this.checkBindingSettings = checkBindingSettings;
-        this.checkGridSetting = checkGridSetting;
-        this.checkLeftPanelShow = checkLeftPanelShow;
-        this.checkMainSetting = checkMainSetting;
-        this.showLeftPanel = showLeftPanel;
-    }
-}
-let conf = new configuration(true,true,true,true, true);
 $(document).ready(function () {
-    //VARIABLE LIST
-    var gridColorAxisHTML = $('#gridColorAxis');
-    var gridColorPickerHTML = $('#gridColorPicker');
-    var activeColorPickerHTML = $('#ActiveColorPicker');
     var leftElementPanelHTML = $("#leftmenu");
-    var rightElementPanelHTML = $("#rightmenu")
+    var rightElementPanelHTML = $("#rightmenu");
     var constColor = {
         'black': '#000000',
         'white': '#ffffff',
@@ -26,351 +12,107 @@ $(document).ready(function () {
         'warning': '#f0ad4e',
         'danger': '#d9534f'
     };
-    var stepHTML = $('#step');
-    var showGridHTML = $('#showGrid');
-    var showAxisHTML = $('#showAxis');
-    var stepBinderHTML = $('#BindingGrid');
-    var stepBindingGridHTML = $('#stepBindingGrid');
-    var strokeWidthHTML = $('#strokeWidth');
-    var bindToLineEnds = $('#bindToLineEnds');
-    var bindToIntersections = $('#bindToIntersections');
-    var bindToCenters = $('#bindToCenters');
-    //Panels
-    var mainPanelSetting = $("#mainPanelSettings");
-    var gridPanelSettings = $("#gridPanelSettings");
-    var bindingPanelSettingss = $("#bindingPanelSettings");
-    var gridColorStroke = $("#gridColorStroke");
-    var gridColorFillColor = $("#gridColorFillColor");
-    var showElementPanel = $("#showElementPanel");
+
     var toggleLayoutPanel = $("#toggleLayoutPanel");
-    var fontsize = $("#fontsize");
-    var fontColorPicker = $("#fontColorPicker");
-    var fontStrokeColor = $("#fontStrokeColor");
 
     var propertyPanel = $("#propertyPanel");
-    var removeLayout = $("#removeLayout");
 
     var rightmenu = $("#rightmenu");
     leftElementPanelHTML.draggable({containment: "parent"});
-    rightmenu.draggable({containment: "parent"});;
+    rightmenu.draggable({containment: "parent"});
     $('#layoutPanel').draggable({containment: "parent"});
 
-    //PROPERTIES
-    function ShowOrHidePropertyPanel() {
-        propertyPanel.toggle();
-    }
-    //SET SETTING ON COLORPICKER
-    gridColorAxisHTML.colorpicker({
+    $(".colorpicker-component[data-setting]").colorpicker({
         colorSelectors: constColor,
     }).on('hidePicker', function () {
-        settingsManager.settings.background.axisColor = gridColorAxisHTML.colorpicker('getValue');
+        settingsManager.setValue($(this).attr('data-setting'), $(this).colorpicker('getValue'));
+    });
+    $(".colorpicker-component[data-setting]").each(function (i, item) {
+        var val = settingsManager.getValue($(item).attr('data-setting'));
+        $(item).colorpicker('setValue', val);
     });
 
-    activeColorPickerHTML.colorpicker({
-        colorSelectors: constColor
-    }).on('hidePicker', function () {
-        settingsManager.settings.styles.drawing.strokeColor = activeColorPickerHTML.colorpicker('getValue');
-    });
-
-    gridColorPickerHTML.colorpicker({
-        colorSelectors: constColor
-    }).on('hidePicker', function () {
-        settingsManager.settings.background.gridColor = gridColorPickerHTML.colorpicker('getValue');
-    });
-
-    fontColorPicker.colorpicker({
-        colorSelectors: constColor
-    }).on('hidePicker', function () {
-        settingsManager.settings.textStyles.drawing.fillColor = fontColorPicker.colorpicker('getValue');
-    });
-    fontStrokeColor.colorpicker({
-        colorSelectors: constColor,
-    }).on('hidePicker', function () {
-        settingsManager.settings.textStyles.drawing.strokeColor = fontStrokeColor.colorpicker('getValue');
-    });
-
-
-    gridColorStroke.colorpicker({
-        colorSelectors: constColor
-    }).on('hidePicker', function () {
-        settingsManager.settings.styles.drawing.strokeColor = gridColorStroke.colorpicker('getValue');
-    });
-    gridColorFillColor.colorpicker({
-        colorSelectors: constColor
-    }).on('hidePicker', function () {
-        settingsManager.settings.styles.drawing.fillColor = gridColorFillColor.colorpicker('getValue');
-    });
-
-
-
-    var sizeLeftElementPanel = parseInt(leftElementPanelHTML.css("top"));
-    
-    $('#bindingSettings').click(function () {
-        if (conf.checkBindingSettings) {
-            CloseAllPanels();
-            leftPanelShow();
-            bindingPanelSettingss.show();
-            conf.checkBindingSettings = false;
-        }
-        else if (!conf.checkBindingSettings){
-            leftPanelHide();
-            bindingPanelSettingss.hide("fast");
-            conf.checkBindingSettings = true;
-        }
-    });
-
-    showElementPanel.click(function () {
-        leftElementPanelHTML.toggle();
-    });
 
     toggleLayoutPanel.click(function () {
         propertyPanel.toggle();
     });
-    var sizeMainPanelSetting = parseInt(mainPanelSetting.css("height"));
-    //mainPanelSettings  // mainSettings // mainPanelSettings
-    $('#mainSettings').click(function () {
-        if (conf.checkMainSetting) {
-            CloseAllPanels();
-            leftPanelShow();
-            mainPanelSetting.show();
-            conf.checkMainSetting = false;
+
+    $('.navbar-btn').click(function () {
+        var navId = $(this).attr('id');
+        var tab = $("[data-nav-id=" + navId + "]");
+        if (tab.is(":visible")) {
+            tab.hide("fast");
         }
-        else if(!conf.checkMainSetting){
-            leftPanelHide();
-            mainPanelSetting.hide();
-            conf.checkMainSetting = true;
+        else{
+            $("[data-nav-id]:visible").hide();
+            tab.show();
         }
     });
 
-    //Grid  // gridSettings // gridPanelSettings
-    var sizeGridPanel = parseInt(gridPanelSettings.css("height"));
-    $('#gridSettings').click(function () {
-        if (conf.checkGridSetting) {
-                CloseAllPanels();
-                leftPanelShow();
-                gridPanelSettings.show();
-                conf.checkGridSetting = false;
-        }
-        else if (!conf.checkGridSetting){
-                leftPanelHide();
-                gridPanelSettings.hide();
-                conf.checkGridSetting = true;
-        }
+
+    projectionManager.getTasks().forEach(function (task, i) {
+        var list = $('.tasksList');
+        var template = list.children().first();
+        var listItem = template.clone();
+        listItem.text(task);
+        listItem.val(i);
+        listItem.show();
+        listItem.appendTo(list);
     });
 
-    //Close panel elements
-    var closePanel = $("#ClosePanel");
-    closePanel.click(function () {
-        CloseAllPanels();
-        leftPanelHide();
+    $('.tasksList li').click(function () {
+        $('.tasksList li.active').removeClass('active');
+        $(this).addClass('active');
+        $('.taskText').text($(this).text());
+        projectionManager.testMode = true;
     });
 
-    function CloseAllPanels(){
-            if(!conf.checkBindingSettings){
-                bindingPanelSettingss.hide("fast");
-                conf.checkBindingSettings = true;
-            }
-            if(!conf.checkGridSetting){
-                gridPanelSettings.hide("fast");
-                conf.checkGridSetting = true;
-            }
-            if(!conf.checkMainSetting){
-                mainPanelSetting.hide("fast");
-                conf.checkMainSetting = true;
-            }
-    }
-
-    function leftPanelShow(){
-        if(conf.checkLeftPanelShow){
-            leftElementPanelHTML.animate({ "top": sizeLeftElementPanel + 250 });
-            conf.checkLeftPanelShow = false;
-        }
-
-    }
-    function leftPanelHide() {
-        if(!conf.checkLeftPanelShow){
-            leftElementPanelHTML.animate({ "top": sizeLeftElementPanel });
-            conf.checkLeftPanelShow = true;
-        }
-
-    }
-
-    function SetSettingInHTMLElements() {
-        gridColorAxisHTML.colorpicker('setValue', settingsManager.settings.background.axisColor);
-        gridColorPickerHTML.colorpicker('setValue', settingsManager.settings.background.gridColor);
-        activeColorPickerHTML.colorpicker('setValue', settingsManager.settings.styles.drawing.strokeColor);
-        gridColorPickerHTML.colorpicker('setValue', settingsManager.settings.background.gridColor);
-        fontColorPicker.colorpicker('setValue', settingsManager.settings.textStyles.drawing.fillColor);
-        fontStrokeColor.colorpicker('setValue', settingsManager.settings.textStyles.drawing.strokeColor);
-
-        stepHTML.val(settingsManager.settings.background.gridStep);
-        stepBindingGridHTML.val(settingsManager.settings.binding.gridStep);
-        strokeWidthHTML.val(settingsManager.settings.styles.drawing.strokeWidth);
-        fontsize.val(settingsManager.settings.textStyles.drawing.fontSize);
-
-
-        if (settingsManager.settings.background.showGrid) {
-            showGridHTML.prop('checked', true);
-        }
-        else if (!settingsManager.settings.background.showGrid) {
-            showGridHTML.prop('checked', true);
-        }
-
-        if (settingsManager.settings.background.showAxis) {
-            showAxisHTML.prop('checked', true);
-        }
-        else if (!settingsManager.settings.background.showAxis) {
-            showAxisHTML.prop('checked', true);
-        }
-        if (settingsManager.settings.binding.bindToGrid) {
-            stepBinderHTML.prop('checked', true);
-        }
-        else if (!settingsManager.settings.binding.bindToGrid) {
-            stepBinderHTML.prop('checked', false);
-        }
-        if (settingsManager.settings.binding.bindToLineEnds) {
-            bindToLineEnds.prop('checked', true);
-        }
-        else if (!settingsManager.settings.binding.bindToLineEnds) {
-            bindToLineEnds.prop('checked', false);
-        }
-        if (settingsManager.settings.binding.bindToIntersections) {
-            bindToIntersections.prop('checked', true);
-        }
-        else if (!settingsManager.settings.binding.bindToIntersections) {
-            bindToIntersections.prop('checked', false);
-        }
-        if (settingsManager.settings.binding.bindToCenters) {
-            bindToCenters.prop('checked', true);
-        }
-        else if (!settingsManager.settings.binding.bindToCenters) {
-            bindToCenters.prop('checked', false);
-        }
-
-
-    };
-    SetSettingInHTMLElements();
-
-    stepHTML.change(function () {
-        settingsManager.settings.background.gridStep = parseInt(stepHTML.val());
+    $('.taskValidate').click(function () {
+        var index = parseInt($('.tasksList li.active').first().val());
+        var res = projectionManager.validateTask(index);
+        alert(res.join());
     });
-    strokeWidthHTML.change(function () {
-        settingsManager.settings.styles.drawing.strokeWidth = strokeWidthHTML.val();
-    });
-    stepBindingGridHTML.change(function () {
-        settingsManager.settings.binding.gridStep = stepBindingGridHTML.val();
-    });
-    fontsize.change(function(){
-        settingsManager.settings.textStyles.drawing.fontSize = $(this).val();
+    $('.taskCancel').click(function () {
+        $('.tasksList li.active').removeClass('active');
+        $('.taskText').text('');
+        projectionManager.testMode = false;
     });
 
 
-    showAxisHTML.click(function () {
+
+    $("input[type=number][data-setting]").change(function () {
+        settingsManager.setValue($(this).attr("data-setting"), parseInt($(this).val()));
+    });
+    $("input[type=number][data-setting]").each(function () {
+        var val = settingsManager.getValue($(this).attr("data-setting"));
+        $(this).val(val);
+    });
+
+
+    $("input[type=checkbox][data-setting]").click(function () {
         if (!$(this).is(':checked')) {
-            settingsManager.settings.background.showAxis = false;
+            settingsManager.setValue($(this).attr("data-setting"), false);
         }
         else {
-            settingsManager.settings.background.showAxis = true;
+            settingsManager.setValue($(this).attr("data-setting"), true);
         }
     });
-
-    showGridHTML.click(function () {
-        if (!$(this).is(':checked')) {
-            settingsManager.settings.background.showGrid = false;
-        }
-        else {
-            settingsManager.settings.background.showGrid = true;
-        }
-    });
-    bindToIntersections.click(function () {
-        if (!$(this).is(':checked')) {
-            settingsManager.settings.background.bindToIntersections = false;
-        }
-        else {
-            settingsManager.settings.background.bindToIntersections = true;
-        }
+    $("input[type=checkbox][data-setting]").each(function () {
+        var val = settingsManager.getValue($(this).attr("data-setting"));
+        $(this).prop('checked', val);
     });
 
-
-    bindToLineEnds.click(function () {
-        if (!$(this).is(':checked')) {
-            settingsManager.settings.binding.bindToLineEnds = false;
-        }
-        else {
-            settingsManager.settings.binding.bindToLineEnds = true;
-        }
+    $("input[data-slider-min]").bootstrapSlider();
+    $("input[data-slider-min]").on("slide", function (slideEvt) {
+        settingsManager.setValue($(this).attr('data-setting'), slideEvt.value);
+        $(this).siblings(".valueLabel").text(slideEvt.value);
+    });
+    $("input[data-slider-min]").each(function (i, item) {
+        var val = settingsManager.getValue($(item).attr('data-setting'));
+        $(item).attr('data-slider-value', val);
+        $(item).siblings(".valueLabel").text(val);
     });
 
-    bindToLineEnds.click(function () {
-        if (!$(this).is(':checked')) {
-            settingsManager.settings.binding.bindToLineEnds = false;
-        }
-        else {
-            settingsManager.settings.binding.bindToLineEnds = true;
-        }
-    });
-
-    bindToCenters.click(function () {
-        if (!$(this).is(':checked')) {
-            settingsManager.settings.styles.binding.bindToCenters = false;
-        }
-        else {
-            settingsManager.settings.styles.binding.bindToCenters = true;
-        }
-    });
-
-
-    //stepBinding
-    stepBinderHTML.click(function () {
-        if (!$(this).is(':checked')) {
-            settingsManager.settings.binding.bindToGrid = false;
-            HideStepGridHTML();
-        }
-        else {
-            settingsManager.settings.binding.bindToGrid = true;
-            ShowStepGridHTML();
-        }
-    });
-
-    function ShowStepGridHTML() {
-        $('#stepBindingGrid').removeAttr("disabled");
-    }
-
-    function HideStepGridHTML() {
-        $('#stepBindingGrid').attr("disabled", "disabled");
-    }
-
-    $("#bootstrap-slider").slider();
-    $("#bootstrap-slider").on("slide", function (slideEvt) {
-        settingsManager.settings.styles.drawing.strokeWidth = slideEvt.value;
-        $("#sliderValue").text(slideEvt.value);
-    });
-
-    $('.slider').on("click", function () {
-        $("#sliderValue").text(newvalue);
-    });
-
-    $("#OpacitySetting").slider();
-    $("#OpacitySetting").on("slide", function (slideEvt) {
-        settingsManager.settings.styles.drawing.opacity = slideEvt.value;
-        $("#OpacityValue").text(slideEvt.value);
-    });
-
-    $('.slider').on("click", function () {
-        $("#OpacityValue").text(newvalue);
-    });
-
-
-    //
-    $("#LineScalingSetting").slider();
-    $("#LineScalingSetting").on("slide", function (slideEvt) {
-        settingsManager.settings.styles.drawing.lineScaling = slideEvt.value;
-        $("#LineScalingValue").text(slideEvt.value);
-    });
-
-    $('.slider').on("click", function () {
-        $("#LineScalingValue").text(newvalue);
-    });
     $('#selectTyleLine').on('change', function () {
         var lineType = $(this).val();
         if (lineType == 'Solid') {
@@ -444,7 +186,7 @@ $(document).ready(function () {
             settingsManager.settings.textStyles.drawing.fontFamily = 'cursive';
             settingsManager.settings.textStyles.drawing.font = 'cursive';
         }
-        else if(fontName == 'MS Serif'){
+        else if (fontName == 'MS Serif') {
             settingsManager.settings.textStyles.drawing.fontFamily = 'serif';
             settingsManager.settings.textStyles.drawing.font = 'serif';
         }
@@ -454,6 +196,6 @@ $(document).ready(function () {
         $('#layersPanel').toggle();
     });
     $('#controlElementPanel').click(function () {
-       $('#leftmenu').toggle();
+        $('#leftmenu').toggle();
     });
 });

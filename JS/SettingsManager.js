@@ -94,6 +94,7 @@ function Settings() {
     {
         threeAxis: true,
         showAxisText: true,
+
         showAxis: true,
         axisColor: 'red',
         axisWidth: 1.5,
@@ -114,8 +115,9 @@ function Settings() {
         bindingTolerance: 10,
         gridStep: 30,
     };
-    this.projectionParams =
+    this.projections =
     {
+        testMode: false,
         showPointText: true,
         showLinkLines: true,
     };
@@ -179,8 +181,37 @@ function SettingsManager(mediator) {
         var settingsObj = new Settings();
         setWrappers(settingsObj, this.settings);
         saveSettings();
-    }
-
+    };
+    this.setValue = function (prop, val) {
+        var props = prop.split('.');
+        var o = this.settings;
+        for (var i = 0; i < props.length; i++) {
+            if (props[i] in o) {
+                if(i == props.length - 1)
+                {
+                    o[props[i]] = val;
+                    return;
+                }
+                else {
+                    o = o[props[i]];
+                }
+            } else {
+                return;
+            }
+        }
+    };
+    this.getValue = function (prop) {
+        var props = prop.split('.');
+        var o = this.settings;
+        for (var i = 0; i < props.length; i++) {
+            if (props[i] in o) {
+                o = o[props[i]];
+            } else {
+                return;
+            }
+        }
+        return o;
+    };
     this.reset();
     loadSettings();
 }
