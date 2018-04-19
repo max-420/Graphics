@@ -5,7 +5,8 @@ function ProjectionManager(mediator, projectionPointsDrawer, stylesManager, proj
     this.testMode = false;
     this.tasks = [
         [
-            new Projection('polygon', [{x:90,y:90,z:90}, {x:120,y:120,z:120}, {x:60,y:30,z:30}])
+            new Projection('polygon', [{x:90,y:90,z:90}]),
+            new Projection('polygon', [{x:120,y:120,z:120}])
         ],
         [
             new Projection('polygon', [{x:90,y:90,z:90}, {x:120,y:120,z:120}, {x:60,y:30,z:30}])
@@ -40,18 +41,44 @@ function ProjectionManager(mediator, projectionPointsDrawer, stylesManager, proj
     this.getTaskText = function (task) {
         var result = "";
         result += 'Построить ';
-        if (task[0].shape == 'polygon') {
-            if (task[0].points3D.length == 1) {
-                result += 'точку ';
+        task.forEach(function (subtask)
+        {
+            if (subtask.shape == 'polygon') {
+                if (subtask.points3D.length == 1) {
+                    result += 'точку ';
+                }
+                if (subtask.points3D.length == 2) {
+                    result += 'отрезок ';
+                }
+                if (subtask.points3D.length == 3) {
+                    result += 'многоугольник ';
+                }
+                result += 'с координатами ';
+                subtask.points3D.forEach(function (p, i, arr) {
+                    result += getPointText(p);
+                    if (i != arr.length - 1) {
+                        result += ','
+                    }
+                    result += ' ';
+                });
             }
-            if (task[0].points3D.length == 2) {
+            result += ', ';
+        });
+        return result;
+    };
+    this.getShapeText = function (task) {
+        var result = "";
+        if (task.shape == 'polygon') {
+            if (task.points3D.length == 1) {
+                result += 'точка ';
+            }
+            if (task.points3D.length == 2) {
                 result += 'отрезок ';
             }
-            if (task[0].points3D.length == 3) {
+            if (task.points3D.length == 3) {
                 result += 'многоугольник ';
             }
-            result += 'с координатами ';
-            task[0].points3D.forEach(function (p, i, arr) {
+            task.points3D.forEach(function (p, i, arr) {
                 result += getPointText(p);
                 if (i != arr.length - 1) {
                     result += ','
@@ -65,15 +92,59 @@ function ProjectionManager(mediator, projectionPointsDrawer, stylesManager, proj
     this.validateTask = function (taskIndex) {
         var task = this.tasks[taskIndex];
         var errors = [];
-        this.projections.forEach(function (p) {
-            errors = errors.concat(p.validateTask(task[0]));
+        var resolvedProjections = [];
+        var tooManyPoints = false;
+        var unresolvedTasks = task.filter(function (taskproj) {
+            var match = this.projections.find(function (p) {
+                p.getMatches(taskproj) == taskproj.points3D.length*3 && p.shape === taskproj.shape && p.points3D.length == taskproj.points3D.length*3;
+            });
+            if(match)
+            {
+                match.validateTask(taskproj);
+                if(!match.validate(taskproj.points3D.length))
+                {
+                    tooManyPoints = true;
+                }
+                resolvedProjections.push(match);
+                return false;
+            }
+            return true;
+        }.bind(this));
+
+        var remainingProjections = this.projections.filter(function (p) {
+            return !resolvedProjections.includes(p);
         });
+
+        unresolvedTasks = unresolvedTasks.filter(function (taskproj) {
+            var match = remainingProjections.filter(function (p) {
+               return p.shape === taskproj.shape;
+            }).sort(function (a,b) {
+               return b.getMatches(taskproj) - a.getMatches(taskproj);
+            })[0];
+            if(match)
+            {
+                errors = errors.concat(match.validateTask(taskproj));
+                return false;
+            }
+            return true;
+        });
+        unresolvedTasks.forEach(function (t) {
+            var error = 'Отсутствует '+ this.getShapeText(t);
+            errors.push(error);
+        }.bind(this));
+        if(tooManyPoints)
+        {
+            errors.push("Количество точек не соответствует заданному");
+        }
+
+
         this.graphics.forEach(function (g) {
             g.remove();
         });
         this.redraw();
         return errors;
     };
+
     this.redraw = function () {
         projectionPointsDrawer.resetPointText();
         this.projections.forEach(function (shape, index) {

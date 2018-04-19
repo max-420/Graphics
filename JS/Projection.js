@@ -20,6 +20,59 @@ function Projection(shape, points3D) {
     function getPointText(point) {
         return '(' + point.x + ';' + point.y + ';' + point.z + ')';
     }
+    this.checkPoint = function (point, pointsCount) {
+        var p3D = this.get3DPoint(point);
+        var count;
+        if(p3D.x == 0)
+        {
+            count = this.points3D.filter(function (point) {
+                return point.x == 0 || (point.x!=0&&point.y!=0&&point.z!=0);
+            }).length;
+        }
+        if(p3D.y == 0)
+        {
+            count = this.points3D.filter(function (point) {
+                return point.y == 0 || (point.x!=0&&point.y!=0&&point.z!=0);
+            }).length;
+        }
+        if(p3D.z == 0)
+        {
+            count = this.points3D.filter(function (point) {
+                return point.z == 0 || (point.x!=0&&point.y!=0&&point.z!=0);
+            }).length;
+        }
+
+        return count<pointsCount;
+    }
+    this.getMatches = function(task)
+    {
+        var matches = 0;
+        task.points3D.forEach(function(taskPoint)
+        {
+            var yz = this.points3D.find(function (point) {
+                return point.x == 0 && this.isNear(point.y, taskPoint.y) && this.isNear(point.z, taskPoint.z);
+            }.bind(this));
+            var xz = this.points3D.find(function (point) {
+                return point.y == 0 && this.isNear(point.x, taskPoint.x) && this.isNear(point.z, taskPoint.z);
+            }.bind(this));
+            var xy = this.points3D.find(function (point) {
+                return point.z == 0 && this.isNear(point.x, taskPoint.x) && this.isNear(point.y, taskPoint.y);
+            }.bind(this));
+            if(xy)
+            {
+                matches++;
+            }
+            if(xz)
+            {
+                matches++;
+            }
+            if(yz)
+            {
+                matches++;
+            }
+        }.bind(this));
+        return matches;
+    }
     this.validateTask = function(task)
     {
         var errors = [];
@@ -54,10 +107,6 @@ function Projection(shape, points3D) {
                 this.points3D.push(taskPoint);
             }
         }.bind(this));
-        if(this.validate(task.points3D.length))
-        {
-            errors.push("Количество точек не соответствует заданному");
-        };
         return errors;
     }
 

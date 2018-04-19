@@ -79,18 +79,19 @@ function Tools3D(mediator, binding, drawer, selection, projectionPointsDrawer, p
         }.bind(this);
 
         tool.onMouseDown = function (event) {
-            if(!filterPoint(event.point))
+            var point = binding.getPoint(event.point);
+            if(!filterPoint(point))
             {
                 return;
             }
             cancelled = false;
-            if(!projection || function(){return pointsCount ? projection.validate(pointsCount):false}())
+            if(!projection || function(){return pointsCount ? !projection.checkPoint(point, pointsCount):false}())
             {
                 projection = new Projection(shape);
                 projectionManager.projections.push(projection);
             }
             projection.autoMerge = !projectionManager.testMode;
-            var point = binding.getPoint(event.point);
+
             projection.addPoint(point);
 
             targetItems.remove();

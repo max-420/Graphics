@@ -234,16 +234,18 @@
             <label><input type="checkbox" data-setting="background.showAxisText">Show axis captions</label>
         </div>
     </div>
-    <div class="tabPanel col-lg-5">
-        <ul class="list-group tasksList tabControl">
-            <li class="list-group-item" style="display:none"></li>
+    <div class="tabPanel col-lg-3">
+        <button class="btn btn-primary dropdown-toggle tabControl " type="button" data-toggle="dropdown">Tasks
+            <span class="caret"></span></button>
+        <button class="taskValidate tabControl btn btn-primary">Check</button>
+        <button class="taskCancel tabControl btn btn-primary">Cancel</button>
+        <ul class="dropdown-menu tasksList tabControl">
+            <li style="display:none"></li>
         </ul>
-        <div class="taskControl">
-            <button class="taskValidate tabControl btn btn-primary">Check</button>
-            <button class="taskCancel tabControl btn btn-primary">Cancel</button>
-            <div class="taskText"></div>
-            <ul class="taskErrors"><li style="display:none"></li></ul>
-        </div>
+        <div class="taskText"></div>
+    </div>
+    <div class="tabPanel col-lg-3">
+            <ul class="taskErrors tabControl"><li style="display:none"></li></ul>
     </div>
 </div>
 
