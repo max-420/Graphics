@@ -9,19 +9,8 @@ function ProjectionManager(mediator, projectionPointsDrawer, stylesManager, proj
             new Projection('polygon', [{x:120,y:120,z:120}])
         ],
         [
-            new Projection('polygon', [{x:90,y:90,z:90}, {x:120,y:120,z:120}, {x:60,y:30,z:30}])
-        ],
-        [
-            new Projection('polygon', [{x:90,y:90,z:90}, {x:120,y:120,z:120}, {x:60,y:30,z:30}])
-        ],
-        [
-            new Projection('polygon', [{x:90,y:90,z:90}, {x:120,y:120,z:120}, {x:60,y:30,z:30}])
-        ],
-        [
-            new Projection('polygon', [{x:90,y:90,z:90}, {x:120,y:120,z:120}, {x:60,y:30,z:30}])
-        ],
-        [
-            new Projection('polygon', [{x:90,y:90,z:90}, {x:120,y:120,z:120}, {x:60,y:30,z:30}])
+            new Projection('polygon', [{x:90,y:90,z:90}]),
+            new Projection('polygon', [{x:120,y:120,z:120},{x:150,y:150,z:150}])
         ],
         [
             new Projection('polygon', [{x:90,y:90,z:90}, {x:120,y:120,z:120}, {x:60,y:30,z:30}])
@@ -93,13 +82,15 @@ function ProjectionManager(mediator, projectionPointsDrawer, stylesManager, proj
         var task = this.tasks[taskIndex];
         var errors = [];
         var resolvedProjections = [];
+        var unresolvedProjections = this.projections.slice(0);
         var tooManyPoints = false;
         var unresolvedTasks = task.filter(function (taskproj) {
-            var match = this.projections.find(function (p) {
-                p.getMatches(taskproj) == taskproj.points3D.length*3 && p.shape === taskproj.shape && p.points3D.length == taskproj.points3D.length*3;
+            var match = unresolvedProjections.find(function (p) {
+                return p.getMatches(taskproj) == taskproj.points3D.length*3 && p.shape === taskproj.shape && p.points3D.length == taskproj.points3D.length*3;
             });
             if(match)
             {
+                unresolvedProjections.splice(unresolvedProjections.indexOf(match), 1);
                 match.validateTask(taskproj);
                 if(!match.validate(taskproj.points3D.length))
                 {

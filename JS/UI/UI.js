@@ -70,6 +70,9 @@ $(document).ready(function () {
     $('.taskValidate').click(function () {
         var index = parseInt($('.tasksList li.active').first().val());
         var res = projectionManager.validateTask(index);
+        var items = $('.taskErrors>li:not(:first-child)').each(function () {
+            $(this).remove();
+        });
         res.forEach(function (str) {
             var list = $('.taskErrors');
             var template = list.children().first();
