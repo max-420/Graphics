@@ -1,5 +1,6 @@
-function ProjectionPointsDrawer(mediator, stylesManager) {
+function ProjectionPointsDrawer(mediator, stylesManager, projectionParams) {
     this.pointChar;
+    this.graphics = [];
     function drawLinkLine(point1, point2) {
         var lines = new Group();
         if ((point1.x < 0 && point1.y < 0) || (point2.x < 0 && point2.y < 0)) {
@@ -16,22 +17,26 @@ function ProjectionPointsDrawer(mediator, stylesManager) {
         return lines;
     }
 
-    function drawPoint(point) {
+    function drawPoint(point, isValid) {
         var icon = new Path.Circle(point, 5);
         stylesManager.applyStyle(icon, 'projectionPoint');
+        if(!isValid)
+        {
+            stylesManager.applyStyle(icon, 'projectionPointInvalid');
+        }
         return icon;
     }
 
     this.drawProjectedPoint = function (projectedPoint) {
         var pointsGroup = new Group();
         if (projectedPoint.xy != null) {
-            pointsGroup.addChild(drawPoint(projectedPoint.xy));
+            pointsGroup.addChild(drawPoint(projectedPoint.xy, projectedPoint.isValid()));
         }
         if (projectedPoint.xz != null) {
-            pointsGroup.addChild(drawPoint(projectedPoint.xz));
+            pointsGroup.addChild(drawPoint(projectedPoint.xz, projectedPoint.isValid()));
         }
         if (projectedPoint.yz != null) {
-            pointsGroup.addChild(drawPoint(projectedPoint.yz));
+            pointsGroup.addChild(drawPoint(projectedPoint.yz, projectedPoint.isValid()));
         }
         return pointsGroup;
     }
@@ -87,6 +92,7 @@ function ProjectionPointsDrawer(mediator, stylesManager) {
                     }
                 }
                 if (!samePointFound) {
+
                     var text = new PointText(projectedPoints[i].yz.add(offset));
                     text.content = String.fromCharCode(this.pointChar) + "'''";
                     stylesManager.applyTextStyle(text, 'pointText');
@@ -122,5 +128,109 @@ function ProjectionPointsDrawer(mediator, stylesManager) {
             linesGroup.addChild(linkLine);
         }
         return linesGroup;
+    }
+
+    this.redraw = function (projections) {
+        this.resetPointText();
+        projections.forEach(function (shape, index) {
+            var shapeGroup = new Group();
+            var pointProjections = shape.points3D;
+
+            pointProjections.forEach(function (proj) {
+                if (projectionParams.showLinkLines) {
+                    shapeGroup.addChild(this.drawLinkLines(proj));
+                }
+                shapeGroup.addChild(this.drawProjectedPoint(proj));
+            }.bind(this));
+            if (projectionParams.showPointText) {
+                shapeGroup.addChild(this.drawPointText(pointProjections));
+            }
+
+            var shapeXY = this.drawShape(pointProjections.map(function (p) {
+                return p.xy
+            }).filter(function (item) {
+                return item != null
+            }), shape.shape);
+            if (shapeXY) {
+                shapeXY.data.projection = shape;
+                shapeGroup.addChild(shapeXY);
+            }
+
+            var shapeYZ = this.drawShape(pointProjections.map(function (p) {
+                return p.yz
+            }).filter(function (item) {
+                return item != null
+            }), shape.shape);
+            if (shapeYZ) {
+                shapeYZ.data.projection = shape;
+                shapeGroup.addChild(shapeYZ);
+            }
+
+            var shapeXZ = this.drawShape(pointProjections.map(function (p) {
+                return p.xz
+            }).filter(function (item) {
+                return item != null
+            }), shape.shape);
+            if (shapeXZ) {
+                shapeXZ.data.projection = shape;
+                shapeGroup.addChild(shapeXZ);
+            }
+            this.graphics[index] = shapeGroup;
+        }.bind(this));
+        return this.graphics;
+    };
+
+    this.drawShape = function (points, shape) {
+        if (points.length < 2) return;
+        var shape;
+        if (shape == 'ellipse') {
+            shape = this.drawEllipse(points);
+        }
+        if (shape == 'polygon' || shape == 'point' || shape == 'line') {
+            shape = this.drawPolygon(points);
+        }
+        if (shape) {
+            stylesManager.applyStyle(shape, 'drawing');
+            return shape;
+        }
+    };
+    this.drawPolygon = function (points) {
+        var shape = new Group();
+        for (var i = 1; i < points.length; i++) {
+            shape.addChild(new Path.Line(points[i - 1], points[i]));
+        }
+        if (points.length > 2) {
+            shape.addChild(new Path.Line(points[0], points[points.length - 1]));
+        }
+        return shape;
+    };
+    this.drawEllipse = function (points) {
+        if (points.length != 3) return;
+        var shape = new Group();
+
+        var diff1 = points[1].subtract(points[0]);
+        var diff2 = points[2].subtract(points[0]);
+
+        var angle = new Point(1, 0).getDirectedAngle(diff1);
+        var r1 = points[0].getDistance(points[1]);
+        var r2 = diff2.project(diff1).getDistance(diff2);
+
+        var rect = new Rectangle(points[0].subtract([r1, r2]), points[0].add([r1, r2]));
+
+        var radAngle = diff1.getDirectedAngle(diff2);
+        var skewAngle = Math.abs(radAngle) >= 90 ? -radAngle % 90 : 90 - radAngle % 90;
+        var skewPoint = [skewAngle, 0];
+
+        var ellipse = new Path.Ellipse(rect);
+        ellipse.skew(skewPoint);
+        ellipse.rotate(angle);
+        shape.addChild(ellipse);
+
+        // var ellipse1 = new Path.Rectangle(rect);
+        // ellipse1.skew(skewPoint);
+        // ellipse1.rotate(angle);
+        // shape.addChild(ellipse1);
+
+        return shape;
     }
 }

@@ -1,6 +1,6 @@
 function Tools3D(mediator, binding, drawer, selection, projectionPointsDrawer, projectionManager, projectionParams) {
-    this.point = new Point3D('polygon', 1);
-    this.line = new Point3D('polygon', 2);
+    this.point = new Point3D('point', 1);
+    this.line = new Point3D('line', 2);
     this.ellipse = new Point3D('ellipse', 3);
     this.polygon = new Point3D('polygon');
     var targetItems = new Group();
@@ -10,16 +10,16 @@ function Tools3D(mediator, binding, drawer, selection, projectionPointsDrawer, p
             item.visible = false;
         });
         targetItems.removeChildren();
-        targetItems.addChildren(projectionManager.redraw());
+        targetItems.addChildren(projectionPointsDrawer.redraw(projectionManager.projections));
     });
     mediator.subscribe("settingsChanged", function () {
-        targetItems.children.forEach(function (item) {
-            item.remove();
-            item.visible = false;
-        });
-        targetItems.removeChildren();
-        targetItems.addChildren(projectionManager.redraw());
-    },
+            targetItems.children.forEach(function (item) {
+                item.remove();
+                item.visible = false;
+            });
+            targetItems.removeChildren();
+            targetItems.addChildren(projectionPointsDrawer.redraw(projectionManager.projections));
+        },
         {
             predicate: function (path, value) {
                 return path.startsWith("projections");
@@ -33,29 +33,32 @@ function Tools3D(mediator, binding, drawer, selection, projectionPointsDrawer, p
         var filter;
 
         function filterPoint(point) {
-            if(filter === "xz")
-            {
-                return point.x<0 && point.y<0
+            if (filter === "xz") {
+                return point.x < 0 && point.y < 0
             }
-            if(filter === "xy")
-            {
-                return point.x<0 && point.y>0
+            if (filter === "xy") {
+                return point.x < 0 && point.y > 0
             }
-            if(filter === "yz")
-            {
-                return point.x>0 && point.y<0
+            if (filter === "yz") {
+                return point.x > 0 && point.y < 0
             }
-            return point.x<0 || point.y<0;
+            return (point.x < 0 && point.y != 0) || (point.y < 0 && point.x != 0);
         }
+
         tool.onMouseMove = function (event) {
-            if(!filterPoint(event.point))
-            {
+            if (!filterPoint(event.point)) {
                 return;
             }
             var bindedPoint = binding.drawPoint(event.point);
-            if(!projection) return;
-            if(projectionParams.showLinkLines) {
+            if (!projection) return;
+            if (projectionParams.showLinkLines) {
                 var projections = projection.bind(bindedPoint);
+                if (!projections) {
+                    var bindedProj = projectionManager.bind(bindedPoint);
+                    if (bindedProj) {
+                        projections = bindedProj.bind(bindedPoint);
+                    }
+                }
                 if (projections) {
 
                     if (projections.xy != null) {
@@ -80,13 +83,15 @@ function Tools3D(mediator, binding, drawer, selection, projectionPointsDrawer, p
 
         tool.onMouseDown = function (event) {
             var point = binding.getPoint(event.point);
-            if(!filterPoint(point))
-            {
+            if (!filterPoint(point)) {
                 return;
             }
             cancelled = false;
-            if(!projection || function(){return pointsCount ? !projection.checkPoint(point, pointsCount):false}())
-            {
+            var nearestProjection = projectionManager.bind(point);
+            if (nearestProjection) {
+                projection = nearestProjection;
+            }
+            if (!projection || !projection.checkPoint(point)) {
                 projection = new Projection(shape);
                 projectionManager.projections.push(projection);
             }
@@ -96,7 +101,7 @@ function Tools3D(mediator, binding, drawer, selection, projectionPointsDrawer, p
 
             targetItems.remove();
             targetItems = new Group();
-            targetItems.addChildren(projectionManager.redraw());
+            targetItems.addChildren(projectionPointsDrawer.redraw(projectionManager.projections));
             drawer.save([targetItems]);
         }.bind(this);
 
@@ -112,10 +117,9 @@ function Tools3D(mediator, binding, drawer, selection, projectionPointsDrawer, p
             if (event.key == 'delete') {
                 project.selectedItems.forEach(function (selectedItem) {
                     var index = projectionManager.projections.indexOf(selectedItem.data.projection);
-                    if(index >= 0) {
+                    if (index >= 0) {
                         projectionManager.projections.splice(index, 1);
-                        if(selectedItem.data.projection === projection)
-                        {
+                        if (selectedItem.data.projection === projection) {
                             projection = null;
                         }
                     }

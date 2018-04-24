@@ -432,9 +432,27 @@ li.dropdown {
     height: 100%;
     color: darkred;
 }
+.taskErrors .glyphicon
+{
+    padding-left: 5px;
+    padding-right: 5px;
+}
+ .taskErrors li ul
+ {
+     list-style-type: none;
+     padding-left: 20px;
+ }
 .taskValidate
 {
 }
 .taskText
 {
+}
+.taskTrue
+{
+    color:green;
+}
+.taskFalse
+{
+    color:red;
 }

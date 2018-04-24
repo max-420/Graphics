@@ -28,6 +28,7 @@
     <script type="text/javascript" src="JS\Tools3D.js"></script>
     <script type="text/javascript" src="JS\Projection.js"></script>
     <script type="text/javascript" src="JS\ProjectionManager.js"></script>
+    <script type="text/javascript" src="JS\Point3D.js"></script>
     <link rel="stylesheet" href="https://code.jquery.com/ui/1.12.1/themes/base/jquery-ui.css">
     <script src="https://code.jquery.com/ui/1.12.1/jquery-ui.js"></script>
     <!---CSS-->
@@ -395,7 +396,7 @@
     var toolbox3D;
     var layerManager;
     var stylesManager = new StylesManager(mediator, settingsManager.settings.styles, settingsManager.settings.textStyles);
-    var projectionPointsDrawer = new ProjectionPointsDrawer(mediator, stylesManager);
+    var projectionPointsDrawer = new ProjectionPointsDrawer(mediator, stylesManager, settingsManager.settings.projections);
     var projectionManager = new ProjectionManager(mediator, projectionPointsDrawer, stylesManager, settingsManager.settings.projections);
     window.onload = function () {
         paper.setup('myCanvas');

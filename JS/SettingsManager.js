@@ -44,6 +44,15 @@ function Settings() {
             lineScaling: 10,
             fillColor: 'red',
         },
+        projectionPointInvalid: {
+            strokeColor: 'grey',
+            strokeWidth: 3,
+            strokeScaling: true,
+            lineType: 'solid',
+            lineScaling: 10,
+            opacity: 0.8,
+            fillColor: 'red',
+        },
     };
     this.textStyles =
     {

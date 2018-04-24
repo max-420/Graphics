@@ -1,10 +1,22 @@
 function Projection(shape, points3D) {
     this.shape = shape;
+    this.getPointsCount = function () {
+        if (shape == 'point') {
+            return 1;
+        }
+        if (shape == 'line') {
+            return 2;
+        }
+        if (shape == 'ellipse') {
+            return 3;
+        }
+        return null;
+    };
+
     this.points3D = points3D ? points3D : [];
     this.bindingTolerance = 10;
     this.autoMerge = true;
-    this.isNear = function(a, b)
-    {
+    this.isNear = function (a, b) {
         return b >= a - this.bindingTolerance && b <= a + this.bindingTolerance;
     };
     this.addPoint = function (point) {
@@ -14,41 +26,36 @@ function Projection(shape, points3D) {
             this.points3D.push(projectionPoint);
             return;
         }
-        var mergedPoint = this.mergePoints(projectionPoint, nearestPoint);
-        this.points3D.splice(this.points3D.indexOf(nearestPoint), 1, mergedPoint);
+        else {
+            var mergedPoint = this.mergePoints(projectionPoint, nearestPoint);
+            this.points3D.splice(this.points3D.indexOf(nearestPoint), 1, mergedPoint);
+        }
     }
-    function getPointText(point) {
-        return '(' + point.x + ';' + point.y + ';' + point.z + ')';
-    }
-    this.checkPoint = function (point, pointsCount) {
+    this.checkPoint = function (point) {
         var p3D = this.get3DPoint(point);
-        var count;
-        if(p3D.x == 0)
-        {
-            count = this.points3D.filter(function (point) {
-                return point.x == 0 || (point.x!=0&&point.y!=0&&point.z!=0);
-            }).length;
-        }
-        if(p3D.y == 0)
-        {
-            count = this.points3D.filter(function (point) {
-                return point.y == 0 || (point.x!=0&&point.y!=0&&point.z!=0);
-            }).length;
-        }
-        if(p3D.z == 0)
-        {
-            count = this.points3D.filter(function (point) {
-                return point.z == 0 || (point.x!=0&&point.y!=0&&point.z!=0);
-            }).length;
-        }
 
-        return count<pointsCount;
+        var countX = this.points3D.filter(function (point) {
+            return point.x == 0 || point.isValid();
+        }).length;
+        var countY = this.points3D.filter(function (point) {
+            return point.y == 0 || point.isValid();
+        }).length;
+        var countZ = this.points3D.filter(function (point) {
+            return point.z == 0 || point.isValid();
+        }).length;
+
+        var count = Math.max(countX, countY, countZ);
+        var pointsCount = this.getPointsCount();
+        if (pointsCount) {
+            return count < pointsCount ? true : this.getNearestPoint(p3D) ? true : false;
+        }
+        else {
+            return !this.validate();
+        }
     }
-    this.getMatches = function(task)
-    {
+    this.getMatches = function (task) {
         var matches = 0;
-        task.points3D.forEach(function(taskPoint)
-        {
+        task.points3D.forEach(function (taskPoint) {
             var yz = this.points3D.find(function (point) {
                 return point.x == 0 && this.isNear(point.y, taskPoint.y) && this.isNear(point.z, taskPoint.z);
             }.bind(this));
@@ -58,26 +65,25 @@ function Projection(shape, points3D) {
             var xy = this.points3D.find(function (point) {
                 return point.z == 0 && this.isNear(point.x, taskPoint.x) && this.isNear(point.y, taskPoint.y);
             }.bind(this));
-            if(xy)
-            {
+            if (xy) {
                 matches++;
             }
-            if(xz)
-            {
+            if (xz) {
                 matches++;
             }
-            if(yz)
-            {
+            if (yz) {
                 matches++;
             }
         }.bind(this));
         return matches;
     }
-    this.validateTask = function(task)
-    {
-        var errors = [];
-        task.points3D.forEach(function(taskPoint)
-        {
+    this.validateTask = function (task) {
+        var result =
+            {
+                shape: task.shape,
+                points: [],
+            };
+        task.points3D.forEach(function (taskPoint) {
             var yz = this.points3D.find(function (point) {
                 return point.x == 0 && this.isNear(point.y, taskPoint.y) && this.isNear(point.z, taskPoint.z);
             }.bind(this));
@@ -87,58 +93,25 @@ function Projection(shape, points3D) {
             var xy = this.points3D.find(function (point) {
                 return point.z == 0 && this.isNear(point.x, taskPoint.x) && this.isNear(point.y, taskPoint.y);
             }.bind(this));
-            if(!xy)
-            {
-                errors.push("Не задана фронтальная проекция точки" + getPointText(taskPoint));
-            }
-            if(!xz)
-            {
-                errors.push("Не задана профильная проекция точки" + getPointText(taskPoint));
-            }
-            if(!yz)
-            {
-                errors.push("Не задана горизонтанльная проекция точки" + getPointText(taskPoint));
-            }
-            if(xy && xz && yz)
-            {
+            result.points.push(
+                {
+                    point: taskPoint,
+                    xy: xy ? true : false,
+                    xz: xz ? true : false,
+                    yz: yz ? true : false
+                });
+            if (xy && xz && yz) {
                 this.points3D.splice(this.points3D.indexOf(xy), 1);
                 this.points3D.splice(this.points3D.indexOf(xz), 1);
                 this.points3D.splice(this.points3D.indexOf(yz), 1);
-                this.points3D.push(taskPoint);
+                this.points3D.push(new Point3D(taskPoint.x, taskPoint.y, taskPoint.z));
             }
         }.bind(this));
-        return errors;
+        return result;
     }
 
-    // this.remerge = function()
-    // {
-    //     var i = 0;
-    //     while(true) {
-    //         var point = this.points3D[i];
-    //         if(!point) break;
-    //         while(true)
-    //         {
-    //             var nearestPoint = this.getNearestPoint(point);
-    //             if(!nearestPoint) break;
-    //             if(nearestPoint.x != 0 && (nearestPoint.x == point.x || point.x == 0) &&
-    //                 nearestPoint.y != 0 && (nearestPoint.y == point.y || point.y == 0) &&
-    //                 nearestPoint.z != 0 && (nearestPoint.z == point.z || point.z == 0))
-    //             {
-    //                 this.points3D.splice(this.points3D.indexOf(point), 1);
-    //                 i--;
-    //                 break;
-    //             }
-    //             var mergedPoint = this.mergePoints(point, nearestPoint);
-    //             this.points3D.splice(this.points3D.indexOf(point), 1, mergedPoint);
-    //             this.points3D.splice(this.points3D.indexOf(nearestPoint), 1);
-    //         }
-    //         i++;
-    //     }
-    // }
-
-    this.mergePoints = function(from, to)
-    {
-        var result = {};
+    this.mergePoints = function (from, to) {
+        var result = new Point3D();
         result.x = to.x;
         result.y = to.y;
         result.z = to.z;
@@ -156,45 +129,15 @@ function Projection(shape, points3D) {
 
     this.get3DPoint = function (point) {
         if (point.x < 0 && point.y < 0) {
-            return (
-                {
-                    x: -point.x,
-                    y: 0,
-                    z: -point.y
-                });
+            return new Point3D(-point.x, 0, -point.y);
         }
         if (point.x < 0 && point.y > 0) {
-            return (
-                {
-                    x: -point.x,
-                    y: point.y,
-                    z: 0,
-                });
+            return new Point3D(-point.x, point.y, 0);
         }
         if (point.x > 0 && point.y < 0) {
-            return (
-                {
-                    x: 0,
-                    y: point.x,
-                    z: -point.y
-                });
+            return new Point3D(0, point.x, -point.y);
         }
         return null;
-    };
-
-    this.getProjections = function () {
-        return this.points3D.map(this.getProjection);
-    };
-
-    this.getProjection = function (point) {
-        return (
-            {
-                xy: point.x !== 0 && point.y !== 0 ? new Point(-point.x, point.y) : null,
-                xz: point.x !== 0 && point.z !== 0 ? new Point(-point.x, -point.z) : null,
-                yz: point.y !== 0 && point.z !== 0 ? new Point(point.y, -point.z) : null,
-            }
-        );
-
     };
 
     this.getNearestPoint = function (projectionPoint) {
@@ -231,14 +174,15 @@ function Projection(shape, points3D) {
         var nearest = this.getNearestPoint(point3D);
         if (nearest != null) {
             var merged = this.mergePoints(nearest, point3D);
-            return this.getProjection(merged);
+            return merged;
         }
         return null;
     };
-    this.validate = function (pointsCount) {
-        var e = this.points3D.length == pointsCount &&
+    this.validate = function () {
+        var polygonCondition = this.shape == 'polygon' ? this.points3D.length >= 3 : false;
+        var e = (polygonCondition || this.points3D.length == this.getPointsCount()) &&
             this.points3D.every(function (p) {
-                return p.x != 0 && p.y != 0 && p.z != 0;
+                return p.isValid();
             });
         return e;
     };

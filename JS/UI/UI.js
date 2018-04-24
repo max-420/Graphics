@@ -43,7 +43,7 @@ $(document).ready(function () {
         if (tab.is(":visible")) {
             tab.hide("fast");
         }
-        else{
+        else {
             $("[data-nav-id]:visible").hide();
             tab.show();
         }
@@ -73,13 +73,27 @@ $(document).ready(function () {
         var items = $('.taskErrors>li:not(:first-child)').each(function () {
             $(this).remove();
         });
-        res.forEach(function (str) {
-            var list = $('.taskErrors');
-            var template = list.children().first();
-            var listItem = template.clone();
-            listItem.text(str);
-            listItem.show();
-            listItem.appendTo(list);
+        var list = $('.taskErrors');
+        res.forEach(function (result) {
+            var projValid = true;
+            var pointsHtml = result.points.map(function (p) {
+                if (p.xy && p.xz && p.yz) {
+                    return '<li class="taskTrue">' + p.point.toString() + '<span class="glyphicon glyphicon-ok"></span></li>';
+                }
+                else if (!p.xy && !p.xz && !p.yz) {
+                    projValid = false;
+                    return '<li class="taskFalse">' + p.point.toString() + '<span class="glyphicon glyphicon-remove"></span></li>';
+                }
+                else {
+                    projValid = false;
+                    var xyHtml = p.xy ? '<span class="taskTrue">XY<span class="glyphicon glyphicon-ok"></span></span>' : '<span class="taskFalse">XY<span class="glyphicon glyphicon-remove"></span></span>';
+                    var xzHtml = p.xz ? '<span class="taskTrue">XZ<span class="glyphicon glyphicon-ok"></span></span>' : '<span class="taskFalse">XZ<span class="glyphicon glyphicon-remove"></span></span>';
+                    var yzHtml = p.yz ? '<span class="taskTrue">YZ<span class="glyphicon glyphicon-ok"></span></span>' : '<span class="taskFalse">YZ<span class="glyphicon glyphicon-remove"></span></span>';
+                    return '<li class="taskFalse">' + p.point.toString() + ' ' + xyHtml + xzHtml + yzHtml + '</li>';
+                }
+            }).join('');
+            var liClass = result.points
+            list.append('<li class="'+(projValid?'taskTrue':'taskFalse')+'">' + result.shape + '<ul>'+pointsHtml+'</ul></li>');
         });
     });
     $('.taskCancel').click(function () {
@@ -87,7 +101,6 @@ $(document).ready(function () {
         $('.taskText').text('');
         projectionManager.testMode = false;
     });
-
 
 
     $("input[type=number][data-setting]").change(function () {
