@@ -66,7 +66,9 @@ $(document).ready(function () {
         $('.taskText').text($(this).text());
         projectionManager.testMode = true;
     });
-
+    function capitalizeFirstLetter(string) {
+        return string.charAt(0).toUpperCase() + string.slice(1);
+    }
     $('.taskValidate').click(function () {
         var index = parseInt($('.tasksList li.active').first().val());
         var res = projectionManager.validateTask(index);
@@ -93,9 +95,10 @@ $(document).ready(function () {
                 }
             }).join('');
             var liClass = result.points
-            list.append('<li class="'+(projValid?'taskTrue':'taskFalse')+'">' + result.shape + '<ul>'+pointsHtml+'</ul></li>');
+            list.append('<li class="'+(projValid?'taskTrue':'taskFalse')+'">' + capitalizeFirstLetter(result.shape) + '<ul>'+pointsHtml+'</ul></li>');
         });
     });
+
     $('.taskCancel').click(function () {
         $('.tasksList li.active').removeClass('active');
         $('.taskText').text('');
