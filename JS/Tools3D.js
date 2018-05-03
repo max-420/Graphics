@@ -4,21 +4,17 @@ function Tools3D(mediator, binding, drawer, selection, projectionPointsDrawer, p
     this.ellipse = new Point3D('ellipse', 3);
     this.polygon = new Point3D('polygon');
     var targetItems = new Group();
-    mediator.subscribe("drawingChanged", function () {
+    mediator.subscribe("projectionsChanged", function () {
         targetItems.children.forEach(function (item) {
             item.remove();
             item.visible = false;
         });
         targetItems.removeChildren();
         targetItems.addChildren(projectionPointsDrawer.redraw(projectionManager.projections));
+        drawer.save([targetItems]);
     });
     mediator.subscribe("settingsChanged", function () {
-            targetItems.children.forEach(function (item) {
-                item.remove();
-                item.visible = false;
-            });
-            targetItems.removeChildren();
-            targetItems.addChildren(projectionPointsDrawer.redraw(projectionManager.projections));
+            mediator.publish("projectionsChanged");
         },
         {
             predicate: function (path, value) {
@@ -101,8 +97,9 @@ function Tools3D(mediator, binding, drawer, selection, projectionPointsDrawer, p
 
             targetItems.remove();
             targetItems = new Group();
-            targetItems.addChildren(projectionPointsDrawer.redraw(projectionManager.projections));
-            drawer.save([targetItems]);
+            //targetItems.addChildren(projectionPointsDrawer.redraw(projectionManager.projections));
+            //drawer.save([targetItems]);
+            mediator.publish("projectionsChanged");
         }.bind(this);
 
         tool.onMouseDrag = function (event) {
@@ -124,7 +121,8 @@ function Tools3D(mediator, binding, drawer, selection, projectionPointsDrawer, p
                         }
                     }
                 });
-                drawer.delete(project.selectedItems);
+                mediator.publish("projectionsChanged");
+                //drawer.delete(project.selectedItems);
 
             }
         }.bind(this);

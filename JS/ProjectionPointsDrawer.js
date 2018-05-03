@@ -17,11 +17,10 @@ function ProjectionPointsDrawer(mediator, stylesManager, projectionParams) {
         return lines;
     }
 
-    function drawPoint(point, isValid) {
+    function drawPointProj(point, isValid) {
         var icon = new Path.Circle(point, 5);
         stylesManager.applyStyle(icon, 'projectionPoint');
-        if(!isValid)
-        {
+        if (!isValid) {
             stylesManager.applyStyle(icon, 'projectionPointInvalid');
         }
         return icon;
@@ -30,13 +29,13 @@ function ProjectionPointsDrawer(mediator, stylesManager, projectionParams) {
     this.drawProjectedPoint = function (projectedPoint) {
         var pointsGroup = new Group();
         if (projectedPoint.xy != null) {
-            pointsGroup.addChild(drawPoint(projectedPoint.xy, projectedPoint.isValid()));
+            pointsGroup.addChild(drawPointProj(projectedPoint.xy, projectedPoint.isValid()));
         }
         if (projectedPoint.xz != null) {
-            pointsGroup.addChild(drawPoint(projectedPoint.xz, projectedPoint.isValid()));
+            pointsGroup.addChild(drawPointProj(projectedPoint.xz, projectedPoint.isValid()));
         }
         if (projectedPoint.yz != null) {
-            pointsGroup.addChild(drawPoint(projectedPoint.yz, projectedPoint.isValid()));
+            pointsGroup.addChild(drawPointProj(projectedPoint.yz, projectedPoint.isValid()));
         }
         return pointsGroup;
     }
@@ -181,27 +180,39 @@ function ProjectionPointsDrawer(mediator, stylesManager, projectionParams) {
     };
 
     this.drawShape = function (points, shape) {
-        if (points.length < 2) return;
-        var shape;
+        if (points.length < 1) return null;
+        var res;
+        if (shape == 'point') {
+            res = this.drawPoint(points);
+        }
         if (shape == 'ellipse') {
-            shape = this.drawEllipse(points);
+            res = this.drawEllipse(points);
         }
-        if (shape == 'polygon' || shape == 'point' || shape == 'line') {
-            shape = this.drawPolygon(points);
+        if (shape == 'polygon' || shape == 'line') {
+            res = this.drawPolygon(points);
         }
-        if (shape) {
+        if (res) {
             stylesManager.applyStyle(shape, 'drawing');
-            return shape;
+            return res;
         }
     };
     this.drawPolygon = function (points) {
         var shape = new Group();
         for (var i = 1; i < points.length; i++) {
-            shape.addChild(new Path.Line(points[i - 1], points[i]));
+            var u = new Path.Line(points[i - 1], points[i]);
+            stylesManager.applyStyle(u, 'drawing');
+            shape.addChild(u);
         }
         if (points.length > 2) {
-            shape.addChild(new Path.Line(points[0], points[points.length - 1]));
+            var u = new Path.Line(points[0], points[points.length - 1]);
+            stylesManager.applyStyle(u, 'drawing');
+            shape.addChild(u);
         }
+        return shape;
+    };
+    this.drawPoint = function (points) {
+        var shape = new Group();
+        shape.addChild(new Path.Line(points[0], points[0]));
         return shape;
     };
     this.drawEllipse = function (points) {

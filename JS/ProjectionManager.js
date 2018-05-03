@@ -128,13 +128,13 @@ function ProjectionManager(mediator, projectionPointsDrawer, stylesManager, proj
             });
         }.bind(this));
 
-
-        projectionPointsDrawer.graphics.forEach(function (g) {
-            g.remove();
-        });
-        projectionPointsDrawer.redraw(this.projections);
+        mediator.publish("projectionsChanged");
         return results;
     };
+    this.deleteProjection = function(projection)
+    {
+
+    }
     this.removeInvalidProjections = function () {
         this.projections = this.projections.filter(
             function (p1) {
