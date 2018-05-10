@@ -12,13 +12,51 @@ function Projection(shape, points3D) {
         }
         return null;
     };
-
     this.points3D = points3D ? points3D : [];
     this.bindingTolerance = 10;
     this.autoMerge = true;
+
     this.isNear = function (a, b) {
         return b >= a - this.bindingTolerance && b <= a + this.bindingTolerance;
     };
+    this.compareTaskPoint = function (point, taskPoint, comparer) {
+        var conditions = this.parseConditions(comparer)
+        if(point.x == 0)
+        {
+            return this.checkCondition(point.y, taskPoint.y, conditions.y) && this.checkCondition(point.z, taskPoint.z, conditions.z);
+        }
+        if(point.y == 0)
+        {
+            return this.checkCondition(point.x, taskPoint.x, conditions.x) && this.checkCondition(point.z, taskPoint.z, conditions.z);
+        }
+        if(point.z == 0)
+        {
+            return this.checkCondition(point.y, taskPoint.y, conditions.y) && this.checkCondition(point.x, taskPoint.x, conditions.x);
+        }
+    };
+    this.parseConditions = function(conditions)
+    {
+        var res=
+        {
+            x:conditions[1],
+            y:conditions[3],
+            z:conditions[5],
+        };
+        return res;
+    };
+    this.checkCondition = function(a, b, condition)
+    {
+        if (condition === '>') {
+            return a > b;
+        }
+        if (condition === '<') {
+            return a < b;
+        }
+        if (condition === '=') {
+            return this.isNear(a,b);
+        }
+    };
+
     this.addPoint = function (point) {
         var projectionPoint = this.get3DPoint(point);
         var nearestPoint = this.getNearestPoint(projectionPoint);
@@ -54,16 +92,20 @@ function Projection(shape, points3D) {
         }
     }
     this.getMatches = function (task) {
+        if(!task.comparer)
+        {
+            task.comparer = 'x=y=z=';
+        }
         var matches = 0;
-        task.points3D.forEach(function (taskPoint) {
+        task.projection.points3D.forEach(function (taskPoint) {
             var yz = this.points3D.find(function (point) {
-                return point.x == 0 && this.isNear(point.y, taskPoint.y) && this.isNear(point.z, taskPoint.z);
+                return point.x == 0 && this.compareTaskPoint(point, taskPoint, task.comparer);
             }.bind(this));
             var xz = this.points3D.find(function (point) {
-                return point.y == 0 && this.isNear(point.x, taskPoint.x) && this.isNear(point.z, taskPoint.z);
+                return point.y == 0 && this.compareTaskPoint(point, taskPoint, task.comparer);
             }.bind(this));
             var xy = this.points3D.find(function (point) {
-                return point.z == 0 && this.isNear(point.x, taskPoint.x) && this.isNear(point.y, taskPoint.y);
+                return point.z == 0 && this.compareTaskPoint(point, taskPoint, task.comparer);
             }.bind(this));
             if (xy) {
                 matches++;
@@ -80,18 +122,18 @@ function Projection(shape, points3D) {
     this.validateTask = function (task) {
         var result =
             {
-                shape: task.shape,
+                shape: task.projection.shape,
                 points: [],
             };
-        task.points3D.forEach(function (taskPoint) {
+        task.projection.points3D.forEach(function (taskPoint) {
             var yz = this.points3D.find(function (point) {
-                return point.x == 0 && this.isNear(point.y, taskPoint.y) && this.isNear(point.z, taskPoint.z);
+                return point.x == 0 && this.compareTaskPoint(point, taskPoint, task.comparer);
             }.bind(this));
             var xz = this.points3D.find(function (point) {
-                return point.y == 0 && this.isNear(point.x, taskPoint.x) && this.isNear(point.z, taskPoint.z);
+                return point.y == 0 && this.compareTaskPoint(point, taskPoint, task.comparer);
             }.bind(this));
             var xy = this.points3D.find(function (point) {
-                return point.z == 0 && this.isNear(point.x, taskPoint.x) && this.isNear(point.y, taskPoint.y);
+                return point.z == 0 && this.compareTaskPoint(point, taskPoint, task.comparer);
             }.bind(this));
             result.points.push(
                 {

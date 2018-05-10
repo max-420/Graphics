@@ -4,14 +4,22 @@ function ProjectionManager(mediator, projectionPointsDrawer, stylesManager, proj
     this.testMode = false;
     this.tasks = [
         [
-            new Projection('point', [new Point3D(90, 90, 90)]),
-            new Projection('point', [new Point3D(120, 120, 120)])
+            {
+                projection: new Projection('point', [new Point3D(90, 90, 90)]),
+            },
+            {
+                projection: new Projection('point', [new Point3D(120, 120, 120)]),
+
+            },
         ],
         [
-            new Projection('point', [new Point3D(90, 90, 90)]),
-            new Projection('line', [new Point3D(120, 120, 120), new Point3D(150, 150, 150)])
+            {
+                projection: new Projection('point', [new Point3D(90, 90, 90)]),
+                comparer:'x>y>z>'
+            },
         ],
-    ];
+    ]
+    ;
 
     this.bind = function (point) {
         return this.projections.find(function (proj) {
@@ -28,25 +36,70 @@ function ProjectionManager(mediator, projectionPointsDrawer, stylesManager, proj
             return this.getTaskText(t);
         }.bind(this));
     };
-
+    var shapeNames =
+        {
+            point: 'точку',
+            line: 'отрезок',
+            polygon: 'многоугольник',
+            ellipse: 'эллипс',
+        };
+    var shapeNamesR =
+        {
+            point: 'точки',
+            line: 'отрезка',
+            polygon: 'многоугольника',
+            ellipse: 'эллипса',
+        }
     this.getTaskText = function (task) {
         var result = "";
         result += 'Построить ';
+
         task.forEach(function (subtask) {
-            if (subtask.shape == 'point') {
-                result += 'точку ';
+                result += shapeNames[subtask.projection.shape] + ' ';
+            var conditions = this.parseConditions(subtask.comparer);
+            var conditionStrArr = [];
+            if(conditions.x === '>')
+            {
+                conditionStrArr.push('правее')
             }
-            if (subtask.shape == 'line') {
-                result += 'отрезок ';
+            if(conditions.x === '<')
+            {
+                conditionStrArr.push('левее')
             }
-            if (subtask.shape == 'polygon') {
-                result += 'многоугольник ';
+            if(conditions.y === '>')
+            {
+                conditionStrArr.push('ближе')
             }
-            if (subtask.shape == 'ellipse') {
-                result += 'эллипс ';
+            if(conditions.y === '<')
+            {
+                conditionStrArr.push('дальше')
+            }
+            if(conditions.z === '>')
+            {
+                conditionStrArr.push('выше')
+            }
+            if(conditions.z === '<')
+            {
+                conditionStrArr.push('ниже')
+            }
+            if(conditionStrArr.length > 0)
+            {
+                if(conditionStrArr.length == 1)
+                {
+                    result += conditionStrArr[0];
+                }
+                if(conditionStrArr.length == 2)
+                {
+                    result += conditionStrArr[0] + ' и ' + conditionStrArr[1];
+                }
+                if(conditionStrArr.length == 3)
+                {
+                    result += conditionStrArr[0] + ', ' +conditionStrArr[1] + ' и ' + conditionStrArr[2];
+                }
+                result +=  ' ' + shapeNamesR[subtask.projection.shape] + ' ';
             }
             result += 'с координатами ';
-            subtask.points3D.forEach(function (p, i, arr) {
+            subtask.projection.points3D.forEach(function (p, i, arr) {
                 result += p.toString();
                 if (i != arr.length - 1) {
                     result += ','
@@ -54,8 +107,23 @@ function ProjectionManager(mediator, projectionPointsDrawer, stylesManager, proj
                 result += ' ';
             });
             result += ', ';
-        });
+        }.bind(this));
         return result;
+    };
+    this.parseConditions = function(conditions)
+    {
+        if(!conditions) return {
+            x:'=',
+            y:'=',
+            z:'=',
+        };
+        var res=
+            {
+                x:conditions[1],
+                y:conditions[3],
+                z:conditions[5],
+            };
+        return res;
     };
     this.getShapeText = function (task) {
         var result = "";
@@ -87,7 +155,7 @@ function ProjectionManager(mediator, projectionPointsDrawer, stylesManager, proj
         var unresolvedProjections = this.projections.slice(0);
         var unresolvedTasks = task.filter(function (taskproj) {
             var match = unresolvedProjections.find(function (p) {
-                return p.getMatches(taskproj) == taskproj.points3D.length * 3 && p.shape === taskproj.shape && p.points3D.length == taskproj.points3D.length * 3;
+                return p.getMatches(taskproj) == taskproj.projection.points3D.length * 3 && p.shape === taskproj.projection.shape && p.points3D.length == taskproj.projection.points3D.length * 3;
             });
             if (match) {
                 unresolvedProjections.splice(unresolvedProjections.indexOf(match), 1);
@@ -100,7 +168,7 @@ function ProjectionManager(mediator, projectionPointsDrawer, stylesManager, proj
 
         unresolvedTasks = unresolvedTasks.filter(function (taskproj) {
             var match = unresolvedProjections.filter(function (p) {
-                return p.shape === taskproj.shape;
+                return p.shape === taskproj.projection.shape;
             }).sort(function (a, b) {
                 return b.getMatches(taskproj) - a.getMatches(taskproj);
             })[0];
@@ -112,27 +180,26 @@ function ProjectionManager(mediator, projectionPointsDrawer, stylesManager, proj
             return true;
         });
         unresolvedTasks.forEach(function (t) {
-            var points = t.points3D.map(function (p) {
+            var points = t.projection.points3D.map(function (p) {
                 var res =
-                {
-                    point:p,
-                    xy:false,
-                    xz:false,
-                    yx:false
-                };
+                    {
+                        point: p,
+                        xy: false,
+                        xz: false,
+                        yx: false
+                    };
                 return res;
             });
             results.push({
-                shape:t.shape,
-                points:points,
+                shape: t.projection.shape,
+                points: points,
             });
         }.bind(this));
 
         mediator.publish("projectionsChanged");
         return results;
     };
-    this.deleteProjection = function(projection)
-    {
+    this.deleteProjection = function (projection) {
 
     }
     this.removeInvalidProjections = function () {
