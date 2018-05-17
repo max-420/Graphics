@@ -49,7 +49,7 @@ function ProjectionManager(mediator, projectionPointsDrawer, stylesManager, proj
             line: 'отрезка',
             polygon: 'многоугольника',
             ellipse: 'эллипса',
-        }
+        };
     this.getTaskText = function (task) {
         var result = "";
         result += 'Построить ';
@@ -199,9 +199,16 @@ function ProjectionManager(mediator, projectionPointsDrawer, stylesManager, proj
         mediator.publish("projectionsChanged");
         return results;
     };
-    this.deleteProjection = function (projection) {
-
-    }
+    this.deleteSelectedProjections = function () {
+        project.selectedItems.forEach(function (selectedItem) {
+            var index = this.projections.indexOf(selectedItem.data.projection);
+            if (index >= 0) {
+                this.projections[index].isDeleted = true;
+                this.projections.splice(index, 1);
+            }
+        }.bind(this));
+        mediator.publish("projectionsChanged");
+    };
     this.removeInvalidProjections = function () {
         this.projections = this.projections.filter(
             function (p1) {

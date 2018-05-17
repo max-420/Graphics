@@ -1,4 +1,4 @@
-function Tools3D(mediator, binding, drawer, selection, projectionPointsDrawer, projectionManager, projectionParams) {
+function Tools3D(mediator, binding, drawer, selection, projectionPointsDrawer, projectionManager, projectionParams, keyboard) {
     this.point = new Point3D('point', 1);
     this.line = new Point3D('line', 2);
     this.ellipse = new Point3D('ellipse', 3);
@@ -46,7 +46,7 @@ function Tools3D(mediator, binding, drawer, selection, projectionPointsDrawer, p
                 return;
             }
             var bindedPoint = binding.drawPoint(event.point);
-            if (!projection) return;
+            if (!projection || projection.isDeleted) return;
             if (projectionParams.showLinkLines) {
                 var projections = projection.bind(bindedPoint);
                 if (!projections) {
@@ -87,7 +87,7 @@ function Tools3D(mediator, binding, drawer, selection, projectionPointsDrawer, p
             if (nearestProjection) {
                 projection = nearestProjection;
             }
-            if (!projection || !projection.checkPoint(point)) {
+            if (!projection || projection.isDeleted || !projection.checkPoint(point)) {
                 projection = new Projection(shape);
                 projectionManager.projections.push(projection);
             }
@@ -110,20 +110,6 @@ function Tools3D(mediator, binding, drawer, selection, projectionPointsDrawer, p
             if (event.key == 'escape') {
                 this.cancel();
                 project.deselectAll();
-            }
-            if (event.key == 'delete') {
-                project.selectedItems.forEach(function (selectedItem) {
-                    var index = projectionManager.projections.indexOf(selectedItem.data.projection);
-                    if (index >= 0) {
-                        projectionManager.projections.splice(index, 1);
-                        if (selectedItem.data.projection === projection) {
-                            projection = null;
-                        }
-                    }
-                });
-                mediator.publish("projectionsChanged");
-                //drawer.delete(project.selectedItems);
-
             }
         }.bind(this);
 

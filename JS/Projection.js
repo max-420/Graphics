@@ -15,7 +15,7 @@ function Projection(shape, points3D) {
     this.points3D = points3D ? points3D : [];
     this.bindingTolerance = 10;
     this.autoMerge = true;
-
+    this.isDeleted = false;
     this.isNear = function (a, b) {
         return b >= a - this.bindingTolerance && b <= a + this.bindingTolerance;
     };

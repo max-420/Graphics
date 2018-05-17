@@ -29,6 +29,7 @@
     <script type="text/javascript" src="JS\Projection.js"></script>
     <script type="text/javascript" src="JS\ProjectionManager.js"></script>
     <script type="text/javascript" src="JS\Point3D.js"></script>
+    <script type="text/javascript" src="JS\Keyboard.js"></script>
     <link rel="stylesheet" href="https://code.jquery.com/ui/1.12.1/themes/base/jquery-ui.css">
     <script src="https://code.jquery.com/ui/1.12.1/jquery-ui.js"></script>
     <!---CSS-->
@@ -80,11 +81,6 @@
             <li>
                 <button class="btn btn-danger navbar-btn bouton-image monBouton " id="projectionsSettings">
                     Projections
-                </button>
-            </li>
-            <li>
-                <button class="btn btn-danger navbar-btn bouton-image monBouton " id="toggleLayoutPanel"> Toggle layout
-                    panel
                 </button>
             </li>
         </ul>
@@ -411,11 +407,26 @@
 
         var selection = new Selection(mediator, layerManager);
         var drawer = new Drawer(mediator, layerManager);
-
+        var keyboard = new Keyboard();
         toolbox = new Tools(mediator, settingsManager.settings.tools, binding, drawer, selection, stylesManager);
 
-        toolbox3D = new Tools3D(mediator, binding, drawer, selection, projectionPointsDrawer, projectionManager, settingsManager.settings.projections);
+        toolbox3D = new Tools3D(mediator, binding, drawer, selection, projectionPointsDrawer, projectionManager, settingsManager.settings.projections, keyboard);
         undoRedo = new UndoRedo(mediator, layerManager.userLayers);
+        keyboard.addHandler(function (event) {
+            if (event.key == 'delete') {
+                projectionManager.deleteSelectedProjections();
+            }
+        });
+        keyboard.addHandler(function (event) {
+            if (event.key == 'z' && event.modifiers.control) {
+                undoRedo.undo();
+            }
+        });
+        keyboard.addHandler(function (event) {
+            if (event.key == 'y' && event.modifiers.control) {
+                undoRedo.redo();
+            }
+        });
     }
 
 </script>
