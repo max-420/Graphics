@@ -31,7 +31,8 @@ function Tools(mediator, toolsSettings, binding, drawer, selection, stylesManage
             path.add(point);
         }
         this.activate = function () {
-            line.activate()
+            line.activate();
+            mediator.publish("toolActivated", this.constructor.name);
         };
     }
 
@@ -52,7 +53,8 @@ function Tools(mediator, toolsSettings, binding, drawer, selection, stylesManage
             targetItems.addChild(path);
         }
         this.activate = function () {
-            line.activate()
+            line.activate();
+            mediator.publish("toolActivated", this.constructor.name);
         };
     }
 
@@ -72,7 +74,8 @@ function Tools(mediator, toolsSettings, binding, drawer, selection, stylesManage
             targetItems.addChild(path);
         }
         this.activate = function () {
-            rectangle.activate()
+            rectangle.activate();
+            mediator.publish("toolActivated", this.constructor.name);
         };
     }
 
@@ -92,7 +95,8 @@ function Tools(mediator, toolsSettings, binding, drawer, selection, stylesManage
             targetItems.addChild(path);
         }
         this.activate = function () {
-            tool.activate()
+            tool.activate();
+            mediator.publish("toolActivated", this.constructor.name);
         };
     }
 
@@ -112,7 +116,8 @@ function Tools(mediator, toolsSettings, binding, drawer, selection, stylesManage
             targetItems.addChild(path);
         }
         this.activate = function () {
-            tool.activate()
+            tool.activate();
+            mediator.publish("toolActivated", this.constructor.name);
         };
     }
 
@@ -132,7 +137,8 @@ function Tools(mediator, toolsSettings, binding, drawer, selection, stylesManage
             targetItems.addChild(path);
         }
         this.activate = function () {
-            circle.activate()
+            circle.activate();
+            mediator.publish("toolActivated", this.constructor.name);
         };
     }
 
@@ -151,7 +157,8 @@ function Tools(mediator, toolsSettings, binding, drawer, selection, stylesManage
             targetItems.addChild(path);
         }
         this.activate = function () {
-            tool.activate()
+            tool.activate();
+            mediator.publish("toolActivated", this.constructor.name);
         };
     }
 
@@ -169,7 +176,8 @@ function Tools(mediator, toolsSettings, binding, drawer, selection, stylesManage
             targetItems.translate(delta);
         }
         this.activate = function () {
-            move.activate()
+            move.activate();
+            mediator.publish("toolActivated", this.constructor.name);
         };
     }
 
@@ -187,7 +195,8 @@ function Tools(mediator, toolsSettings, binding, drawer, selection, stylesManage
             lastDistance = distance;
         }
         this.activate = function () {
-            tool.activate()
+            tool.activate();
+            mediator.publish("toolActivated", this.constructor.name);
         };
     }
 
@@ -207,7 +216,8 @@ function Tools(mediator, toolsSettings, binding, drawer, selection, stylesManage
             lastAngle = angle;
         }
         this.activate = function () {
-            tool.activate()
+            tool.activate();
+            mediator.publish("toolActivated", this.constructor.name);
         };
     }
 
@@ -245,7 +255,8 @@ function Tools(mediator, toolsSettings, binding, drawer, selection, stylesManage
             }
         }
         this.activate = function () {
-            tool.activate()
+            tool.activate();
+            mediator.publish("toolActivated", this.constructor.name);
         };
     }
 
@@ -300,7 +311,8 @@ function Tools(mediator, toolsSettings, binding, drawer, selection, stylesManage
             }
         }.bind(this);
         this.activate = function () {
-            tool.activate()
+            tool.activate();
+            mediator.publish("toolActivated", this.constructor.name);
         };
     }
 
@@ -311,7 +323,8 @@ function Tools(mediator, toolsSettings, binding, drawer, selection, stylesManage
             mediator.publish("fieldMoved");
         }
         this.activate = function () {
-            hand.activate()
+            hand.activate();
+            mediator.publish("toolActivated", this.constructor.name);
         };
     }
 
@@ -352,6 +365,7 @@ function Tools(mediator, toolsSettings, binding, drawer, selection, stylesManage
         this.activate = function () {
             tool.activate();
             tool.text = null;
+            mediator.publish("toolActivated", this.constructor.name);
         };
     }
 
@@ -364,7 +378,11 @@ function Tools(mediator, toolsSettings, binding, drawer, selection, stylesManage
         tool.onMouseDown = function (event) {
             startPoint = event.point;
             selection.selectPoint(startPoint);
-            if (selectionCallback && selection.anythingSelected()) selectionCallback();
+            if (selectionCallback && selection.anythingSelected())
+            {
+                selectionCallback();
+                selectionCallback = null;
+            }
         }
         tool.onMouseDrag = function (event) {
             if (!selectMany) {
@@ -380,10 +398,15 @@ function Tools(mediator, toolsSettings, binding, drawer, selection, stylesManage
             selection.selectInsideRectangle(new Rectangle(startPoint, event.point));
             drawer.cancel();
             selectMany = false;
-            if (selectionCallback && selection.anythingSelected()) selectionCallback();
+            if (selectionCallback && selection.anythingSelected())
+            {
+                selectionCallback();
+                selectionCallback = null;
+            }
         }
         this.activate = function () {
-            tool.activate()
+            tool.activate();
+            mediator.publish("toolActivated", this.constructor.name);
         };
         this.activateWithCallback = function (callback, event) {
             this.activate();
@@ -422,7 +445,7 @@ function Tools(mediator, toolsSettings, binding, drawer, selection, stylesManage
             //targetItems.remove();
         }
         this.activate = function () {
-            tool.activate()
+            tool.activate();
         };
     }
 
@@ -479,7 +502,8 @@ function Tools(mediator, toolsSettings, binding, drawer, selection, stylesManage
         }.bind(this);
 
         this.activate = function () {
-            tool.activate()
+            tool.activate();
+            mediator.publish("toolActivated", this.constructor.name);
         };
     }
 

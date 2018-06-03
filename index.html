@@ -48,10 +48,6 @@
             width: 150px;
         }
 
-        body {
-            font-family: Arial, Helvetica, sans-serif;
-        }
-
         table {
             font-size: 1em;
         }
@@ -93,16 +89,24 @@
 <div class="container-fluid tabContent" hidden="true" id="mainPanelSettings" data-nav-id="mainSettings">
     <div class="tabPanel col-lg-1">
         <button type="button" onclick="undoRedo.undo();" class="btn btn-primary tabControl"><span
-                class="glyphicon glyphicon-menu-left"></span></button>
+                class="glyphicon glyphicon-repeat icon-flipped"></span></button>
 
         <button type="button" onclick="undoRedo.redo();" class="btn btn-primary tabControl"><span
-                class="glyphicon glyphicon-menu-right"></span></button>
+                class="glyphicon glyphicon-repeat"></span></button>
+
+        <button type="button" onclick="undoRedo.save();" class="btn btn-primary tabControl"><span
+                class="glyphicon glyphicon-save"></span></button>
 
     </div>
     <div class="tabPanel col-lg-3">
-        <div id="gridColorStroke" class="input-group colorpicker-component tabControl"
+        <div id="gridColorStroke" class="input-group colorpicker-component tabControl inline"
              data-setting="styles.drawing.strokeColor">
             <label class="btn btn-secondary">Stroke color</label>
+            <span class="input-group-addon"><i></i></span>
+        </div>
+        <div id="gridColorFillColor" class="input-group colorpicker-component tabControl inline"
+             data-setting="styles.drawing.fillColor">
+            <label class="btn btn-secondary">Fill color</label>
             <span class="input-group-addon"><i></i></span>
         </div>
         <div class="input-group tabControlRow">
@@ -111,7 +115,7 @@
                 <input id="bootstrap-slider" type="text" data-slider-min="1"
                        data-slider-max="100" data-slider-step="1" data-slider-value="10"
                        data-setting="styles.drawing.strokeWidth"/>
-                <div class="valueLabel">25</div>
+                <div class="valueLabel"></div>
             </div>
         </div>
         <div class="input-group tabControlRow">
@@ -120,24 +124,20 @@
                 <input id="OpacitySetting" width="200" type="text" data-slider-min="0"
                        data-slider-max="1" data-slider-step="0.1" data-slider-value="0"
                        data-setting="styles.drawing.opacity"/>
-                <div class="valueLabel">0</div>
+                <div class="valueLabel"></div>
             </div>
         </div>
     </div>
     <div class="tabPanel col-lg-3">
-        <div id="gridColorFillColor" class="input-group colorpicker-component tabControl"
-             data-setting="styles.drawing.fillColor">
-            <label class="btn btn-secondary">Fill color</label>
-            <span class="input-group-addon"><i></i></span>
-        </div>
+
         <div class="input-group tabControlRow">
             <label class="btn btn-secondary">Line type</label>
-            <select class="form-control" id="selectTyleLine">
-                <option>Solid</option>
-                <option>Dotted</option>
-                <option>Dashed</option>
-                <option>DotDash</option>
-                <option>TwoDotsOneDash</option>
+            <select class="form-control" data-setting="styles.drawing.lineType">
+                <option value="solid">Solid</option>
+                <option value="dotted">Dotted</option>
+                <option value="dashed">Dashed</option>
+                <option value="dotDash">DotDash</option>
+                <option value="twoDotsOneDash">TwoDotsOneDash</option>
             </select>
         </div>
         <div class="input-group tabControlRow">
@@ -150,34 +150,75 @@
             </div>
         </div>
     </div>
+    <div class="tabPanel col-lg-3" data-for-tool="Text">
+        <div class="input-group colorpicker-component tabControl inline"
+             data-setting="textStyles.drawing.fillColor">
+            <label class="btn btn-secondary">Font color</label>
+            <span class="input-group-addon"><i></i></span>
+        </div>
+        <div class="input-group tabControl inline">
+            <label class="btn btn-secondary">Font size</label>
+            <input class="form-control" type="number" data-setting="textStyles.drawing.fontSize">
+        </div>
+        <div class="input-group tabControlRow">
+            <label class="btn btn-secondary">Font</label>
+            <select class="form-control" data-setting="textStyles.drawing.fontFamily">
+                <option value="Helvetica">Helvetica</option>
+                <option value="'Arial Black'">Arial Black</option>
+                <option value="'Courier New'">Courier New</option>
+                <option value="Verdana">Verdana</option>
+                <option value="'Times New Roman'">Times New Roman</option>
+            </select>
+        </div>
+        <div class="input-group tabControlRow">
+            <label class="btn btn-secondary">Font weight</label>
+            <select class="form-control" data-setting="textStyles.drawing.fontWeight">
+                <option value="normal">Normal</option>
+                <option value="bolder">Bolder</option>
+                <option value="bold">Bold</option>
+            </select>
+        </div>
+    </div>
+    <div class="tabPanel col-lg-2" data-for-tool="Polygon">
+        <div class="input-group tabControlRow">
+            <label class="btn btn-secondary">Sides</label>
+            <input class="form-control" type="number" data-setting="tools.polygon.sides">
+        </div>
+    </div>
+    <div class="tabPanel col-lg-2" data-for-tool="Star">
+        <div class="input-group tabControlRow">
+            <label class="btn btn-secondary">Points</label>
+            <input class="form-control" type="number" data-setting="tools.star.points">
+        </div>
+    </div>
 </div>
 
 <div class="container-fluid tabContent" hidden="true" data-nav-id="bindingSettings">
-    <div class="tabPanel col-lg-3">
+    <div class="tabPanel col-lg-2">
         <div class="checkbox tabControl">
-            <label><input type="checkbox" id="BindingGrid" value="" data-setting="binding.bindToGrid">Binding to
+            <label><input type="checkbox" data-setting="binding.bindToGrid">Binding to
                 grid</label>
         </div>
         <div class="checkbox tabControl">
             <label>
-                <input type="checkbox" id="bindToLineEnds" value="" data-setting="binding.bindToLineEnds">Binding to
+                <input type="checkbox" data-setting="binding.bindToLineEnds">Binding to
                 line ends
             </label>
         </div>
         <div class="checkbox tabControl">
             <label>
-                <input type="checkbox" id="bindToIntersections" value="" data-setting="binding.bindToIntersections">Binding
+                <input type="checkbox" data-setting="binding.bindToIntersections">Binding
                 to intersections
             </label>
         </div>
         <div class="checkbox tabControl">
             <label>
-                <input type="checkbox" id="bindToCenters" value="" data-setting="binding.bindToCenters">Binding to
+                <input type="checkbox" data-setting="binding.bindToCenters">Binding to
                 centers
             </label>
         </div>
     </div>
-    <div class="tabPanel col-lg-3">
+    <div class="tabPanel col-lg-2">
         <div class="input-group tabControlRow">
             <label class="btn btn-secondary">Binding tolerance</label>
             <input class="form-control" type="number" data-setting="binding.bindingTolerance">
@@ -190,7 +231,15 @@
 </div>
 
 <div class="container-fluid tabContent" hidden="true" data-nav-id="gridSettings">
-    <div class="tabPanel col-lg-3">
+    <div class="tabPanel col-lg-1">
+        <div class="checkbox tabControl">
+            <label><input type="checkbox" data-setting="background.showGrid">Draw grid</label>
+        </div>
+        <div class="checkbox tabControl">
+            <label><input type="checkbox" data-setting="background.showAxis">Draw axis</label>
+        </div>
+    </div>
+    <div class="tabPanel col-lg-2">
         <div id="gridColorPicker" class="input-group colorpicker-component tabControl"
              data-setting="background.gridColor">
             <label class="btn btn-secondary">Grid color</label>
@@ -201,19 +250,12 @@
             <label class="btn btn-secondary">Axis color</label>
             <span class="input-group-addon"><i></i></span>
         </div>
-        <div class="checkbox tabControl">
-            <label><input type="checkbox" data-setting="background.showGrid">Draw grid</label>
-        </div>
-        <div class="checkbox tabControl">
-            <label><input type="checkbox" data-setting="background.showAxis">Draw axis</label>
-        </div>
-    </div>
-    <div class="tabPanel col-lg-3">
         <div class="input-group tabControlRow">
             <label class="btn btn-secondary">Grid step</label>
             <input type="number" class="form-control" data-setting="binding.gridStep">
         </div>
     </div>
+
 </div>
 
 <div class="container-fluid tabContent" hidden="true" data-nav-id="projectionsSettings">
@@ -231,7 +273,7 @@
             <label><input type="checkbox" data-setting="background.showAxisText">Show axis captions</label>
         </div>
     </div>
-    <div class="tabPanel col-lg-3">
+    <div class="tabPanel col-lg-3" >
         <button class="btn btn-primary dropdown-toggle tabControl " type="button" data-toggle="dropdown">Tasks
             <span class="caret"></span></button>
         <button class="taskValidate tabControl btn btn-primary">Check</button>
@@ -241,39 +283,31 @@
         </ul>
         <div class="taskText"></div>
     </div>
-    <div class="tabPanel col-lg-3">
-            <ul class="taskErrors tabControl"><li style="display:none"></li></ul>
+    <div class="tabPanel col-lg-3 taskResultsPanel">
+        <ul class="taskErrors tabControl">
+            <li style="display:none"></li>
+        </ul>
     </div>
 </div>
 
-<ul class="dropdown-menu" role="menu" aria-labelledby="dropdownMenu" id="leftmenu">
-    <li><a href="#" onclick="toolbox.line.activate();"><span class="your-icon icon-simple-line normal"></span></a></li>
-    <li><a href="#" onclick="toolbox.pathLine.activate()"><span class="your-icon icon-line normal"></span></a></li>
-    <li><a href="#" onclick="toolbox.circle.activate()"><span class="your-icon icon-circle normal"></span></a></li>
-    <li>
-        <a href="#" onclick="toolbox.ellipse.activate()"><span class="your-icon icon-ellipse normal"></span></a>
-    </li>
-    <li>
-        <a href="#" onclick="toolbox.rectangle.activate()"><span class="your-icon icon-rectangle normal"></span></a>
-    </li>
-    <li>
-        <a href="#" onclick="toolbox.polygon.activate()"><span class="your-icon icon-polygon normal"></span></a>
-    <li>
-        <a href="#" onclick="toolbox.star.activate()"><span class="your-icon icon-star normal"></span></a>
-    </li>
-    <li>
-        <a href="#" onclick="toolbox.move.activate()"><span class="your-icon icon-move normal"></span></span></a>
-    </li>
-    <li><a href="#" onclick="toolbox.rotate.activate()"><span class="your-icon icon-rotate normal"></span> </a></li>
-    <li><a href="#" onclick="toolbox.scale.activate()"><span class="your-icon icon-scale normal"></span></a></li>
+<ul class="dropdown-menu draggable" role="menu" aria-labelledby="dropdownMenu" id="toolboxMain">
+    <li data-tool="line"><span class="your-icon icon-simple-line normal"></span></li>
+    <li data-tool="pathLine"><span class="your-icon icon-line normal"></span></li>
+    <li data-tool="circle"><span class="your-icon icon-circle normal"></span></li>
+    <li data-tool="ellipse"><span class="your-icon icon-ellipse normal"></span></li>
+    <li data-tool="rectangle"><span class="your-icon icon-rectangle normal"></span></li>
+    <li data-tool="polygon"><span class="your-icon icon-polygon normal"></span>
+    <li data-tool="star"><span class="your-icon icon-star normal"></span></li>
+    <li data-tool="move"><span class="your-icon icon-move normal"></span></li>
+    <li data-tool="rotate"><span class="your-icon icon-rotate normal"></span></li>
+    <li data-tool="scale"><span class="your-icon icon-scale normal"></span></li>
 
-    <li><a href="#" onclick="toolbox.select.activate()"><span class="your-icon icon-Select normal"></span></a></li>
-    <li><a href="#" onclick="toolbox.hand.activate()"><span class="your-icon icon-hand normal"></span></a></li>
-    <li><a href="#" onclick="toolbox.freeTransform.activate()"><span class="your-icon icon-hand normal"></span></a></li>
-    <li><a href="#" onclick="toolbox.curveTransform.activate()"><span class="your-icon icon-hand normal"></span></a>
-    </li>
-    <li><a href="#" onclick="toolbox.text.activate()"><span class="your-icon icon-text normal"></span></a></li>
-    <li><a href="#" onclick="toolbox.circle3Points.activate()"><span class="your-icon icon-text normal"></span></a></li>
+    <li data-tool="select"><span class="your-icon icon-Select normal"></span></li>
+    <li data-tool="hand"><span class="your-icon icon-hand normal"></span></li>
+    <!--<li data-tool="freeTransform"><span class="your-icon icon-hand normal"></span></li>-->
+    <!--<li data-tool="curveTransform"><span class="your-icon icon-hand normal"></span></li>-->
+    <li data-tool="text"><span class="your-icon icon-text normal"></span></li>
+    <!--<li data-tool="circle3Points"><span class="your-icon icon-text normal"></span></li>-->
     <!--
         <li class="divider"></li>
         <li class="dropdown-submenu">
@@ -294,13 +328,13 @@
     -->
 </ul>
 
-<ul class="dropdown-menu" role="menu" aria-labelledby="dropdownMenu" id="rightmenu">
-    <li><a href="#" onclick="toolbox3D.point.activate();"><span class="your-icon icon-dot normal"></span></a></li>
-    <li><a href="#" onclick="toolbox3D.line.activate();"><span class="your-icon icon-line normal"></span></a></li>
-    <li><a href="#" onclick="toolbox3D.polygon.activate();"><span class="your-icon icon-polygon normal"></span></a></li>
-    <li><a href="#" onclick="toolbox3D.ellipse.activate();"><span class="your-icon icon-ellipse normal"></span></a></li>
+<ul class="dropdown-menu draggable" role="menu" aria-labelledby="dropdownMenu" id="toolbox3D">
+    <li data-tool="point"><span class="your-icon icon-dot normal"></span></li>
+    <li data-tool="line"><span class="your-icon icon-line normal"></span></li>
+    <li data-tool="polygon"><span class="your-icon icon-polygon normal"></span></li>
+    <li data-tool="ellipse"><span class="your-icon icon-ellipse normal"></span></li>
 </ul>
-<div class="row" id="layoutPanel">
+<div class="row draggable" id="layoutPanel">
     <div class="panel panel-default">
         <!-- Default panel contents -->
         <div class="panel-heading">Layers
@@ -311,71 +345,7 @@
         </ul>
     </div>
 </div>
-<nav class="navbar navbar-default navbar-fixed-bottom" id="propertyPanel" style="display:none;">
-    <div class="form-row">
-        <div class="form-group col-md-2">
-            <div class="input-group">
-                <span class="input-group-addon" for="fontsize">Font Size</span>
-                <input type="number" class="form-control form-control-sm" id="fontsize" placeholder="fontsize">
-            </div>
-        </div>
 
-        <div class="form-group col-md-2">
-            <div class="input-group">
-                <span class="input-group-addon" for="selectTypeLineText">Line type</span>
-                <select class="form-control" id="selectTypeLineText">
-                    <option>Solid</option>
-                    <option>Dotted</option>
-                    <option>Dashed</option>
-                    <option>DotDash</option>
-                    <option>TwoDotsOneDash</option>
-                </select>
-            </div>
-        </div>
-        <!--<div class="form-group col-md-3">-->
-        <!--<div class="input-group">-->
-        <!--<span class="input-group-addon" for="selectTypeLineText">Font Weight</span>-->
-        <!--<select class="form-control" id="selectFontWeight">-->
-        <!--<option>Bold</option>-->
-        <!--<option>Bolder</option>-->
-        <!--<option>Lighter</option>-->
-        <!--<option>Normal</option>-->
-        <!--</select>-->
-        <!--</div>-->
-        <!--</div>-->
-        <div class="form-group col-md-2">
-            <div class="input-group">
-                <span class="input-group-addon" for="FontForText">Font</span>
-                <select class="form-control" id="FontForText">
-                    <option>sans-serif</option>
-                    <option>Arial Black</option>
-                    <option>Comic Sans MS</option>
-                    <option>MS Serif</option>
-                </select>
-            </div>
-        </div>
-        <div class="form-group col-md-2">
-            <div class="input-group">
-                <span class="input-group-addon" for="fontColorPicker">Fill color</span>
-                <div id="fontColorPicker" data-format="alias" data-align="right"
-                     class="input-group colorpicker-component" style="width: 90%" data-setting="">
-                    <input type="text" value="primary" class="form-control"/>
-                    <span class="input-group-addon"><i></i></span>
-                </div>
-            </div>
-        </div>
-        <div class="form-group col-md-2">
-            <div class="input-group">
-                <span class="input-group-addon" for="fontStrokeColor">Stroke color</span>
-                <div id="fontStrokeColor" data-format="alias" data-align="right"
-                     class="input-group colorpicker-component" position="right" style="width: 90%">
-                    <input type="text" value="primary" class="form-control"/>
-                    <span class="input-group-addon"><i></i></span>
-                </div>
-            </div>
-        </div>
-    </div>
-</nav>
 <canvas id="myCanvas" resize></canvas>
 
 
@@ -425,6 +395,18 @@
         keyboard.addHandler(function (event) {
             if (event.key == 'y' && event.modifiers.control) {
                 undoRedo.redo();
+            }
+        });
+        keyboard.addHandler(function (event) {
+            if (event.key == 's' && event.modifiers.control) {
+                undoRedo.save();
+                event.preventDefault();
+            }
+        });
+        keyboard.addHandler(function (event) {
+            if (event.key == 'a' && event.modifiers.control) {
+                selection.selectAll();
+                event.preventDefault();
             }
         });
     }

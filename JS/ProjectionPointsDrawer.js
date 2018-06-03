@@ -191,10 +191,7 @@ function ProjectionPointsDrawer(mediator, stylesManager, projectionParams) {
         if (shape == 'polygon' || shape == 'line') {
             res = this.drawPolygon(points);
         }
-        if (res) {
-            stylesManager.applyStyle(shape, 'drawing');
-            return res;
-        }
+        return res;
     };
     this.drawPolygon = function (points) {
         var shape = new Group();
@@ -235,6 +232,7 @@ function ProjectionPointsDrawer(mediator, stylesManager, projectionParams) {
         var ellipse = new Path.Ellipse(rect);
         ellipse.skew(skewPoint);
         ellipse.rotate(angle);
+        stylesManager.applyStyle(ellipse, 'drawing');
         shape.addChild(ellipse);
 
         // var ellipse1 = new Path.Rectangle(rect);

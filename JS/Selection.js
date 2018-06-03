@@ -45,7 +45,14 @@ function Selection(mediator, layerManager) {
         selectedItems = null;
     }
     this.selectAll = function () {
-        hitTestObj.selected = true;
+        var items = hitTestObj.getItems({
+            match: function (item) {
+                return item.className != 'Layer' && ((item.parent.className != 'Group' && item.className != 'Group') || item.data.projection);
+            },
+        });
+        items.forEach(function (item) {
+            item.selected = true;
+        });
         mediator.publish("selectionChanged");
     }
     this.deselectAll = function () {

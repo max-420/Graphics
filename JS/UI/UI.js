@@ -1,6 +1,4 @@
 $(document).ready(function () {
-    var leftElementPanelHTML = $("#leftmenu");
-    var rightElementPanelHTML = $("#rightmenu");
     var constColor = {
         'black': '#000000',
         'white': '#ffffff',
@@ -12,15 +10,18 @@ $(document).ready(function () {
         'warning': '#f0ad4e',
         'danger': '#d9534f'
     };
+    $('.draggable').draggable({containment: "parent"});
 
-    var toggleLayoutPanel = $("#toggleLayoutPanel");
+    $('.taskResultsPanel').hide();
 
-    var propertyPanel = $("#propertyPanel");
-
-    var rightmenu = $("#rightmenu");
-    leftElementPanelHTML.draggable({containment: "parent"});
-    rightmenu.draggable({containment: "parent"});
-    $('#layoutPanel').draggable({containment: "parent"});
+    $('#toolboxMain li').click(function () {
+        var tool = $(this).attr('data-tool');
+        toolbox[tool].activate();
+    });
+    $('#toolbox3D li').click(function () {
+        var tool = $(this).attr('data-tool');
+        toolbox3D[tool].activate();
+    });
 
     $(".colorpicker-component[data-setting]").colorpicker({
         colorSelectors: constColor,
@@ -30,11 +31,6 @@ $(document).ready(function () {
     $(".colorpicker-component[data-setting]").each(function (i, item) {
         var val = settingsManager.getValue($(item).attr('data-setting'));
         $(item).colorpicker('setValue', val);
-    });
-
-
-    toggleLayoutPanel.click(function () {
-        propertyPanel.toggle();
     });
 
     $('.navbar-btn').click(function () {
@@ -70,6 +66,7 @@ $(document).ready(function () {
         return string.charAt(0).toUpperCase() + string.slice(1);
     }
     $('.taskValidate').click(function () {
+        $('.taskResultsPanel').show();
         var index = parseInt($('.tasksList li.active').first().val());
         var res = projectionManager.validateTask(index);
         var items = $('.taskErrors>li:not(:first-child)').each(function () {
@@ -100,6 +97,7 @@ $(document).ready(function () {
     });
 
     $('.taskCancel').click(function () {
+        $('.taskResultsPanel').hide();
         $('.tasksList li.active').removeClass('active');
         $('.taskText').text('');
         projectionManager.testMode = false;
@@ -135,88 +133,30 @@ $(document).ready(function () {
     });
     $("input[data-slider-min]").each(function (i, item) {
         var val = settingsManager.getValue($(item).attr('data-setting'));
-        $(item).attr('data-slider-value', val);
+        $(item).bootstrapSlider('setValue', val);
         $(item).siblings(".valueLabel").text(val);
     });
 
-    $('#selectTyleLine').on('change', function () {
-        var lineType = $(this).val();
-        if (lineType == 'Solid') {
-
-            settingsManager.settings.styles.drawing.lineType = 'solid';
-        }
-        else if (lineType == 'Dotted') {
-            settingsManager.settings.styles.drawing.lineType = 'dotted';
-        }
-        else if (lineType == 'Dashed') {
-            settingsManager.settings.styles.drawing.lineType = 'dashed';
-        }
-        else if (lineType == 'DotDash') {
-            settingsManager.settings.styles.drawing.lineType = 'dotDash';
-        }
-        else if (lineType == 'TwoDotsOneDash') {
-            settingsManager.settings.styles.drawing.lineType = 'twoDotsOneDash';
-        }
-        else {
-            settingsManager.settings.styles.drawing.lineType = 'solid';
-        }
+    $("select[data-setting]").change(function () {
+        var value = $(this).val();
+        settingsManager.setValue($(this).attr('data-setting'), value);
     });
-
-    $('#selectTypeLineText').on('change', function () {
-        var lineType = $(this).val();
-        if (lineType == 'Solid') {
-            settingsManager.settings.textStyles.drawing.lineType = 'solid';
-        }
-        else if (lineType == 'Dotted') {
-            settingsManager.settings.textStyles.drawing.lineType = 'dotted';
-        }
-        else if (lineType == 'Dashed') {
-            settingsManager.settings.textStyles.drawing.lineType = 'dashed';
-        }
-        else if (lineType == 'DotDash') {
-            settingsManager.settings.textStyles.drawing.lineType = 'dotDash';
-        }
-        else if (lineType == 'TwoDotsOneDash') {
-            settingsManager.settings.textStyles.drawing.lineType = 'twoDotsOneDash';
-        }
-        else {
-            settingsManager.settings.textStyles.drawing.lineType = 'solid';
-        }
+    $("select[data-setting]").each(function () {
+        var val = settingsManager.getValue($(this).attr("data-setting"));
+        $(this).val(val);
     });
-    $('#selectFontWeight').on('change', function () {
-        var lineType = $(this).val();
-        if (lineType == 'Bold') {
-            settingsManager.settings.textStyles.drawing.fontWeight = 'normal';
-        }
-        else if (lineType == 'Bolder') {
-            settingsManager.settings.textStyles.drawing.fontWeight = 'bolder';
-        }
-        else if (lineType == 'Lighter') {
-            settingsManager.settings.textStyles.drawing.fontWeight = 'lighter';
-        }
-        else if (lineType == 'Normal') {
-            settingsManager.settings.textStyles.drawing.fontWeight = '100';
-        }
-    });
-    $('#FontForText').on('change', function () {
-        var fontName = $(this).val();
-        if (fontName == 'sans-serif') {
-            settingsManager.settings.textStyles.drawing.fontFamily = 'sans-serif';
-            settingsManager.settings.textStyles.drawing.font = 'sans-serif';
-        }
-        else if (fontName == 'Arial Black') {
-            settingsManager.settings.textStyles.drawing.fontFamily = 'sans-serif';
-            settingsManager.settings.textStyles.drawing.font = 'sans-serif';
-        }
-        else if (fontName == 'Comic Sans MS') {
-            settingsManager.settings.textStyles.drawing.fontFamily = 'cursive';
-            settingsManager.settings.textStyles.drawing.font = 'cursive';
-        }
-        else if (fontName == 'MS Serif') {
-            settingsManager.settings.textStyles.drawing.fontFamily = 'serif';
-            settingsManager.settings.textStyles.drawing.font = 'serif';
-        }
-
+    $("[data-for-tool]").each(function (i, item) {
+        $(item).hide();
+        mediator.subscribe('toolActivated',function (tool) {
+           if(tool == $(item).attr('data-for-tool'))
+           {
+               $(item).show();
+           }
+           else
+           {
+               $(item).hide();
+           }
+        });
     });
     $('#controlLayersPanel').click(function () {
         $('#layersPanel').toggle();

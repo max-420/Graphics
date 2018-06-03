@@ -108,9 +108,6 @@ function StylesManager(mediator, styles, textStyles) {
             item.fontSize = settings.fontSize;
         }
         if (typeof settings.justification != 'undefined') {
-            item.font = settings.font;
-        }
-        if (typeof settings.shadowOffset != 'undefined') {
             item.justification = settings.justification;
         }
     }

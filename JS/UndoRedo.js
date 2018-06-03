@@ -21,4 +21,14 @@ function UndoRedo(mediator, controlledObj) {
     mediator.subscribe("drawingChanged", function () {
         copies.splice(++currentPos, copies.length, controlledObj.exportJSON());
     });
+    this.save = function()
+    {
+        var fileName = "image.svg";
+        var url = "data:image/svg+xml;base64," + btoa(project.exportSVG({asString:true, bounds: 'content'}));
+
+        var link = document.createElement("a");
+        link.download = fileName;
+        link.href = url;
+        link.click();
+    }
 }

@@ -6,7 +6,7 @@ $(document).ready(function () {
     const layoutNameName = 'layer';
     const someSwith = 'someSwitchLayout';
     const radioButtonLayoutName = 'radioButtonLayout';
-    const removeNameForDelete = 'layoutID';
+    const removeNameForDelete = 'layer';
     const radioButtonChangeLayerName = 'activelayout';
     var index = 1;//TODO убрать
 

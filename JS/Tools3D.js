@@ -50,7 +50,7 @@ function Tools3D(mediator, binding, drawer, selection, projectionPointsDrawer, p
             if (projectionParams.showLinkLines) {
                 var projections = projection.bind(bindedPoint);
                 if (!projections) {
-                    var bindedProj = projectionManager.bind(bindedPoint);
+                    var bindedProj = projectionManager.bind(bindedPoint, shape);
                     if (bindedProj) {
                         projections = bindedProj.bind(bindedPoint);
                     }
@@ -124,6 +124,7 @@ function Tools3D(mediator, binding, drawer, selection, projectionPointsDrawer, p
             filter = pointFilter;
             tool.activate();
             binding.clear();
+            mediator.publish("toolActivated", this.constructor.name);
         };
     }
 }

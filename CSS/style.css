@@ -171,12 +171,9 @@ li.dropdown {
     }
     .your-icon {
         position: relative;
-        top: 1px;
-        display: inline-block;
         font-style: normal;
         font-weight: normal;
         line-height: 1;
-        float: left;
         display: block; /* This is required */
     }
     
@@ -319,38 +316,49 @@ li.dropdown {
     background: inherit;
     left: 20px;
 }
-#rightmenu{
+#layoutPanel{
+     position: absolute;
+     width: 200px;
+     bottom: 5%;
+     right: 5%
+ }
+#toolbox3D{
     display: block;
     position: absolute;
     top: 300px;
     left:93%;
     min-width:20px;
 }
-#layoutPanel{
-    position: absolute;
-    width: 200px;
-    bottom: 5%;
-    right: 5%
-}
-#leftmenu{
+#toolboxMain{
     display: block;
     position: absolute;
     left: 40px;
     top: 300px;
     min-width:20px;
 }
-
-#rightMenuInstruments{
-    position: absolute;
-    min-width: 20px;
-    top: 10%;
-    right: 5%
+.dropdown-menu li
+{
+    margin: 10px;
+    display: block;
 }
-
+.dropdown-menu li:hover
+{
+    background-color: #d9534f;
+}
+.dropdown-menu li.active
+{
+    background-color: #d9534f;
+}
+.tabContent input[type="number"]
+{
+    width: 100px;
+    float: none;
+    vertical-align:top;
+}
 .tabContent
 {
     padding: 10px;
-    height: 200px;
+    height: 165px;
     background-color: #f8f8f8;
     border-color: #e7e7e7;
     border-bottom: 1px;
@@ -368,6 +376,7 @@ li.dropdown {
     border-color: lightgrey;
     border-radius: 3px;
     background-color: snow;
+    vertical-align:top;
 }
 .tabControl
 {
@@ -378,10 +387,10 @@ li.dropdown {
     margin: 0 10px 10px 0;
     width: 100%;
 }
-.tabControlRow input, .tabControlRow select
+.tabControl.inline, .tabControlRow.inline
 {
-    width: auto !important;
-    float: none !important;
+    margin: 0 10px 10px 0;
+    display: inline-table;
 }
 .tabControl label, .tabControlRow label
 {
@@ -455,4 +464,10 @@ li.dropdown {
 .taskFalse
 {
     color:red;
+}
+.icon-flipped {
+    transform: scaleX(-1);
+    -moz-transform: scaleX(-1);
+    -webkit-transform: scaleX(-1);
+    -ms-transform: scaleX(-1);
 }

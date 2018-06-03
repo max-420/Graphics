@@ -67,10 +67,9 @@ function Settings() {
             shadowColor: 'rgba(0, 0, 0, 0)',
             shadowBlur: 0,
             shadowOffset: 0,
-            fontFamily: 'sans-serif',
+            fontFamily: 'Helvetica',
             fontWeight: 'normal',
             fontSize: 30,
-            font: 'sans-serif',
             justification: 'left',
         },
         pointText: {

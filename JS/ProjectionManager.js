@@ -21,8 +21,12 @@ function ProjectionManager(mediator, projectionPointsDrawer, stylesManager, proj
     ]
     ;
 
-    this.bind = function (point) {
+    this.bind = function (point, shape) {
         return this.projections.find(function (proj) {
+            if(proj.shape != shape)
+            {
+                return false;
+            }
             var point3D = proj.get3DPoint(point);
             var nearest = proj.getNearestPoint(point3D);
             if (nearest != null) {
