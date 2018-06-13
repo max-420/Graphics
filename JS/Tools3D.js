@@ -124,7 +124,7 @@ function Tools3D(mediator, binding, drawer, selection, projectionPointsDrawer, p
             filter = pointFilter;
             tool.activate();
             binding.clear();
-            mediator.publish("toolActivated", this.constructor.name);
+            mediator.publish("tool3DActivated", shape);
         };
     }
 }

@@ -32,7 +32,7 @@ function Tools(mediator, toolsSettings, binding, drawer, selection, stylesManage
         }
         this.activate = function () {
             line.activate();
-            mediator.publish("toolActivated", this.constructor.name);
+            mediator.publish("toolActivated", 'pathLine');
         };
     }
 
@@ -54,7 +54,7 @@ function Tools(mediator, toolsSettings, binding, drawer, selection, stylesManage
         }
         this.activate = function () {
             line.activate();
-            mediator.publish("toolActivated", this.constructor.name);
+            mediator.publish("toolActivated", 'line');
         };
     }
 
@@ -75,7 +75,7 @@ function Tools(mediator, toolsSettings, binding, drawer, selection, stylesManage
         }
         this.activate = function () {
             rectangle.activate();
-            mediator.publish("toolActivated", this.constructor.name);
+            mediator.publish("toolActivated", 'rectangle');
         };
     }
 
@@ -96,7 +96,7 @@ function Tools(mediator, toolsSettings, binding, drawer, selection, stylesManage
         }
         this.activate = function () {
             tool.activate();
-            mediator.publish("toolActivated", this.constructor.name);
+            mediator.publish("toolActivated", 'polygon');
         };
     }
 
@@ -117,7 +117,7 @@ function Tools(mediator, toolsSettings, binding, drawer, selection, stylesManage
         }
         this.activate = function () {
             tool.activate();
-            mediator.publish("toolActivated", this.constructor.name);
+            mediator.publish("toolActivated", 'star');
         };
     }
 
@@ -138,7 +138,7 @@ function Tools(mediator, toolsSettings, binding, drawer, selection, stylesManage
         }
         this.activate = function () {
             circle.activate();
-            mediator.publish("toolActivated", this.constructor.name);
+            mediator.publish("toolActivated", 'circle');
         };
     }
 
@@ -158,7 +158,7 @@ function Tools(mediator, toolsSettings, binding, drawer, selection, stylesManage
         }
         this.activate = function () {
             tool.activate();
-            mediator.publish("toolActivated", this.constructor.name);
+            mediator.publish("toolActivated", 'ellipse');
         };
     }
 
@@ -177,7 +177,7 @@ function Tools(mediator, toolsSettings, binding, drawer, selection, stylesManage
         }
         this.activate = function () {
             move.activate();
-            mediator.publish("toolActivated", this.constructor.name);
+            mediator.publish("toolActivated", 'move');
         };
     }
 
@@ -196,7 +196,7 @@ function Tools(mediator, toolsSettings, binding, drawer, selection, stylesManage
         }
         this.activate = function () {
             tool.activate();
-            mediator.publish("toolActivated", this.constructor.name);
+            mediator.publish("toolActivated", 'scale');
         };
     }
 
@@ -217,7 +217,7 @@ function Tools(mediator, toolsSettings, binding, drawer, selection, stylesManage
         }
         this.activate = function () {
             tool.activate();
-            mediator.publish("toolActivated", this.constructor.name);
+            mediator.publish("toolActivated", 'rotate');
         };
     }
 
@@ -256,7 +256,7 @@ function Tools(mediator, toolsSettings, binding, drawer, selection, stylesManage
         }
         this.activate = function () {
             tool.activate();
-            mediator.publish("toolActivated", this.constructor.name);
+            mediator.publish("toolActivated", 'freeTransform');
         };
     }
 
@@ -312,7 +312,7 @@ function Tools(mediator, toolsSettings, binding, drawer, selection, stylesManage
         }.bind(this);
         this.activate = function () {
             tool.activate();
-            mediator.publish("toolActivated", this.constructor.name);
+            mediator.publish("toolActivated", 'curveTransform');
         };
     }
 
@@ -324,7 +324,7 @@ function Tools(mediator, toolsSettings, binding, drawer, selection, stylesManage
         }
         this.activate = function () {
             hand.activate();
-            mediator.publish("toolActivated", this.constructor.name);
+            mediator.publish("toolActivated", 'hand');
         };
     }
 
@@ -365,7 +365,7 @@ function Tools(mediator, toolsSettings, binding, drawer, selection, stylesManage
         this.activate = function () {
             tool.activate();
             tool.text = null;
-            mediator.publish("toolActivated", this.constructor.name);
+            mediator.publish("toolActivated", 'text');
         };
     }
 
@@ -406,7 +406,7 @@ function Tools(mediator, toolsSettings, binding, drawer, selection, stylesManage
         }
         this.activate = function () {
             tool.activate();
-            mediator.publish("toolActivated", this.constructor.name);
+            mediator.publish("toolActivated", 'select');
         };
         this.activateWithCallback = function (callback, event) {
             this.activate();
@@ -503,7 +503,7 @@ function Tools(mediator, toolsSettings, binding, drawer, selection, stylesManage
 
         this.activate = function () {
             tool.activate();
-            mediator.publish("toolActivated", this.constructor.name);
+            mediator.publish("toolActivated", 'circle3Points');
         };
     }
 

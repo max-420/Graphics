@@ -14,13 +14,23 @@ $(document).ready(function () {
 
     $('.taskResultsPanel').hide();
 
-    $('#toolboxMain li').click(function () {
+    $('.toolboxMain li').click(function () {
         var tool = $(this).attr('data-tool');
         toolbox[tool].activate();
     });
-    $('#toolbox3D li').click(function () {
+    $('.toolbox3D li').click(function () {
         var tool = $(this).attr('data-tool');
         toolbox3D[tool].activate();
+    });
+
+    mediator.subscribe("toolActivated", function (tool) {
+        $('[data-tool].active').removeClass('active');
+        $('.toolboxMain [data-tool=' + tool + ']').addClass('active');
+    });
+
+    mediator.subscribe("tool3DActivated", function (tool) {
+        $('[data-tool].active').removeClass('active');
+        $('.toolbox3D [data-tool=' + tool + ']').addClass('active');
     });
 
     $(".colorpicker-component[data-setting]").colorpicker({
@@ -164,4 +174,5 @@ $(document).ready(function () {
     $('#controlElementPanel').click(function () {
         $('#leftmenu').toggle();
     });
+
 });
