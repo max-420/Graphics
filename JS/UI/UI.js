@@ -158,6 +158,7 @@ $(document).ready(function () {
     $("[data-for-tool]").each(function (i, item) {
         $(item).hide();
         mediator.subscribe('toolActivated',function (tool) {
+            var a =$(item).attr('data-for-tool');
            if(tool == $(item).attr('data-for-tool'))
            {
                $(item).show();

@@ -409,7 +409,7 @@ function Tools(mediator, toolsSettings, binding, drawer, selection, stylesManage
             mediator.publish("toolActivated", 'select');
         };
         this.activateWithCallback = function (callback, event) {
-            this.activate();
+            tool.activate();
             selectionCallback = callback;
             if (event) tool.onMouseDown(event);
         }

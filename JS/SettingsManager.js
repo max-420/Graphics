@@ -58,7 +58,7 @@ function Settings() {
     {
         drawing: {
             strokeColor: 'red',
-            strokeWidth: 1,
+            strokeWidth: 0,
             strokeScaling: false,
             opacity: 1,
             lineType: 'dotted',

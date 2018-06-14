@@ -174,7 +174,8 @@ li.dropdown {
         font-style: normal;
         font-weight: normal;
         line-height: 1;
-        display: block; /* This is required */
+        display: block;
+        background-repeat: no-repeat;
     }
     
     .your-icon.icon-home {
@@ -338,12 +339,14 @@ li.dropdown {
 }
 .dropdown-menu li
 {
-    margin: 10px;
+    padding: 3px;
+    margin: 3px;
     display: block;
 }
 .dropdown-menu li:hover
 {
     background-color: #d9534f;
+    outline: 1px solid red;
 }
 .dropdown-menu li.active
 {
